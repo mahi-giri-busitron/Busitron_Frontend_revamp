@@ -1,6 +1,4 @@
-import React from "react";
-// import pic1 from "../assets/image.webp";
-// import pic2 from "../assets/about2.webp";
+import React from "react";	
 import pic1 from "../assets/office2.jpg";
 import pic2 from "../assets/office3.jpeg";
 
@@ -29,7 +27,6 @@ const Location = () => {
                         This is the registered office address of Spirent
                         Communications plc.
                     </p>
-                    {/* <p className="text-md">Registered in England number 470893</p> */}
                     <p className="text-md font-serif">
                         2nd Floor, Uptown Cyberabad, 100 Feet Rd,
                     </p>
