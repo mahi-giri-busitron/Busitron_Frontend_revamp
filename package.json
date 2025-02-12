@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "docker:build": "docker build -t busitron_frontend .",
-    "docker:run": "docker run -p 5173:5173 busitron_frontend",
+    "docker:build": "docker build -t busitron_frontend_revamp .",
+    "docker:run": "docker run -p 5173:5173 busitron_frontend_revamp",
     "docker:compose": "docker-compose up --build"
   },
   "dependencies": {
