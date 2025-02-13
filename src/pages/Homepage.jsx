@@ -6,7 +6,8 @@ import EventPage from "./EventPage.jsx";
 
 const Homepage = () => {
     return (
-        <div className="h-auto bg-white">
+    <>
+        <div className=" h-auto bg-white">
             <div className="container mx-auto px-4">
                 <div className="flex flex-wrap items-center ">
                     {/* Left Content */}
@@ -23,7 +24,7 @@ const Homepage = () => {
                                 adipisicing elit. Sapiente vero omnis excepturi,
                                 reiciendis aperiam officia.
                             </p>
-                            <div className="button_wrapper_left flex gap-2 flex-wrap">
+                            <div className="button_wrapper_left flex gap-2 flex-wrap   m-0 md:m-4">
                                 <Button
                                     label="Donate Now"
                                     className="rounded-[20px]"
@@ -31,6 +32,7 @@ const Homepage = () => {
                                 <Button
                                     label="Join Volunteers"
                                     severity="success"
+                                    className="sm:!ml-0"
                                 />
                             </div>
                         </div>
@@ -48,11 +50,22 @@ const Homepage = () => {
                             </figure>
                         </div>
                     </div>
+
+
                 </div>
             </div>
-            <Products />
-            <EventPage />
+           
+   
+          
+
+         
         </div>
+
+
+<Products />
+
+<EventPage />
+</>
     );
 };
 

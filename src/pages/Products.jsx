@@ -33,7 +33,7 @@ const data = [
 
 const Products = () => {
     return (
-        <div className="product h-[40vh] bg-white ">
+        <div className="product h-auto bg-white ">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center justify-center">
                     {data.map((item, index) => (

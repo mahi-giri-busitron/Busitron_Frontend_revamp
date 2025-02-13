@@ -23,7 +23,7 @@ const data = [
 
 const EventPage = () => {
     return (
-        <div className="event_page">
+        <div className="event_page hidden md:block">
             <div className="container mx-auto p-4 max-w-screen-lg">
                 <div className="heading_content">
                     <h6 className="text-[#00715D] text-lg md:text-xl lg:text-2xl text-center font-bold my-2">
