@@ -12,8 +12,6 @@ const Contact = () => {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log("Form Data: ", data);
-        alert("Form submitted successfully!");
         reset(); // Reset the form after successful submission
     };
 
