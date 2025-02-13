@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import 'primeicons/primeicons.css';
+@import "primeicons/primeicons.css";
 @import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 .button_wrapper_left .p-button {
@@ -18,8 +18,7 @@
     color: #00715d;
 }
 
-
-.product{
+.product {
     margin-bottom: 60px;
 }
 

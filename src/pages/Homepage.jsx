@@ -1,12 +1,12 @@
 import React from "react";
 
 import { Button } from "primereact/button";
-import Products from "./Products";
-import EventPage from "./EventPage";
+import Products from "./Products.jsx";
+import EventPage from "./EventPage.jsx";
 
 const Homepage = () => {
     return (
-        <div className="h-auto bg-white" >
+        <div className="h-auto bg-white">
             <div className="container mx-auto px-4">
                 <div className="flex flex-wrap items-center ">
                     {/* Left Content */}
