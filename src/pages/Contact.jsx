@@ -1,37 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
 const Contact = () => {
-    const [fullName, setFullName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [errors, setErrors] = useState({}); // State to track validation errors
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm();
 
-    const maxLength = 300;
-
-    const validateForm = () => {
-        const newErrors = {};
-        if (!fullName.trim()) newErrors.fullName = "Full Name is required";
-        if (!phone.trim()) newErrors.phone = "Phone is required";
-        if (!email.trim()) newErrors.email = "Email is required";
-        if (!message.trim()) newErrors.message = "Message is required";
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            alert("Form submitted successfully!");
-            // Reset the form (optional)
-            setFullName("");
-            setPhone("");
-            setEmail("");
-            setMessage("");
-            setErrors({});
-        }
+    const onSubmit = (data) => {
+        console.log("Form Data: ", data);
+        alert("Form submitted successfully!");
+        reset(); // Reset the form after successful submission
     };
 
     return (
@@ -42,12 +25,11 @@ const Contact = () => {
             }}
         >
             <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-                {/* Contact Info Section */}
-                {/* (Same as before) */}
+                {/* Contact Info Section (same as before) */}
             </div>
 
-            <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-                <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Full Name
@@ -55,15 +37,17 @@ const Contact = () => {
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="Alex Jordan"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            {...register("fullName", {
+                                required: "Full Name is required",
+                            })}
                         />
                         {errors.fullName && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.fullName}
+                                {errors.fullName.message}
                             </p>
                         )}
                     </div>
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Phone
@@ -71,15 +55,21 @@ const Contact = () => {
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="Phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            {...register("phone", {
+                                required: "Phone is required",
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: "Phone must contain only numbers",
+                                },
+                            })}
                         />
                         {errors.phone && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.phone}
+                                {errors.phone.message}
                             </p>
                         )}
                     </div>
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Email
@@ -87,15 +77,21 @@ const Contact = () => {
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="name@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "Invalid email address",
+                                },
+                            })}
                         />
                         {errors.email && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.email}
+                                {errors.email.message}
                             </p>
                         )}
                     </div>
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Message
@@ -103,25 +99,21 @@ const Contact = () => {
                         <textarea
                             className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             placeholder="Your message..."
-                            maxLength={maxLength}
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            {...register("message", {
+                                required: "Message is required",
+                                maxLength: 300,
+                            })}
                         ></textarea>
-                        <div
-                            className={`text-right ${
-                                message.length === maxLength
-                                    ? "text-red-500"
-                                    : "text-gray-500"
-                            } text-xs`}
-                        >
-                            {maxLength - message.length}
+                        <div className="text-right text-gray-500 text-xs">
+                            Max 300 characters
                         </div>
                         {errors.message && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.message}
+                                {errors.message.message}
                             </p>
                         )}
                     </div>
+
                     <Button
                         type="submit"
                         label="Send Message"
