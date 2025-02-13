@@ -30,17 +30,6 @@ const services = [
 ];
 
 const Footer = () => {
-    const [footerData, setFooterData] = useState(null);
-
-    // useEffect(() => {
-    //   const getFooterData = async () => {
-    //     const data = await fetchUserData();
-    //     setFooterData(data);
-    //   };
-
-    //   getFooterData();
-    // }, []);
-
     return (
         <footer className="bg-[#FBFBFB] py-10 px-6 text-gray-700">
             <div className="max-w-7xl mx-auto space-y-10 p-5">
