@@ -40,14 +40,12 @@
 }
 
 .product .product_wrapper {
-    /* margin: 10px 0px 10px 0px; */
     padding: 8px 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 10px;
 
     color: #00715d;
     border: 3px solid #00715d;
-    /* background-color: #ffffff; */
 }
 
 .product .product_wrapper:hover {
@@ -79,14 +77,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-/* Light Mode */
+}
+
 body {
     background-color: #ffffff;
     color: #000000;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Dark Mode */
 .dark body {
     background-color: #121215;
     color: #ffffff;
