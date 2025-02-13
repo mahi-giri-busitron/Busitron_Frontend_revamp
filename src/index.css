@@ -1,3 +1,84 @@
 @import "tailwindcss";
 @import 'primeicons/primeicons.css';
 @import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+.button_wrapper_left .p-button {
+    color: #ffffff;
+    background: #00715d;
+    border: 1px solid #00715d;
+    padding: 0.75rem 1.25rem;
+    font-size: 15px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    box-shadow: 0.2s;
+    border-radius: 30px;
+}
+.button_wrapper_left .p-button:hover {
+    border: 1px solid #00715d;
+    background-color: #ffffff;
+    color: #00715d;
+}
+
+
+.product{
+    margin-bottom: 60px;
+}
+
+.button_wrapper_left .p-button:last-child {
+    color: #ffffff;
+    background: black;
+    border: 1px solid black;
+    padding: 0.75rem 1.25rem;
+    font-size: 15px;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+        box-shadow 0.2s;
+    border-radius: 30px;
+    margin-left: 20px;
+}
+
+.button_wrapper_left .p-button:last-child:hover {
+    border: 1px solid black;
+    background-color: #ffffff;
+    color: black;
+}
+
+.product .product_wrapper {
+    margin: 30px 0px 10px 30px;
+    padding: 8px 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+
+    color: #00715d;
+    border: 3px solid #00715d;
+    /* background-color: #ffffff; */
+}
+
+.product .product_wrapper:hover {
+    transform: translateY(-10px);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transition: 1s;
+}
+
+.image_wrapper_product {
+    position: relative;
+}
+
+.image_wrapper_product:hover .overlay {
+    opacity: 1;
+}
+.image_wrapper_product .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: 0.5s ease;
+    background-color: #00715d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
