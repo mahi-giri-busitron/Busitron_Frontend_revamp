@@ -12,11 +12,24 @@ import "./index.css";
 import Signin from "./component/Signin";
 import PrivateRoute from "./component/PrivateRoute";
 import Dashboard from "./component/Dashboard";
+import { useState, useEffect } from "react";
 
 function App() {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const [darkMode, setDarkMode] = useState(prefersDark);
+
+    // Apply theme globally
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    }, [darkMode]);
+
     return (
         <Router>
-            <Navbar />
+            <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
             <Routes>
                 <Route
                     path="/"
