@@ -16,18 +16,15 @@ const Contact = () => {
     };
 
     return (
-        <div
-            className="h-auto flex flex-col items-center justify-center p-5"
-            style={{
-                background: "linear-gradient(to right, #36D1DC, #5B86E5)",
-            }}
-        >
-            <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-                {/* Contact Info Section (same as before) */}
-            </div>
+        <div className="h-auto flex flex-col items-center justify-center p-5">
+            {/* Contact Us Heading */}
+            <h1 className="text-3xl font-bold text-black mb-8">Contact Us</h1>
 
             <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    className="space-y-2 sm:space-y-4 lg:space-y-6"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Full Name
@@ -39,11 +36,13 @@ const Contact = () => {
                                 required: "Full Name is required",
                             })}
                         />
-                        {errors.fullName && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.fullName.message}
-                            </p>
-                        )}
+                        <div className="h-5">
+                            {errors.fullName && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.fullName.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <div>
@@ -60,12 +59,20 @@ const Contact = () => {
                                     message: "Phone must contain only numbers",
                                 },
                             })}
+                            onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                    /\D/g,
+                                    ""
+                                );
+                            }}
                         />
-                        {errors.phone && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.phone.message}
-                            </p>
-                        )}
+                        <div className="h-5">
+                            {errors.phone && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.phone.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <div>
@@ -83,11 +90,13 @@ const Contact = () => {
                                 },
                             })}
                         />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.email.message}
-                            </p>
-                        )}
+                        <div className="h-5">
+                            {errors.email && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.email.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <div>
@@ -99,17 +108,23 @@ const Contact = () => {
                             placeholder="Your message..."
                             {...register("message", {
                                 required: "Message is required",
-                                maxLength: 300,
+                                maxLength: {
+                                    value: 300,
+                                    message:
+                                        "Message must be less than 300 characters",
+                                },
                             })}
                         ></textarea>
                         <div className="text-right text-gray-500 text-xs">
                             Max 300 characters
                         </div>
-                        {errors.message && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.message.message}
-                            </p>
-                        )}
+                        <div className="h-5">
+                            {errors.message && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.message.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <Button
@@ -120,8 +135,8 @@ const Contact = () => {
                     />
                 </form>
 
-                {/* Photo Section */}
-                <div className="flex items-center justify-center bg-gray-200 rounded-lg w-full h-full">
+                {/* Photo Section - Visible only on large screens */}
+                <div className="hidden lg:flex items-center justify-center bg-gray-200 rounded-lg w-full h-full">
                     <img
                         src="src/assets/pexels-photo-3184287.jpeg"
                         alt="Contact Illustration"
