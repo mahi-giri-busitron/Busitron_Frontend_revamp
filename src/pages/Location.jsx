@@ -35,7 +35,7 @@ const Location = () => {
             Our Offices
         </h1>
 
-        <section className="flex flex-col md:grid md:grid-cols-2 gap-14 md:mx-14 mx-10">
+        <section className="flex flex-col md:grid md:grid-cols-2 gap-14 md:mx-16 mx-10">
             {arr.map((item)=>(
             <div className="flex flex-col sm:flex-col md:block">
                 <img src={item.img} className="rounded-lg w-full" />
@@ -59,7 +59,7 @@ const Location = () => {
                 <div className="md:my-0 my-2">
                     <iframe
                         src={item.frame}
-                        width="300"
+                        width="270"
                         height="300"
                         className="border-0 w-full rounded-lg"
                         allowFullScreen
