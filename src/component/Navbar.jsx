@@ -62,7 +62,7 @@ const Navbar = () => {
                     MyLogo
                 </Link>
 
-                <ul className="hidden md:flex space-x-6 lg:space-x-10 font-semibold text-lg">
+                <ul className="hidden md:flex md:space-x-6 md:text-xs lg:text-base lg:space-x-10 font-semibold text-lg">
                     {navLinks.map((nav) => (
                         <li key={nav.id}>
                             <span
