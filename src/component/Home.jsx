@@ -9,12 +9,24 @@ import Contact from "../pages/Contact.jsx";
 const Home = () => {
     return (
         <React.Fragment>
-            <Homepage />
-            <About />
-            <Service />
-            <Projects />
-            <Location />
-            <Contact />
+            <div id="home">
+                <Homepage />
+            </div>
+            <div id="about">
+                <About />
+            </div>
+            <div id="services">
+                <Service />
+            </div>
+            <div id="projects">
+                <Projects />
+            </div>
+            <div id="location">
+                <Location />
+            </div>
+            <div id="contact">
+                <Contact />
+            </div>
         </React.Fragment>
     );
 };
