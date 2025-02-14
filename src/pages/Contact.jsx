@@ -13,7 +13,6 @@ const Contact = () => {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log("Form Data:", data);
         reset();
     };
 
