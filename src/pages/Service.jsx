@@ -35,14 +35,14 @@ const ServicesPage = () => {
     return (
         <div className="bg-white px-6 py-12">
             <div className="flex justify-center items-start py-6">
-                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 text-center">
+                <h1 className="text-4xl font-bold text-gray-900 text-center">
                     Our Services
                 </h1>
             </div>
 
             <div className="max-w-4xl mx-auto text-center mb-12">
                 <div className="group w-fit mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold text-purple-800 cursor-pointer py-3">
+                    <h2 className="text-1xl md:text-3xl font-bold text-purple-800 cursor-pointer py-3">
                         Why Choose Our Investment Services?
                     </h2>
                     <hr className="w-16 border-amber-500 border-2 mb-4 transition-all duration-300 group-hover:w-full" />

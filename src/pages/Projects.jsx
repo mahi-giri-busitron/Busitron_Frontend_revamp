@@ -156,13 +156,13 @@ const Projects = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-700 p-6">
+        <div className="min-h-screen bg-gray-100 p-6">
             <div className="container xs-p-0 md-px-5 py-24 mx-auto max-w-[1240px]">
                 <div className="container mx-auto  text-center p-3 pb-5">
-                    <h2 className="text-4xl font-bold text-white ">
+                    <h2 className="text-4xl font-bold ">
                         Our Projects
                     </h2>
-                    <p className="mt-4 text-gray-100 max-w-2xl mx-auto">
+                    <p className="mt-4 max-w-2xl mx-auto">
                         We offer a comprehensive solution for top-quality web
                         design and development services. Our customized,
                         budget-friendly web design options are tailored to meet

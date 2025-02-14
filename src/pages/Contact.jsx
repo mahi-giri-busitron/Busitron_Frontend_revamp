@@ -21,7 +21,7 @@ const Contact = () => {
 
     return (
         <div className="h-auto flex flex-col items-center justify-center p-5">
-            <h1 className="text-3xl font-bold text-black mb-8">Contact Us</h1>
+            <h1 className="text-4xl font-bold text-black mb-8">Contact Us</h1>
             <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <form className="space-y-2 sm:space-y-4 lg:space-y-2" onSubmit={handleSubmit(onSubmit)}>
                     {/* Full Name Field */}
