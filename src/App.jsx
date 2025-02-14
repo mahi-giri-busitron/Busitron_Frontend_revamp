@@ -1,45 +1,51 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Footer from "./component/Footer.jsx";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { scroller } from "react-scroll";
 import Navbar from "./component/Navbar.jsx";
-import NotFoundpage from "./pages/NotFoundpage.jsx";
-import "./index.css";
+import Footer from "./component/Footer.jsx";
+import Home from "./component/Home.jsx";
 import Signin from "./component/Signin.jsx";
+import NotFoundpage from "./pages/NotFoundpage.jsx";
 import PrivateRoute from "./component/PrivateRoute.jsx";
 import Dashboard from "./component/Dashboard.jsx";
-import { useState, useEffect } from "react";
-import Home from "./component/Home.jsx";
 
 function App() {
-    const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
-    const [darkMode, setDarkMode] = useState(prefersDark);
-
-    // Apply theme globally
+    const location = useLocation();
     useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
+        const section = new URLSearchParams(location.search).get("scrollTo");
+
+        if (section) {
+            const scrollToSection = () => {
+                const targetElement = document.getElementById(section);
+                if (targetElement) {
+                    scroller.scrollTo(section, {
+                        duration: 800,
+                        smooth: "easeInOutQuart",
+                        offset: -80, // Adjust for fixed navbar
+                    });
+                } else {
+                    console.warn(`Element with ID '${section}' not found.`);
+                }
+            };
+            setTimeout(scrollToSection, 500);
         }
-    }, [darkMode]);
+    }, [location]);
 
     return (
-        <Router>
-            <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+        <>
+            <Navbar />
             <div className="pt-20">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
-                    <Route path="*" element={<NotFoundpage />} />
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
+                    <Route path="*" element={<NotFoundpage />} />
                 </Routes>
             </div>
-
             <Footer />
-        </Router>
+        </>
     );
 }
 

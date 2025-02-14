@@ -1,11 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Link as ScrollLink } from "react-scroll";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { scroller } from "react-scroll";
 import "primeicons/primeicons.css";
 
-const Navbar = ({ darkMode, setDarkMode }) => {
-    const [scrolled, setScrolled] = useState(false);
-    const [toggle, setToggle] = useState(false);
+const Navbar = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [scrolling, setScrolling] = useState(false);
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location]);
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolling(window.scrollY > 50);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const handleNavClick = (nav) => {
+        setMenuOpen(false);
+
+        const scrollToSection = () => {
+            const targetElement = document.getElementById(nav.id);
+            if (targetElement) {
+                scroller.scrollTo(nav.id, {
+                    duration: 600,
+                    smooth: "easeInOutQuart",
+                    offset: -80,
+                });
+            } else {
+                console.warn(`Element with ID '${nav.id}' not found.`);
+            }
+        };
+
+        if (location.pathname === "/") {
+            setTimeout(scrollToSection, 300);
+        } else {
+            navigate(`/?scrollTo=${nav.id}`);
+        }
+    };
 
     const navLinks = [
         { id: "home", title: "Home" },
@@ -16,134 +51,82 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         { id: "contact", title: "Contact" },
     ];
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     return (
         <nav
             className={`fixed top-0 left-0 w-full p-4 z-50 transition-all duration-300 ${
-                scrolled
-                    ? "bg-black bg-opacity-50 backdrop-blur-md shadow-md"
-                    : "bg-transparent"
+                scrolling ? "bg-white shadow-md" : "bg-transparent"
             }`}
         >
-            <div className="container mx-auto flex justify-between items-center">
-                {/* Logo */}
-                <Link
-                    to="/"
-                    className="text-2xl font-bold text-[#00715D] dark:text-white"
-                >
+            <div className="container mx-auto flex justify-between items-center px-4 md:px-8">
+                <Link to="/" className="text-2xl font-bold text-blue-600">
                     MyLogo
                 </Link>
 
-                {/* Desktop Navigation */}
-                <ul className="hidden md:flex space-x-8 font-semibold text-lg mx-auto">
+                <ul className="hidden md:flex space-x-6 lg:space-x-10 font-semibold text-lg">
                     {navLinks.map((nav) => (
                         <li key={nav.id}>
-                            <ScrollLink
-                                to={nav.id}
-                                smooth={true}
-                                duration={500}
-                                className={`cursor-pointer hover:text-[#00715D] transition capitalize ${
-                                    scrolled || darkMode
-                                        ? "text-white"
-                                        : "text-gray-900"
-                                }`}
+                            <span
+                                className="cursor-pointer hover:text-blue-500 transition capitalize text-gray-900"
+                                onClick={() => handleNavClick(nav)}
                             >
                                 {nav.title}
-                            </ScrollLink>
+                            </span>
                         </li>
                     ))}
                 </ul>
 
-                {/* Right Side - Theme Toggle & Login Button */}
-                <div className="flex items-center space-x-6">
-                    {/* Dark Mode Toggle */}
-                    <button
-                        onClick={() => setDarkMode(!darkMode)}
-                        className="relative flex items-center justify-center w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full p-1 transition-all duration-300 cursor-pointer"
+                <div className="flex items-center space-x-4 sm:space-x-6">
+                    <Link
+                        to="/login"
+                        className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                     >
-                        <div
-                            className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transform transition-all duration-300 ${
-                                darkMode
-                                    ? "translate-x-6 bg-[#00715D]"
-                                    : "bg-gray-800"
-                            }`}
-                        />
-                        <i
-                            className={`pi ${
-                                darkMode
-                                    ? "pi-moon text-[#00715D]"
-                                    : "pi-sun text-gray-800"
-                            } absolute left-7 transition-all duration-300`}
-                        />
-                    </button>
-
-                    {/* Login Button */}
-                    <button className="text-white bg-blue-600 px-5 py-2 rounded-lg font-semibold transition duration-300 ease-in-out hover:bg-blue-700 hover:shadow-lg cursor-pointer">
                         Login
-                    </button>
-
-                    {/* Mobile Menu Toggle */}
+                    </Link>
                     <button
-                        onClick={() => setToggle(!toggle)}
-                        className="md:hidden cursor-pointer"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        className="md:hidden text-2xl text-blue-600"
                     >
                         <i
                             className={`pi ${
-                                toggle ? "pi-times" : "pi-bars"
-                            } text-2xl text-[#00715D]`}
+                                menuOpen ? "pi-times" : "pi-bars"
+                            }`}
                         />
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Sidebar Menu */}
             <div
-                className={`fixed top-0 right-0 h-full w-64 bg-black bg-opacity-90 z-50 transform ${
-                    toggle ? "translate-x-0" : "translate-x-full"
-                } transition-transform duration-300 md:hidden`}
+                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${
+                    menuOpen ? "translate-x-0" : "translate-x-full"
+                }`}
             >
-                <div className="flex flex-col p-6">
-                    {/* Close Button */}
-                    <button
-                        onClick={() => setToggle(false)}
-                        className="self-end mb-4 cursor-pointer"
+                <button
+                    onClick={() => setMenuOpen(false)}
+                    className="absolute top-4 right-4 text-2xl text-gray-700"
+                >
+                    <i className="pi pi-times" />
+                </button>
+
+                <ul className="flex flex-col mt-4 space-y-4 text-lg font-semibold px-4">
+                    {navLinks.map((nav) => (
+                        <li key={nav.id}>
+                            <span
+                                className="block py-2 hover:text-blue-500 transition capitalize text-gray-900"
+                                onClick={() => handleNavClick(nav)}
+                            >
+                                {nav.title}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="mt-4 px-4">
+                    <Link
+                        to="/login"
+                        className="block w-full px-4 py-2 text-center rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                     >
-                        <i className="pi pi-times text-2xl text-white" />
-                    </button>
-
-                    {/* Mobile Nav Links */}
-                    <ul className="flex flex-col space-y-6 text-lg">
-                        {navLinks.map((nav) => (
-                            <li key={nav.id}>
-                                <ScrollLink
-                                    to={nav.id}
-                                    smooth={true}
-                                    duration={500}
-                                    className="cursor-pointer hover:text-[#00715D] transition text-white"
-                                    onClick={() => setToggle(false)}
-                                >
-                                    {nav.title}
-                                </ScrollLink>
-                            </li>
-                        ))}
-                    </ul>
-
-                    {/* Mobile Login Button */}
-                    <div className="mt-6">
-                        <button
-                            className="block w-full text-center text-white bg-blue-600 px-5 py-2 rounded-lg font-semibold transition duration-300 ease-in-out hover:bg-blue-700 hover:shadow-lg cursor-pointer"
-                            onClick={() => setToggle(false)}
-                        >
-                            Login
-                        </button>
-                    </div>
+                        Login
+                    </Link>
                 </div>
             </div>
         </nav>
