@@ -96,7 +96,7 @@ const Navbar = () => {
             </div>
 
             <div
-                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${
+                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 md:hidden ${
                     menuOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
@@ -107,9 +107,9 @@ const Navbar = () => {
                     <i className="pi pi-times" />
                 </button>
 
-                <ul className="flex flex-col mt-4 space-y-4 text-lg font-semibold px-4">
+                <ul className="flex flex-col mt-4 space-y-4 text-md font-semibold px-6 pt-10">
                     {navLinks.map((nav) => (
-                        <li key={nav.id}>
+                        <li key={nav.id} className="!mb-0">
                             <span
                                 className="block py-2 hover:text-blue-500 transition capitalize text-gray-900"
                                 onClick={() => handleNavClick(nav)}
