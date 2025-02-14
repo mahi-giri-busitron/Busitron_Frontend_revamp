@@ -43,9 +43,11 @@
     padding: 8px 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 10px;
-
     color: #00715d;
     border: 3px solid #00715d;
+    height: 100%;
+    max-height: 185px;
+    overflow: auto;
 }
 
 .product .product_wrapper:hover {
@@ -89,3 +91,26 @@ body {
     background-color: #121215;
     color: #ffffff;
 }
+
+/* scrollbar   */
+
+::-webkit-scrollbar {
+    width: 8px;
+    /* border-radius: 50px; */
+display: none;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }

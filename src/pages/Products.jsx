@@ -6,28 +6,28 @@ const data = [
         icon: "pi pi-apple",
         name: "Support",
         description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!  Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!  ",
     },
     {
         id: 2,
         icon: " pi pi-graduation-cap",
         name: "Education",
         description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!  Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! ",
     },
     {
         id: 3,
         icon: "pi pi-user",
         name: "Volunteers",
         description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!  Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! ",
     },
     {
         id: 4,
         icon: "pi pi-box",
         name: "Donation",
         description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!",
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic!  Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, hic! ",
     },
 ];
 
@@ -35,7 +35,7 @@ const Products = () => {
     return (
         <div className="product h-auto bg-white ">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-center">
                     {data.map((item, index) => (
                         <div key={index} className="product_card p-4 w-full">
                             <div className="product_wrapper bg-white text-center">
