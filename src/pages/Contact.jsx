@@ -7,28 +7,27 @@ const Contact = () => {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
         reset,
     } = useForm();
 
     const onSubmit = (data) => {
-        reset(); // Reset the form after successful submission
+        console.log("Form Data:", data);
+        reset();
     };
+
+    const message = watch("message", ""); // Watch the message input
+    const remainingChars = 300 - message.length;
 
     return (
         <div className="h-auto flex flex-col items-center justify-center p-5">
-            {/* Contact Us Heading */}
             <h1 className="text-3xl font-bold text-black mb-8">Contact Us</h1>
-
             <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <form
-                    className="space-y-2 sm:space-y-4 lg:space-y-6"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
+                <form className="space-y-2 sm:space-y-4 lg:space-y-2" onSubmit={handleSubmit(onSubmit)}>
+                    {/* Full Name Field */}
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">
-                            Full Name
-                        </label>
+                        <label className="block text-gray-700 font-medium mb-1">Full Name</label>
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="Alex Jordan"
@@ -38,17 +37,14 @@ const Contact = () => {
                         />
                         <div className="h-5">
                             {errors.fullName && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.fullName.message}
-                                </p>
+                                <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
                             )}
                         </div>
                     </div>
 
+                    {/* Phone Field */}
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">
-                            Phone
-                        </label>
+                        <label className="block text-gray-700 font-medium mb-1">Phone</label>
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="Phone"
@@ -60,25 +56,19 @@ const Contact = () => {
                                 },
                             })}
                             onInput={(e) => {
-                                e.target.value = e.target.value.replace(
-                                    /\D/g,
-                                    ""
-                                );
+                                e.target.value = e.target.value.replace(/\D/g, "");
                             }}
                         />
                         <div className="h-5">
                             {errors.phone && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.phone.message}
-                                </p>
+                                <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
                             )}
                         </div>
                     </div>
 
+                    {/* Email Field */}
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">
-                            Email
-                        </label>
+                        <label className="block text-gray-700 font-medium mb-1">Email</label>
                         <InputText
                             className="w-full p-inputtext-sm"
                             placeholder="name@example.com"
@@ -92,41 +82,41 @@ const Contact = () => {
                         />
                         <div className="h-5">
                             {errors.email && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.email.message}
-                                </p>
+                                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                             )}
                         </div>
                     </div>
 
+                    {/* Message Field */}
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">
-                            Message
-                        </label>
+                        <label className="block text-gray-700 font-medium mb-1">Message</label>
                         <textarea
-                            className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                             placeholder="Your message..."
                             {...register("message", {
                                 required: "Message is required",
                                 maxLength: {
                                     value: 300,
-                                    message:
-                                        "Message must be less than 300 characters",
+                                    message: "Message must be less than 300 characters",
+                                },
+                                onChange: (e) => {
+                                    if (e.target.value.length > 300) {
+                                        e.target.value = e.target.value.slice(0, 300);
+                                    }
                                 },
                             })}
                         ></textarea>
-                        <div className="text-right text-gray-500 text-xs">
-                            Max 300 characters
-                        </div>
-                        <div className="h-5">
-                            {errors.message && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.message.message}
-                                </p>
-                            )}
+                        <div className="text-xs flex justify-between items-center">
+                            <span className="text-red-500">
+                                {errors.message?.type === "required" && errors.message.message}
+                            </span>
+                            <span className={remainingChars > 0 ? "text-gray-500" : "text-red-500"}>
+                                {remainingChars > 0 ? remainingChars : "You have reached your limit"}
+                            </span>
                         </div>
                     </div>
 
+                    {/* Submit Button */}
                     <Button
                         type="submit"
                         label="Send Message"
@@ -148,4 +138,4 @@ const Contact = () => {
     );
 };
 
-export default Contact;
+export default Contact; 
