@@ -8,13 +8,9 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [scrolling, setScrolling] = useState(false);
-
-    // Close menu when route changes
     useEffect(() => {
         setMenuOpen(false);
     }, [location]);
-
-    // Change navbar background on scroll
     useEffect(() => {
         const handleScroll = () => {
             setScrolling(window.scrollY > 50);
@@ -23,9 +19,8 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Handle navigation click (scroll or route change)
     const handleNavClick = (nav) => {
-        setMenuOpen(false); // Close mobile menu
+        setMenuOpen(false);
 
         const scrollToSection = () => {
             const targetElement = document.getElementById(nav.id);
@@ -41,7 +36,6 @@ const Navbar = () => {
         };
 
         if (location.pathname === "/") {
-            // Delay scrolling slightly to ensure the element is rendered
             setTimeout(scrollToSection, 300);
         } else {
             navigate(`/?scrollTo=${nav.id}`);
@@ -68,7 +62,6 @@ const Navbar = () => {
                     MyLogo
                 </Link>
 
-                {/* Desktop Nav Links */}
                 <ul className="hidden md:flex space-x-6 lg:space-x-10 font-semibold text-lg">
                     {navLinks.map((nav) => (
                         <li key={nav.id}>
@@ -82,7 +75,6 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                {/* Login Button & Mobile Menu */}
                 <div className="flex items-center space-x-4 sm:space-x-6">
                     <Link
                         to="/login"
@@ -103,7 +95,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             <div
                 className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${
                     menuOpen ? "translate-x-0" : "translate-x-full"

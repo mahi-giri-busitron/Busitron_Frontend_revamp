@@ -11,8 +11,6 @@ import Dashboard from "./component/Dashboard.jsx";
 
 function App() {
     const location = useLocation();
-
-    // Scroll to section when navigating with query parameter
     useEffect(() => {
         const section = new URLSearchParams(location.search).get("scrollTo");
 
@@ -29,8 +27,6 @@ function App() {
                     console.warn(`Element with ID '${section}' not found.`);
                 }
             };
-
-            // Wait for the DOM to fully load before scrolling
             setTimeout(scrollToSection, 500);
         }
     }, [location]);
@@ -40,16 +36,11 @@ function App() {
             <Navbar />
             <div className="pt-20">
                 <Routes>
-                    {/* Public Routes */}
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
-
-                    {/* Private Routes */}
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
-
-                    {/* 404 Not Found Route */}
                     <Route path="*" element={<NotFoundpage />} />
                 </Routes>
             </div>
