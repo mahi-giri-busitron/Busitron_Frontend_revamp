@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const EnterEmailForResetPassword = () => {
     return (
@@ -16,8 +17,11 @@ const EnterEmailForResetPassword = () => {
                         className="w-full p-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                         placeholder="Enter your Email"
                     />
-                    <button className=" p-15 w-full mt-8 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                    <button className="p-15 w-full mt-8 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition">
                         Submit
+                    </button>
+                    <button className="pt-4 w-full hover:text-blue-500">
+                        <Link to={"/signin"}>Back to signin</Link>
                     </button>
                 </div>
             </div>
