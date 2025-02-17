@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { InputOtp } from "primereact/inputotp";
 import { Button } from "primereact/button";
 
-
-
 const maskEmail = (email) => {
     const [start, end] = [email.slice(0, 2), email.slice(-2)];
     const domain = email.split("@")[1];
@@ -20,19 +18,18 @@ const OtpVerification = () => {
             <h1 className="p-4 font-bold text-2xl mb-6 text-blue-500">
                 User Verification
             </h1>
-
-            <div className="bg-white justify-center flex flex-col items-center p-3 rounded-lg shadow-lg max-w-lg lg:w-full sm:w-[800px] sm:h-[370px] text-center transform transition-transform duration-500 hover:scale-105">
-                <h2 className="font-semibold text-xl text-gray-700 mb-2">
+            <div className="bg-white justify-center flex flex-col py-7 items-center rounded-lg shadow-lg max-w-lg lg:w-full text-center transform transition-transform duration-500 hover:scale-105 md:w-full ">
+                <h2 className="m-1 font-semibold text-xl text-gray-700 ">
                     Authenticate Your Account
                 </h2>
 
-                <p className="text-gray-600 block">
+                <p className="m-1 text-gray-600 block">
                     Please enter the code sent to
                 </p>
-                <span className="font-semibold text-blue-500">
+                <span className="m-1 font-semibold text-blue-500">
                     {maskedEmail}
                 </span>
-                <div className=" p-3 flex justify-center mb-6">
+                <div className="px-2 flex justify-center mb-6">
                     <InputOtp
                         value={token}
                         integerOnly
@@ -43,16 +40,18 @@ const OtpVerification = () => {
                     />
                 </div>
 
-                <div className="flex justify-between items-center mt-6 w-full px-10">
+                <div className="flex sm:justify-around justify-between  items-center mt-6 ">
                     <Button
                         label="Resend Code"
                         link
                         className="p-0 transition-colors duration-300 hover:text-blue-500"
                     />
-                    <Button
-                        label="Submit"
-                        className="transition-transform duration-300 hover:scale-105"
-                    />
+                    <div className="sm:m-1">
+                        <Button
+                            label="Submit"
+                            className="transition-transform duration-300 hover:scale-105"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
