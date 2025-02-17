@@ -114,16 +114,16 @@ const services = [
 const Projects = () => {
     const ProjectTemplate1 = (service) => {
         return (
-            <div className="group rounded-xl border-2  border-white mx-[20px] text-center service-item bg-white  overflow-hidden  hover:border-cyan-500  hover:border-2  flex flex-col  max-w-[350px] h-full shadow-lg hover:shadow-lg transition-shadow duration-300">
-                <div className="img  ">
+            <div className="group rounded-xl border-2 border-white mx-[0px] sm:mx-[10px]  md:mx-[20px]  text-center service-item bg-white overflow-hidden hover:border-cyan-500 hover:border-2 flex flex-col  h-full shadow-lg hover:shadow-lg transition-shadow duration-300">
+                <div className="img">
                     <img
                         src={service.image}
                         alt={service.title}
-                        className="w-full aspect-3/2 object-cover   transition-timing-function: linear; duration-800  group-hover:scale-120  transition-transform "
+                        className="w-full aspect-3/2 object-cover transition-timing-function: linear; duration-800 group-hover:scale-120 transition-transform"
                     />
                 </div>
-                <div className=" details text-center p-6  relative flex flex-col justify-between   ">
-                    <div className="icon w-18 h-18 bg-blue-500 text-white rounded-full flex items-center justify-center border-4 border-white shadow-lg -mt-10 mx-auto group-hover:border-blue-500 group-hover:bg-white group-hover:text-blue-500 transition-colors duration-300">
+                <div className="details text-center p-4 relative flex flex-col justify-between">
+                    <div className="icon w-15 h-15 md:w-18 md:h-18 bg-blue-500 text-white rounded-full flex items-center justify-center border-4 border-white shadow-lg -mt-10 mx-auto group-hover:border-blue-500 group-hover:bg-white group-hover:text-blue-500 transition-colors duration-300">
                         <i className={`${service.icon} text-2xl`}></i>
                     </div>
                     <h3 className="md:text-lg xl:text-xl font-semibold mt-4 mb-2">
@@ -139,7 +139,7 @@ const Projects = () => {
 
     const responsiveOptions = [
         {
-            breakpoint: "1200px",
+            breakpoint: "1500px",
             numVisible: 3,
             numScroll: 1,
         },
@@ -149,20 +149,20 @@ const Projects = () => {
             numScroll: 1,
         },
         {
-            breakpoint: "575px",
+            breakpoint: "639px",
             numVisible: 1,
             numScroll: 1,
         },
     ];
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <div className="container xs-p-0 md-px-5 py-12 mx-auto max-w-[1240px]">
+        <div className="  bg-gray-500">
+            <div className="container max-w-[1200px] xs-p-0 md-px-5 py-12  mx-auto  ">
                 <div className="container mx-auto  text-center p-3 pb-5">
-                    <h2 className="text-4xl font-bold ">
+                    <h2 className="text-4xl font-bold text-white ">
                         Our Projects
                     </h2>
-                    <p className="mt-4 max-w-2xl mx-auto">
+                    <p className="mt-4 text-gray-100 max-w-2xl mx-auto">
                         We offer a comprehensive solution for top-quality web
                         design and development services. Our customized,
                         budget-friendly web design options are tailored to meet
@@ -177,6 +177,7 @@ const Projects = () => {
                         numScroll={1}
                         responsiveOptions={responsiveOptions}
                         itemTemplate={ProjectTemplate1}
+                        showIndicators={false}
                     />
                 </div>
             </div>
