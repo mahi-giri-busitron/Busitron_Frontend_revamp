@@ -35,7 +35,7 @@ function App() {
     return (
         <>
             <Navbar />
-            <div className="pt-20">
+            <div className="pt-16">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
