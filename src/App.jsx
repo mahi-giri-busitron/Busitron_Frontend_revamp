@@ -9,6 +9,8 @@ import PrivateRoute from "./component/PrivateRoute.jsx";
 import Dashboard from "./component/Dashboard.jsx";
 import OtpVerification from "./pages/OtpVerification.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 
 function App() {
     const location = useLocation();
@@ -40,6 +42,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
                     <Route path="/otp-verification" element={<OtpVerification />} />
+                    <Route path="/enter-new-password" element={<ResetPassword />} />
+                    <Route path="/forgot-password" element={<EnterEmailForResetPassword />} />
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
