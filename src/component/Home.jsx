@@ -8,7 +8,6 @@ import Service from "../pages/Service.jsx";
 import Contact from "../pages/Contact.jsx";
 
 const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
     visible: {
         opacity: 1,
         y: 0,
