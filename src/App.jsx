@@ -4,7 +4,7 @@ import { scroller } from "react-scroll";
 import Navbar from "./component/Navbar.jsx";
 import Footer from "./component/Footer.jsx";
 import Home from "./component/Home.jsx";
-import Signin from "./component/Signin.jsx";
+import Signin from "./component/Signindemo.jsx";
 import NotFoundpage from "./pages/NotFoundpage.jsx";
 import PrivateRoute from "./component/PrivateRoute.jsx";
 import Dashboard from "./component/Dashboard.jsx";
@@ -21,7 +21,7 @@ function App() {
                     scroller.scrollTo(section, {
                         duration: 800,
                         smooth: "easeInOutQuart",
-                        offset: -80, // Adjust for fixed navbar
+                        offset: -80,
                     });
                 } else {
                     console.warn(`Element with ID '${section}' not found.`);

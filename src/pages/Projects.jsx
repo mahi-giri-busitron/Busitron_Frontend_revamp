@@ -156,8 +156,8 @@ const Projects = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <div className="container xs-p-0 md-px-5 py-24 mx-auto max-w-[1240px]">
+        <div className="min-h-screen bg-gray-100">
+            <div className="container xs-p-0 md-px-5 py-12 mx-auto max-w-[1240px]">
                 <div className="container mx-auto  text-center p-3 pb-5">
                     <h2 className="text-4xl font-bold ">
                         Our Projects

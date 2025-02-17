@@ -31,7 +31,7 @@ const Location = () => {
 
     return (
     <>
-        <h1 className="text-4xl text-center font-bold md:my-5 md:mx-14 my-4 mx-10">
+        <h1 className="text-4xl text-center font-bold md:my-8 md:mx-14 my-4 mx-10">
             Our Offices
         </h1>
 

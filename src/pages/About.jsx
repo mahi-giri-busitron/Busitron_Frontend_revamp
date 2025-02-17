@@ -70,7 +70,7 @@ const Section = ({ title, content, image, reverse }) => (
 const About = () => {
     return (
         <div className="min-h-screen bg-gray-200">
-            <div className="container px-5 py-24 mx-auto max-w-[1240px]">
+            <div className="container px-5 py-12 mx-auto max-w-[1240px]">
                 <section className="text-gray-600 body-font">
                     <div className="container px-5 lg:py-20 mx-auto flex flex-wrap items-center">
                         <div className="flex flex-wrap lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
