@@ -8,6 +8,7 @@ import Signin from "./component/Signindemo.jsx";
 import NotFoundpage from "./pages/NotFoundpage.jsx";
 import PrivateRoute from "./component/PrivateRoute.jsx";
 import Dashboard from "./component/Dashboard.jsx";
+import OtpVerification from "./pages/OtpVerification.jsx";
 
 function App() {
     const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
+                    <Route path="/otp-verification" element={<OtpVerification />} />
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
