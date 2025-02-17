@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import Error from "../assets/images/error.jpg";
 
-const NotFoundpage = () => {
+const NotFoundPage = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -39,4 +39,4 @@ const NotFoundpage = () => {
     );
 };
 
-export default NotFoundpage;
+export default NotFoundPage;

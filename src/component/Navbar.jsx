@@ -217,7 +217,7 @@ const Navbar = () => {
 
                 <div className="flex items-center space-x-4 sm:space-x-6">
                     <Link
-                        to="/login"
+                        to="/signin"
                         className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                     >
                         Login
@@ -267,7 +267,7 @@ const Navbar = () => {
                         </ul>
                         <div className="mt-4">
                             <Link
-                                to="/login"
+                                to="/signin"
                                 className="block w-full px-4 py-2 text-center rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                             >
                                 Login

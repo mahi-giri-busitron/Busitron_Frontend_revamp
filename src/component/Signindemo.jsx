@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const Signin = () => {
+const Signindemo = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -83,4 +83,4 @@ const Signin = () => {
     );
 };
 
-export default Signin;
+export default Signindemo;

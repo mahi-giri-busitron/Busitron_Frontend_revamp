@@ -4,11 +4,11 @@ import { scroller } from "react-scroll";
 import Navbar from "./component/Navbar.jsx";
 import Footer from "./component/Footer.jsx";
 import Home from "./component/Home.jsx";
-import Signin from "./component/Signindemo.jsx";
-import NotFoundpage from "./pages/NotFoundpage.jsx";
+import Signin from "./component/Sign.jsx";
 import PrivateRoute from "./component/PrivateRoute.jsx";
 import Dashboard from "./component/Dashboard.jsx";
 import OtpVerification from "./pages/OtpVerification.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function App() {
     const location = useLocation();
@@ -43,7 +43,7 @@ function App() {
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
-                    <Route path="*" element={<NotFoundpage />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>
             <Footer />
