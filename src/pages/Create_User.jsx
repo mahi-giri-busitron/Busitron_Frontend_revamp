@@ -18,7 +18,6 @@ const Create_User = () => {
     const [preview, setPreview] = useState(null);
 
     const onSubmit = (data) => {
-        console.log("Form Data:", data);
         reset();
         setChecked(false);
         setPreview(null);
@@ -34,6 +33,8 @@ const Create_User = () => {
             reader.readAsDataURL(file);
         }
     };
+
+    const handleClick = () => {};
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
@@ -62,9 +63,7 @@ const Create_User = () => {
                             <label
                                 htmlFor="profilePicInput"
                                 className="absolute flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-full shadow-lg cursor-pointer right-0 bottom-0 transform translate-x-0 translate-y-0"
-                                onClick={() =>
-                                    console.log("Edit Profile Picture")
-                                }
+                                onClick={handleClick()}
                             >
                                 <i className="pi pi-pencil text-white text-lg"></i>
                             </label>
