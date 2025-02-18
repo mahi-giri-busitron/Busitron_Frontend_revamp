@@ -14,7 +14,7 @@ const OtpVerification = () => {
     const maskedEmail = maskEmail(email);
 
     return (
-        <div className="py-6 flex flex-col items-center lg:justify-center bg-gray-200 transition-all duration-500 ease-in-out px-4 sm:justify-start h-full">
+        <div className="py-14 flex flex-col items-center lg:justify-center bg-gray-200 transition-all duration-500 ease-in-out px-4 sm:justify-start h-full">
             <h1 className="p-4 font-bold text-2xl mb-6 text-blue-500">
                 User Verification
             </h1>

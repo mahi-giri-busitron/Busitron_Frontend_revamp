@@ -37,9 +37,8 @@ const Create_User = () => {
     const handleClick = () => {};
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-            <div className="w-3/3 max-w-4xl shadow-lg rounded-lg bg-white p-6 sm:p-8 my-4 sm:my-8 grid grid-cols-1 sm:grid-cols-1 gap-6">
-                {/* Profile Picture at the Top */}
+        <div className="flex justify-center items-center py-10 bg-gray-100 px-4">
+            <div className="w-1/2 max-w-4xl shadow-lg rounded-lg bg-white p-6 sm:p-8 my-4 sm:my-8 grid grid-cols-1 sm:grid-cols-1 gap-6">
                 <div className="col-span-2 flex justify-center">
                     <h1 className="font-semibold text-xl sm:text-2xl text-gray-800 mb-4">
                         Add your Details

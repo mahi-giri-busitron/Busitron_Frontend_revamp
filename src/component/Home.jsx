@@ -17,7 +17,7 @@ const sectionVariants = {
 
 const Home = () => {
     return (
-        <React.Fragment>
+        <div className="pt-12">
             {[
                 { id: "home", Component: Homepage },
                 { id: "about", Component: About },
@@ -37,7 +37,7 @@ const Home = () => {
                     <Component />
                 </motion.div>
             ))}
-        </React.Fragment>
+        </div>
     );
 };
 
