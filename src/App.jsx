@@ -11,6 +11,7 @@ import OtpVerification from "./pages/OtpVerification.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
+import Create_User from "./pages/Create_User.jsx";
 
 function App() {
     const location = useLocation();
@@ -41,7 +42,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<Signin />} />
-                    <Route path="/otp-verification" element={<OtpVerification />} />
+                    <Route path="/signin/otp-verification" element={<OtpVerification />} />
+                    <Route path="/signin/create-user" element={<Create_User />} />
+                    
                     <Route path="/enter-new-password" element={<ResetPassword />} />
                     <Route path="/forgot-password" element={<EnterEmailForResetPassword />} />
                     <Route element={<PrivateRoute />}>
