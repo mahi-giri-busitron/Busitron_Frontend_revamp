@@ -8,7 +8,7 @@ import Contact from "../pages/Contact.jsx";
 
 const Home = () => {
     return (
-        <div className="pt-12">
+        <div className="pt-10">
             <div id="home">
                 <Homepage />
             </div>

@@ -8,6 +8,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [scrolling, setScrolling] = useState(false);
+    const [activeTab, setActiveTab] = useState("home");
 
     useEffect(() => {
         setMenuOpen(false);
@@ -15,7 +16,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolling(window.scrollY > 50);
+            setScrolling(window.scrollY > 1);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -23,6 +24,7 @@ const Navbar = () => {
 
     const handleNavClick = (nav) => {
         setMenuOpen(false);
+        setActiveTab(nav.id);
         const scrollToSection = () => {
             const targetElement = document.getElementById(nav.id);
             if (targetElement) {
@@ -67,11 +69,15 @@ const Navbar = () => {
                     MyLogo
                 </Link>
 
-                <ul className="hidden md:flex space-x-3 lg:space-x-10 font-semibold text-base lg:text-lg">
+                <ul className="hidden md:flex space-x-3 lg:space-x-10 font-semibold text-base lg:text-lg md:text-sm md:space-x-4">
                     {navLinks.map((nav) => (
                         <li key={nav.id}>
                             <span
-                                className="cursor-pointer hover:text-blue-500 transition capitalize text-gray-900"
+                                className={`cursor-pointer hover:text-blue-500 transition capitalize ${
+                                    activeTab === nav.id
+                                        ? "text-blue-500"
+                                        : "text-gray-900"
+                                }`}
                                 onClick={() => handleNavClick(nav)}
                             >
                                 {nav.title}
@@ -110,11 +116,15 @@ const Navbar = () => {
                     >
                         <i className="pi pi-times" />
                     </button>
-                    <ul className="flex flex-col mt-4 space-y-2 text-lg font-semibold">
+                    <ul className="flex flex-col mt-8 space-y-5 text-md font-semibold">
                         {navLinks.map((nav) => (
                             <li key={nav.id}>
                                 <span
-                                    className="block py-2 hover:text-blue-500 transition capitalize text-gray-900"
+                                    className={`cursor-pointer hover:text-blue-500 transition capitalize ${
+                                        activeTab === nav.id
+                                            ? "text-blue-500"
+                                            : "text-gray-900"
+                                    }`}
                                     onClick={() => handleNavClick(nav)}
                                 >
                                     {nav.title}
@@ -122,11 +132,11 @@ const Navbar = () => {
                             </li>
                         ))}
                     </ul>
-                    <div className="mt-4">
+                    <div className="mt-6">
                         {!hideLoginPaths.includes(location.pathname) && (
                             <Link
                                 to="/signin"
-                                className="block w-[40%] px-1 py-1 text-center rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                                className="block w-1/2 py-2 text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
                             >
                                 Login
                             </Link>
