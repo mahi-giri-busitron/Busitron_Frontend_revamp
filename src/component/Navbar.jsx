@@ -52,10 +52,12 @@ const Navbar = () => {
     ];
 
     const hideLoginPaths = [
-        "/create-profile",
+        "/signin",
+        "/signin/otp-verification",
+        "/signin/create-user",
         "/otp-verification",
+        "/enter-new-password",
         "/forgot-password",
-        "/signin", // Hides login button when on the sign-in page
     ];
 
     return (
