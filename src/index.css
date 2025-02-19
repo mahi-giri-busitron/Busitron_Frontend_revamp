@@ -120,3 +120,7 @@ body {
 .p-carousel-prev-icon {
     color: #ffffff;
 }
+
+.Dropdown .p-dropdown .p-dropdown-trigger {
+    width: 33px;
+}
