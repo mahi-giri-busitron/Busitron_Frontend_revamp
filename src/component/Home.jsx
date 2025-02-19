@@ -8,7 +8,7 @@ import Contact from "../pages/Contact.jsx";
 
 const Home = () => {
     return (
-        <>
+        <div className="pt-12">
             <div id="home">
                 <Homepage />
             </div>
@@ -27,7 +27,7 @@ const Home = () => {
             <div id="contact">
                 <Contact />
             </div>
-        </>
+        </div>
     );
 };
 
