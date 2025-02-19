@@ -1,5 +1,5 @@
 import React from "react";
-
+import { motion } from 'framer-motion'
 import { Button } from "primereact/button";
 import Products from "./Products.jsx";
 import EventPage from "./EventPage.jsx";
@@ -7,39 +7,68 @@ import EventPage from "./EventPage.jsx";
 const Homepage = () => {
     return (
         <>
-            <div className=" h-auto bg-white">
+            <div className="h-auto bg-white">
                 <div className="container mx-auto px-4">
-                    <div className="flex flex-wrap items-center ">
+                    <div className="flex flex-wrap items-center">
                         {/* Left Content */}
-                        <div className="w-full md:w-1/2 ">
+                        <motion.div
+                            className="w-full md:w-1/2"
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                        >
                             <div className="left_content p-4 my-4">
-                                <h6 className="text-[#00715D] text-lg md:text-xl font-bold mb-3">
+                                <motion.h6
+                                    className="text-[#00715D] text-lg md:text-xl font-bold mb-3"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    viewport={{ once: true }}
+                                >
                                     Speak Hope for the Homeless
-                                </h6>
-                                <h1 className="text-4xl md:text-3xl lg:text-[65px] leading-none font-bold my-4">
+                                </motion.h6>
+                                <motion.h1
+                                    className="text-4xl md:text-3xl lg:text-[65px] leading-none font-bold my-4"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.1 }}
+                                    viewport={{ once: true }}
+                                >
                                     Donate to children & senior citizens.
-                                </h1>
-                                <p className="my-4 text-sm md:text-base">
+                                </motion.h1>
+                                <motion.p
+                                    className="my-4 text-sm md:text-base"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.1 }}
+                                    viewport={{ once: true }}
+                                >
                                     Lorem ipsum dolor sit amet consectetur
                                     adipisicing elit. Sapiente vero omnis
                                     excepturi, reiciendis aperiam officia.
-                                </p>
-                                <div className="button_wrapper_left flex gap-2 flex-wrap   m-0 md:m-4">
-                                    <Button
-                                        label="Donate Now"
-                                        className="rounded-[20px]"
-                                    />
-                                    <Button
-                                        label="Join Volunteers"
-                                        severity="success"
-                                        className="sm:!ml-0"
-                                    />
-                                </div>
+                                </motion.p>
+                                <motion.div
+                                    className="button_wrapper_left flex gap-2 flex-wrap m-0 md:m-4"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.1 }}
+                                    viewport={{ once: true }}
+                                >
+                                    <Button label="Donate Now" className="rounded-[20px]" />
+                                    <Button label="Join Volunteers" severity="success" className="sm:!ml-0" />
+                                </motion.div>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Right Content */}
-                        <div className="w-full md:w-1/2 ">
+                        <motion.div
+                            className="w-full md:w-1/2"
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5 }}
+                            viewport={{ once: true }}
+                        >
                             <div className="right-content p-4 my-4">
                                 <figure className="h-[250px] md:h-[350px] w-full">
                                     <img
@@ -49,11 +78,10 @@ const Homepage = () => {
                                     />
                                 </figure>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </div>
-
             <Products />
             <EventPage />
         </>
