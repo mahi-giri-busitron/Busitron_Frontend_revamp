@@ -44,121 +44,124 @@ const Location = () => {
                 Our Offices
             </motion.h1>
 
-            <section className="flex flex-col md:grid md:grid-cols-2 gap-14 md:mx-16 mx-10">
-                {arr.map((item, index) => (
-                    <motion.div
-                        key={index}
-                        className="flex flex-col sm:flex-col md:block bg-white p-5 rounded-lg shadow-lg"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: index * 0.2 }}
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        <motion.img
-                            src={item.img}
-                            className="rounded-lg w-full shadow-md"
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ duration: 0.6 }}
+            <div className="mx-auto px-2 max-w-[1240px]">
+                <section className="flex flex-col md:grid md:grid-cols-2 gap-14 md:mx-16 mx-10 lg:mx-10">
+                    {arr.map((item, index) => (
+                        <motion.div
+                            key={index}
+                            className="flex flex-col sm:flex-col md:block bg-white p-5 rounded-lg shadow-lg"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: index * 0.2 }}
                             whileHover={{ scale: 1.05 }}
-                        />
-
-                        <motion.div
-                            className="space-y-3 my-3"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 1 }}
                         >
-                            <motion.h2
-                                className="text-2xl font-bold"
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.4 }}
-                            >
-                                {item.name}
-                            </motion.h2>
+                            <motion.img
+                                src={item.img}
+                                className="rounded-lg w-full shadow-md"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 0.6 }}
+                                whileHover={{ scale: 1.05 }}
+                            />
 
-                            <motion.h3
-                                className="text-xl font-semibold"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.5 }}
+                            <motion.div
+                                className="space-y-3 my-3"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 1 }}
                             >
-                                {item.type}
-                            </motion.h3>
-
-                            <motion.p
-                                className="text-md font-sans"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.6 }}
-                            >
-                                {item.reg}
-                            </motion.p>
-
-                            <motion.p
-                                className="text-md font-serif"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.7 }}
-                            >
-                                {item.ad1}
-                            </motion.p>
-
-                            <motion.p
-                                className="text-md font-serif"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.8 }}
-                            >
-                                {item.ad2}
-                            </motion.p>
-
-                            <motion.p
-                                className="text-md"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.9 }}
-                            >
-                                {item.ad3}
-                            </motion.p>
-
-                            <motion.p
-                                className="text-md font-semibold"
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 1 }}
-                            >
-                                Tel:
-                                <a
-                                    href={`tel:${item.phone}`}
-                                    className="text-blue-600 ml-1"
+                                <motion.h2
+                                    className="text-2xl font-bold"
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.4 }}
                                 >
-                                    {item.phone}
-                                </a>
-                            </motion.p>
-                        </motion.div>
+                                    {item.name}
+                                </motion.h2>
 
-                        <motion.div
-                            className="md:my-0 my-2"
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
-                        >
-                            <motion.iframe
-                                src={item.frame}
-                                width="270"
-                                height="300"
-                                className="border-0 w-full rounded-lg"
-                                allowFullScreen
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
-                                whileHover={{ scale: 1.02 }}
-                            ></motion.iframe>
+                                <motion.h3
+                                    className="text-xl font-semibold"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.5 }}
+                                >
+                                    {item.type}
+                                </motion.h3>
+
+                                <motion.p
+                                    className="text-md font-sans"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.6 }}
+                                >
+                                    {item.reg}
+                                </motion.p>
+
+                                <motion.p
+                                    className="text-md font-serif"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.7 }}
+                                >
+                                    {item.ad1}
+                                </motion.p>
+
+                                <motion.p
+                                    className="text-md font-serif"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.8 }}
+                                >
+                                    {item.ad2}
+                                </motion.p>
+
+                                <motion.p
+                                    className="text-md"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.9 }}
+                                >
+                                    {item.ad3}
+                                </motion.p>
+
+                                <motion.p
+                                    className="text-md font-semibold"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 1 }}
+                                >
+                                    Tel:
+                                    <a
+                                        href={`tel:${item.phone}`}
+                                        className="text-blue-600 ml-1"
+                                    >
+                                        {item.phone}
+                                    </a>
+                                </motion.p>
+                            </motion.div>
+
+                            <motion.div
+                                className="md:my-0 my-2"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 0.8, delay: 0.3 }}
+                            >
+                                <motion.iframe
+                                    src={item.frame}
+                                    width="270"
+                                    height="300"
+                                    className="border-0 w-full rounded-lg"
+                                    allowFullScreen
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    whileHover={{ scale: 1.02 }}
+                                ></motion.iframe>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                ))}
-            </section>
+                    ))}
+                </section>
+            </div>
+           
         </motion.div>
     );
 };
