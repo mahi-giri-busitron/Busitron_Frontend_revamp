@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { countryCodes } from "../utils/countryCodes";
 
 const Create_User = () => {
     const {
@@ -16,8 +18,11 @@ const Create_User = () => {
 
     const [checked, setChecked] = useState(false);
     const [preview, setPreview] = useState(null);
+    const [selectedCode, setSelectedCode] = useState(
+        countryCodes.find((c) => c.code === "+91")
+    );
 
-    const onSubmit = (data) => {
+    const onSubmit = () => {
         reset();
         setChecked(false);
         setPreview(null);
@@ -37,36 +42,32 @@ const Create_User = () => {
     const handleClick = () => {};
 
     return (
-        <div className="flex justify-center items-center py-10 bg-gray-100 px-4">
-            <div className="w-1/2 max-w-4xl shadow-lg rounded-lg bg-white p-6 sm:p-8 my-4 sm:my-8 grid grid-cols-1 sm:grid-cols-1 gap-6">
-                <div className="col-span-2 flex justify-center">
-                    <h1 className="font-semibold text-xl sm:text-2xl text-gray-800 mb-4">
-                        Add your Details
-                    </h1>
-                </div>
-                <div className="col-span-2 flex flex-col items-center space-y-3">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-lg shadow-lg rounded-lg bg-white p-6 sm:p-8 my-2">
+                <h1 className="text-center font-semibold text-2xl text-gray-800 mb-4">
+                    Add your details
+                </h1>
+                <div className="flex flex-col items-center space-y-3">
                     <div className="relative">
                         {preview ? (
                             <img
                                 src={preview}
                                 alt="Profile"
-                                className="w-28 h-28 sm:w-36 sm:h-36 md:w-36 md:h-36 lg:w-52 lg:h-52 rounded-full object-cover border-4  border-gray-100 "
+                                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100"
                             />
                         ) : (
-                            <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-36 md:h-36 lg:w-52 lg:h-52 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-100">
-                                <i className="pi pi-user text-gray-400 text-5xl"></i>
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-100">
+                                <i className="pi pi-user text-gray-400 text-4xl"></i>
                             </div>
                         )}
 
-                        <div className="relative">
-                            <label
-                                htmlFor="profilePicInput"
-                                className="absolute flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-full shadow-lg cursor-pointer right-0 bottom-0 transform translate-x-0 translate-y-0"
-                                onClick={handleClick()}
-                            >
-                                <i className="pi pi-pencil text-white text-lg"></i>
-                            </label>
-                        </div>
+                        <label
+                            htmlFor="profilePicInput"
+                            className="absolute flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full shadow-lg cursor-pointer right-0 bottom-0"
+                            onClick={handleClick}
+                        >
+                            <i className="pi pi-pencil text-white text-lg"></i>
+                        </label>
                     </div>
 
                     <input
@@ -86,51 +87,91 @@ const Create_User = () => {
                     )}
                 </div>
 
-                {/* Form Section */}
-
-                {/* Left side */}
-                <div className="space-y-4 sm:px-4 md:px-6 lg:px-8">
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="space-y-3"
-                    >
-                        {/* Full Name */}
-                        <div className="flex flex-col items-start">
-                            <label className="font-medium text-gray-700">
-                                Full Name
-                            </label>
-                            <InputText
-                                type="text"
-                                {...register("fullName", {
-                                    required: "Full name is required",
-                                })}
-                                placeholder="Enter your Full Name"
-                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                            />
-                            <div className="h-4">
-                                {errors.fullName && (
-                                    <p className="text-red-500 text-xs mt-1">
-                                        {errors.fullName.message}
-                                    </p>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 mt-6"
+                >
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Full Name
+                        </label>
+                        <InputText
+                            {...register("fullName", {
+                                required: "Full name is required",
+                            })}
+                            placeholder="Tony Stark"
+                            className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+                        />
+                        {errors.fullName && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.fullName.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <label className="font-medium text-gray-700">
+                            Phone
+                        </label>
+                        <div className="flex flex-row gap-2 flex-nowrap items-center Dropdown">
+                            <Dropdown
+                                value={selectedCode}
+                                options={countryCodes}
+                                onChange={(e) => setSelectedCode(e.value)}
+                                placeholder="Select"
+                                className="sm:w-24 md:w-34 text-xs lg:text-sm"
+                                optionLabel="code"
+                                valueTemplate={(option) =>
+                                    option ? (
+                                        <div className="flex items-center gap-1">
+                                            <img
+                                                src={option.flag}
+                                                alt={option.name}
+                                                className="w-6 h-5 hidden sm:block"
+                                            />
+                                            <span className="text-xs lg:text-sm">
+                                                {option.code}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        "Select"
+                                    )
+                                }
+                                itemTemplate={(option) => (
+                                    <div className="flex items-center gap-1">
+                                        <img
+                                            src={option.flag}
+                                            alt={option.name}
+                                            className="w-6 h-5"
+                                        />
+                                        <span className="text-xs sm:text-sm">
+                                            {option.code}
+                                        </span>
+                                        <span className="text-xs sm:text-sm">
+                                            {option.name}
+                                        </span>
+                                    </div>
                                 )}
-                            </div>
-                        </div>
-
-                        {/* Phone */}
-                        <div className="flex flex-col">
-                            <label className="block text-gray-700 font-medium mb-1">
-                                Phone
-                            </label>
+                                filter
+                                filterBy="name"
+                            />
                             <InputText
                                 type="text"
-                                maxLength={10}
-                                placeholder="Enter 10-digit number"
+                                maxLength={selectedCode?.length || 10}
+                                placeholder={`Enter ${
+                                    selectedCode?.length || 10
+                                }-digit number`}
+                                className="w-full text-xs sm:text-sm placeholder:text-[12px] sm:placeholder:text-sm"
                                 {...register("phone", {
                                     required: "Phone number is required",
                                     pattern: {
-                                        value: /^\d{10}$/,
-                                        message:
-                                            "Phone number must be exactly 10 digits",
+                                        value: new RegExp(
+                                            `^\\d{${
+                                                selectedCode?.length || 10
+                                            }}$`
+                                        ),
+                                        message: `Phone number must be exactly ${
+                                            selectedCode?.length || 10
+                                        } digits`,
                                     },
                                 })}
                                 onChange={(e) => {
@@ -138,10 +179,13 @@ const Create_User = () => {
                                         /\D/g,
                                         ""
                                     );
-                                    if (numericValue.length > 10) {
+                                    if (
+                                        numericValue.length >
+                                        (selectedCode?.length || 10)
+                                    ) {
                                         numericValue = numericValue.slice(
                                             0,
-                                            10
+                                            selectedCode.length
                                         );
                                     }
                                     setValue("phone", numericValue, {
@@ -151,46 +195,37 @@ const Create_User = () => {
                                 }}
                                 value={watch("phone") || ""}
                             />
-                            <div className="h-4">
-                                {errors.phone && (
-                                    <p className="text-red-500 text-xs mt-1">
-                                        {errors.phone.message}
-                                    </p>
-                                )}
-                            </div>
                         </div>
+                        {errors.phone && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.phone.message}
+                            </p>
+                        )}
+                    </div>
 
-                        {/* Email */}
-                        <div className="flex flex-col">
-                            <label className="font-medium text-gray-700">
-                                Email
-                            </label>
-                            <InputText
-                                placeholder="name@example.com"
-                                {...register("email", {
-                                    required: "Email is required",
-                                    pattern: {
-                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                        message: "Invalid email address",
-                                    },
-                                })}
-                            />
-                            <div className="h-5">
-                                {errors.email && (
-                                    <p className="text-red-500 text-xs mt-1">
-                                        {errors.email.message}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                {/* Submit Section */}
-                <div className="col-span-2 flex flex-col items-center">
-                    <div className="py-1">
+                    {/* Email Field */}
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Email
+                        </label>
+                        <InputText
+                            placeholder="name@example.com"
+                            {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "Invalid email address",
+                                },
+                            })}
+                        />
+                        {errors.email && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.email.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex items-center">
                         <Checkbox
-                            inputId="terms"
                             checked={checked}
                             {...register("terms", {
                                 required: "You must agree to the terms",
@@ -201,27 +236,27 @@ const Create_User = () => {
                                 trigger("terms");
                             }}
                         />
-                        <label htmlFor="terms" className="px-1 text-gray-700">
-                            I agree to the terms and conditions
+                        <label className="px-1 text-gray-700">
+                            I agree to the terms
                         </label>
                     </div>
                     {errors.terms && (
-                        <p className="text-red-500 text-xs mt-1">
+                        <p className="text-red-500 text-xs">
                             {errors.terms.message}
                         </p>
                     )}
                     <button
-                        className={`w-1/3 py-3 rounded-md font-medium text-white transition-all ${
+                        type="submit"
+                        className={`w-full py-3 rounded-md font-medium text-white ${
                             checked
-                                ? "bg-gray-900 hover:bg-gray-800"
-                                : "bg-gray-400 cursor-not-allowed"
+                                ? "bg-blue-600 hover:bg-blue-500"
+                                : "bg-gray-400"
                         }`}
                         disabled={!checked}
-                        type="submit"
                     >
                         Submit
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );

@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
+import { countryCodes } from "../utils/countryCodes.jsx";
+
+const CountryDropdown = ({ selectedCode, setSelectedCode }) => (
+    <Dropdown
+        value={selectedCode}
+        options={countryCodes}
+        onChange={(e) => setSelectedCode(e.value)}
+        placeholder="Select"
+        className="w-48 text-sm"
+        optionLabel="code"
+        filter
+        filterBy="name, code"
+        valueTemplate={() => (
+            <div className="flex items-center">
+                <img
+                    src={selectedCode.flag}
+                    alt={selectedCode.name}
+                    className="w-6 h-4 mr-2"
+                />
+                <span>{selectedCode.code}</span>
+            </div>
+        )}
+        itemTemplate={(option) => (
+            <div className="flex items-center gap-1">
+                <img src={option.flag} alt={option.name} className="w-6 h-5" />
+                <span className="text-xs sm:text-sm">{option.code}</span>
+                <span className="text-xs sm:text-sm">{option.name}</span>
+            </div>
+        )}
+    />
+);
 
 const Contact = () => {
     const {
@@ -10,24 +42,32 @@ const Contact = () => {
         watch,
         formState: { errors },
         reset,
+        setValue,
+        trigger,
     } = useForm();
-
-    const onSubmit = (data) => {
-        reset();
-    };
+    const [selectedCode, setSelectedCode] = useState(
+        countryCodes.find((c) => c.code === "+91")
+    );
 
     const message = watch("message", "");
     const remainingChars = 300 - message.length;
 
+    const handlePhoneChange = (e) => {
+        let numericValue = e.target.value.replace(/\D/g, "").slice(0, 10);
+        setValue("phone", numericValue, { shouldValidate: true });
+        trigger("phone");
+    };
+
+    const renderError = (field) =>
+        errors[field] && (
+            <p className="text-red-500 text-xs mt-1">{errors[field].message}</p>
+        );
+
     return (
-        <div className="h-auto flex flex-col items-center justify-center p-5 my-12">
+        <div className="h-auto flex flex-col items-center justify-center p-5">
             <h1 className="text-4xl font-bold text-black mb-8">Contact Us</h1>
             <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <form
-                    className="space-y-2 sm:space-y-4 lg:space-y-2"
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    {/* Full Name Field */}
+                <form className="space-y-4" onSubmit={handleSubmit(reset)}>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Full Name
@@ -39,47 +79,38 @@ const Contact = () => {
                                 required: "Full Name is required",
                             })}
                         />
-                        <div className="h-5">
-                            {errors.fullName && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.fullName.message}
-                                </p>
-                            )}
-                        </div>
+                        {renderError("fullName")}
                     </div>
 
-                    {/* Phone Field */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Phone
                         </label>
-                        <InputText
-                            className="w-full p-inputtext-sm"
-                            placeholder="+91 9876543210"
-                            {...register("phone", {
-                                required: "Phone is required",
-                                pattern: {
-                                    value: /^[0-9]+$/,
-                                    message: "Phone must contain only numbers",
-                                },
-                            })}
-                            onInput={(e) => {
-                                e.target.value = e.target.value.replace(
-                                    /\D/g,
-                                    ""
-                                );
-                            }}
-                        />
-                        <div className="h-5">
-                            {errors.phone && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.phone.message}
-                                </p>
-                            )}
+                        <div className="flex items-center gap-2">
+                            <CountryDropdown
+                                selectedCode={selectedCode}
+                                setSelectedCode={setSelectedCode}
+                            />
+                            <InputText
+                                type="text"
+                                maxLength={10}
+                                className="w-full p-inputtext-sm"
+                                placeholder={`Enter ${selectedCode.length}-digit number`}
+                                {...register("phone", {
+                                    required: "Phone number is required",
+                                    pattern: {
+                                        value: /^\d{10}$/,
+                                        message:
+                                            "Phone number must be exactly 10 digits",
+                                    },
+                                })}
+                                onChange={handlePhoneChange}
+                            />
                         </div>
+                        {renderError("phone")}
                     </div>
 
-                    {/* Email Field */}
+                    {/* Email */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Email
@@ -95,16 +126,9 @@ const Contact = () => {
                                 },
                             })}
                         />
-                        <div className="h-5">
-                            {errors.email && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.email.message}
-                                </p>
-                            )}
-                        </div>
+                        {renderError("email")}
                     </div>
 
-                    {/* Message Field */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Message
@@ -119,20 +143,11 @@ const Contact = () => {
                                     message:
                                         "Message must be less than 300 characters",
                                 },
-                                onChange: (e) => {
-                                    if (e.target.value.length > 300) {
-                                        e.target.value = e.target.value.slice(
-                                            0,
-                                            300
-                                        );
-                                    }
-                                },
                             })}
-                        ></textarea>
+                        />
                         <div className="text-xs flex justify-between items-center">
                             <span className="text-red-500">
-                                {errors.message?.type === "required" &&
-                                    errors.message.message}
+                                {errors.message?.message}
                             </span>
                             <span
                                 className={
@@ -148,16 +163,14 @@ const Contact = () => {
                         </div>
                     </div>
 
-                    {/* Submit Button */}
                     <Button
                         type="submit"
                         label="Send Message"
-                        className="px-6 py-2 text-sm text-white font-medium rounded-md border-none shadow-md hover:opacity-90"
+                        className="px-6 py-2 text-sm text-white font-medium rounded-md shadow-md hover:opacity-90"
                         style={{ backgroundColor: "rgba(0, 113, 93, 1)" }}
                     />
                 </form>
 
-                {/* Photo Section - Visible only on large screens */}
                 <div className="hidden lg:flex items-center justify-center bg-gray-200 rounded-lg w-full h-full">
                     <img
                         src="src/assets/pexels-photo-3184287.jpeg"
