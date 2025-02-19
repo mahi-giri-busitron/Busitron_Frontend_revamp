@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const data = [
     {
@@ -25,22 +26,41 @@ const EventPage = () => {
     return (
         <div className="event_page hidden md:block">
             <div className="container mx-auto p-4 max-w-screen-lg">
-                <div className="heading_content">
-                    <h6 className="text-[#00715D] text-lg md:text-xl lg:text-2xl text-center font-bold my-2">
+                <div className="heading_content text-center">
+                    <motion.h6
+                        className="text-[#00715D] text-lg md:text-xl lg:text-2xl font-bold my-2"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
                         Our Event
-                    </h6>
-                    <h1 className="text-xl md:text-2xl lg:text-3xl text-center font-bold my-2">
+                    </motion.h6>
+                    <motion.h1
+                        className="text-xl md:text-2xl lg:text-3xl font-bold my-2"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                    >
                         Our Upcoming Event
-                    </h1>
+                    </motion.h1>
                 </div>
 
                 {/* Responsive Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {data.map((item) => (
-                        <div className="p-4" key={item.id}>
-                            <div
-                                className="image_wrapper_product text-white p-6 rounded-lg shadow-md flex justify-center items-center bg-center bg-no-repeat bg-cover h-[200px]"
+                    {data.map((item, index) => (
+                        <motion.div
+                            key={item.id}
+                            className="p-4"
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: index * 0.2 }}
+                            viewport={{ once: true }}
+                        >
+                            <motion.div
+                                className="image_wrapper_product text-white p-6 rounded-lg shadow-md flex justify-center items-center bg-center bg-no-repeat bg-cover h-[200px] relative overflow-hidden"
                                 style={{ backgroundImage: `url(${item.img})` }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
                             >
                                 <div className="content button_wrapper_left text-center">
                                     <h5 className="text-lg font-semibold">
@@ -49,13 +69,17 @@ const EventPage = () => {
                                     <p className="text-sm">{item.date}</p>
                                 </div>
                                 {/* Overlay */}
-                                <div className="overlay bg-black bg-opacity-50 absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <motion.div
+                                    className="overlay bg-black bg-opacity-50 absolute inset-0 flex items-center justify-center opacity-0"
+                                    whileHover={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
                                     <div className="text-white font-bold">
                                         Hello World
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
                     ))}
                 </div>
             </div>

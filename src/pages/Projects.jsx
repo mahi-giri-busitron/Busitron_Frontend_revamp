@@ -163,7 +163,7 @@ const Projects = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="">
             <motion.div
                 className="container xs-p-0 md-px-5 py-12 mx-auto max-w-[1240px]"
                 initial={{ opacity: 0 }}

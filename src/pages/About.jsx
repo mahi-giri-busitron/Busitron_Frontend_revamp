@@ -3,6 +3,7 @@ import about1 from "../assets/image.webp";
 import about from "../assets/about.webp";
 import about2 from "../assets/about1.webp";
 import about3 from "../assets/about2.webp";
+import { motion } from "framer-motion";
 
 const sections = [
     {
@@ -29,10 +30,16 @@ const sections = [
 ];
 
 const Section = ({ title, content, image, reverse }) => (
-    <section className="text-gray-600 body-font">
+    <motion.section
+        className="text-gray-600 body-font"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }} 
+    >
         <div className="container px-5 lg:py-20 mx-auto flex flex-wrap items-center mb-2">
             {!reverse && (
-                <div className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden ">
+                <div className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden">
                     <img
                         className="object-cover object-center w-full h-full lg:w-[32rem]"
                         src={image}
@@ -48,7 +55,6 @@ const Section = ({ title, content, image, reverse }) => (
                         </h1>
                         <hr className="w-16 border-amber-500 border-2 mb-4 transition-all duration-300 group-hover:w-full" />
                     </div>
-
                     <p className="text-[#656c6f] text-sm md:text-md lg:text-lg leading-relaxed font-serif">
                         {content}
                     </p>
@@ -64,16 +70,27 @@ const Section = ({ title, content, image, reverse }) => (
                 </div>
             )}
         </div>
-    </section>
+    </motion.section>
 );
 
 const About = () => {
     return (
-        <div className="min-h-screen bg-gray-200">
+        <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="min-h-screen bg-gray-200"
+        >
             <div className="container px-5 py-12 mx-auto max-w-[1240px]">
                 <section className="text-gray-600 body-font">
                     <div className="container px-5 lg:py-20 mx-auto flex flex-wrap items-center">
-                        <div className="flex flex-wrap lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
+                        <motion.div
+                            className="flex flex-wrap lg:w-1/2 sm:w-2/3 content-start sm:pr-10"
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                        >
                             <div className="w-full px-4 mb-6 mx-auto">
                                 <h1 className="text-gray-900 text-4xl font-medium tracking-tight leading-tight mb-2">
                                     About Us
@@ -84,17 +101,29 @@ const About = () => {
                                     networks, cybersecurity, and positioning.
                                 </p>
                             </div>
-                        </div>
-                        <div className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
+                        </motion.div>
+                        <motion.div
+                            className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0"
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                        >
                             <img
                                 className="object-cover object-center w-full h-full lg:h-[20rem]"
                                 src={about}
                                 alt="About Us"
                             />
-                        </div>
+                        </motion.div>
                     </div>
                 </section>
-                <div className="flex flex-col text-center w-full my-10">
+                <motion.div
+                    className="flex flex-col text-center w-full my-10"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                >
                     <p className="lg:w-2/3 mx-auto text-[#2c54cd] text-md md:text-lg lg:text-xl">
                         We stand behind your promise to deliver a new generation
                         of technologies to your customers. Our automated test
@@ -102,12 +131,12 @@ const About = () => {
                         development in the lab and ensure new products and
                         services perform in the real world.
                     </p>
-                </div>
+                </motion.div>
                 {sections.map((section, index) => (
                     <Section key={index} {...section} />
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
