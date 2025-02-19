@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { scroller } from "react-scroll";
-import { motion, AnimatePresence } from "framer-motion";
 import "primeicons/primeicons.css";
 
 const Navbar = () => {
@@ -9,6 +8,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [scrolling, setScrolling] = useState(false);
+    const [activeTab, setActiveTab] = useState("home");
 
     useEffect(() => {
         setMenuOpen(false);
@@ -16,7 +16,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolling(window.scrollY > 50);
+            setScrolling(window.scrollY > 1);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -24,6 +24,7 @@ const Navbar = () => {
 
     const handleNavClick = (nav) => {
         setMenuOpen(false);
+        setActiveTab(nav.id);
         const scrollToSection = () => {
             const targetElement = document.getElementById(nav.id);
             if (targetElement) {
@@ -32,8 +33,6 @@ const Navbar = () => {
                     smooth: "easeInOutQuart",
                     offset: -80,
                 });
-            } else {
-                console.warn(`Element with ID '${nav.id}' not found.`);
             }
         };
         if (location.pathname === "/") {
@@ -52,11 +51,15 @@ const Navbar = () => {
         { id: "contact", title: "Contact" },
     ];
 
+    const hideLoginPaths = [
+        "/create-profile",
+        "/otp-verification",
+        "/forgot-password",
+        "/signin", // Hides login button when on the sign-in page
+    ];
+
     return (
-        <motion.nav
-            initial={{ opacity: 0, y: -15.5 }}
-            animate={{ opacity: 1, y: 1.5 }}
-            transition={{ duration: 0.2 }}
+        <nav
             className={`fixed top-0 left-0 w-full p-4 z-50 transition-all duration-300 ${
                 scrolling ? "bg-white shadow-md" : "bg-transparent"
             }`}
@@ -66,22 +69,25 @@ const Navbar = () => {
                     MyLogo
                 </Link>
 
-                <ul className="hidden md:flex space-x-3 lg:space-x-10 font-semibold text-base lg:text-lg">
+                <ul className="hidden md:flex space-x-3 lg:space-x-10 font-semibold text-base lg:text-lg md:text-sm md:space-x-4">
                     {navLinks.map((nav) => (
-                        <motion.li key={nav.id} whileHover={{ scale: 1.1 }}>
+                        <li key={nav.id}>
                             <span
-                                className="cursor-pointer hover:text-blue-500 transition capitalize text-gray-900"
+                                className={`cursor-pointer hover:text-blue-500 transition capitalize ${
+                                    activeTab === nav.id
+                                        ? "text-blue-500"
+                                        : "text-gray-900"
+                                }`}
                                 onClick={() => handleNavClick(nav)}
                             >
                                 {nav.title}
                             </span>
-                        </motion.li>
+                        </li>
                     ))}
                 </ul>
 
                 <div className="flex items-center space-x-4 sm:space-x-6">
-                    {/* Hide login button if on signin page */}
-                    {location.pathname !== "/signin" && (
+                    {!hideLoginPaths.includes(location.pathname) && (
                         <Link
                             to="/signin"
                             className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
@@ -102,51 +108,43 @@ const Navbar = () => {
                 </div>
             </div>
 
-            <AnimatePresence>
-                {menuOpen && (
-                    <motion.div
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        exit={{ x: "100%" }}
-                        transition={{ duration: 0.4 }}
-                        className="fixed top-0 right-0 h-full w-64 bg-white shadow-lg p-4 md:hidden"
+            {menuOpen && (
+                <div className="fixed top-0 right-0 !h-[100%] w-[50%] bg-white shadow-lg p-4 md:hidden z-50">
+                    <button
+                        onClick={() => setMenuOpen(false)}
+                        className="absolute top-4 right-4 text-2xl text-gray-700"
                     >
-                        <button
-                            onClick={() => setMenuOpen(false)}
-                            className="absolute top-4 right-4 text-2xl text-gray-700"
-                        >
-                            <i className="pi pi-times" />
-                        </button>
-                        <ul className="flex flex-col mt-8 space-y-2 text-lg font-semibold">
-                            {navLinks.map((nav) => (
-                                <motion.li
-                                    key={nav.id}
-                                    whileTap={{ scale: 0.9 }}
+                        <i className="pi pi-times" />
+                    </button>
+                    <ul className="flex flex-col mt-8 space-y-5 text-md font-semibold">
+                        {navLinks.map((nav) => (
+                            <li key={nav.id}>
+                                <span
+                                    className={`cursor-pointer hover:text-blue-500 transition capitalize ${
+                                        activeTab === nav.id
+                                            ? "text-blue-500"
+                                            : "text-gray-900"
+                                    }`}
+                                    onClick={() => handleNavClick(nav)}
                                 >
-                                    <span
-                                        className="block py-2 hover:text-blue-500 transition capitalize text-gray-900"
-                                        onClick={() => handleNavClick(nav)}
-                                    >
-                                        {nav.title}
-                                    </span>
-                                </motion.li>
-                            ))}
-                        </ul>
-                        <div className="mt-4">
-                            {/* Hide login button in mobile menu if on signin page */}
-                            {location.pathname !== "/signin" && (
-                                <Link
-                                    to="/signin"
-                                    className="block w-full px-4 py-2 text-center rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-                                >
-                                    Login
-                                </Link>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.nav>
+                                    {nav.title}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="mt-6">
+                        {!hideLoginPaths.includes(location.pathname) && (
+                            <Link
+                                to="/signin"
+                                className="block w-1/2 py-2 text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                                Login
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            )}
+        </nav>
     );
 };
 
