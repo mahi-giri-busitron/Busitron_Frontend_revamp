@@ -35,7 +35,7 @@ const TopNavBar = (props) => {
                 <div className="md:hidden ">
                     <i
                         className="pi pi-bars"
-                        style={{ color: "slateblue", fontSize: "1.5rem" }}
+                        style={{ color: "black", fontSize: "1.5rem" }}
                         onClick={() => setVisible(true)}
                     ></i>
                 </div>
@@ -52,9 +52,10 @@ const TopNavBar = (props) => {
                     />
                     <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <i className="pi pi-search md:hidden text-gray-600 text-xl"></i>
-                <i className="pi pi-bell text-gray-600 text-xl"></i>
-                <i className="pi pi-info-circle text-gray-600 text-xl"></i>
+               <span className="lg:hidden">
+                <i className="pi pi-search  text-gray-600 text-xl hover:text-blue-600" ></i> </span>
+                <i className="pi pi-bell text-gray-600 text-xl cursor-pointer hover:text-blue-600"></i>
+                <i className="pi pi-info-circle text-gray-600 text-xl cursor-pointer hover:text-blue-600"></i>
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-600 text-white rounded-full">
                     AP
                 </div>

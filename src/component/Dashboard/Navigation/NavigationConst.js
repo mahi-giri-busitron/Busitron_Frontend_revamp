@@ -1,6 +1,7 @@
 export const GetNavigationData = () => {
     return [
-        { label: "Dashboard", path: "/dashboard", icon: "pi pi-home" },
+        { label: "Home", path: "/", icon: "pi pi-home" },
+        { label: "Dashboard", path: "/dashboard", icon: "pi pi-warehouse" },
         { label: "Projects", path: "/dashboard/project", icon: "pi pi-sitemap" },
         { label: "Financial Management", path: "/dashboard/financial-management", icon: "pi pi-wallet" },
         { label: "Daily Upadtes", path: "/dashboard/daily-updates", icon: "pi pi-sync" },
