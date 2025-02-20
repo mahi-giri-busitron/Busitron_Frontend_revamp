@@ -22,6 +22,12 @@ import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
 import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
 import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
 import User_Management from "./component/Dashboard/User_Management.jsx";
+import CompanySetting from "./component/Settings/CompanySetting.jsx";
+import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
+import AppSetting from "./component/Settings/AppSetting.jsx";
+import RolePermissions from "./component/Settings/RolePermissions.jsx";
+import TaskSettings from "./component/Settings/TaskSettings.jsx";
+import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 
 function App() {
     const location = useLocation();
@@ -97,7 +103,33 @@ function App() {
                         <Route path="ticket" element={<Ticket />} />
                         <Route path="email" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
-                        <Route path="setting" element={<Settings />} />
+
+                        <Route path="setting" element={<Settings />}>
+                            <Route
+                                path="company-settings"
+                                element={<CompanySetting />}
+                            />
+                            <Route
+                                path="business-address"
+                                element={<BusinessAddress />}
+                            />
+                            <Route
+                                path="app-settings"
+                                element={<AppSetting />}
+                            />
+                            <Route
+                                path="role-permissions"
+                                element={<RolePermissions />}
+                            />
+                            <Route
+                                path="task-settings"
+                                element={<TaskSettings />}
+                            />
+                            <Route
+                                path="module-settings"
+                                element={<ModuleSettings />}
+                            />
+                        </Route>
                     </Route>
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
