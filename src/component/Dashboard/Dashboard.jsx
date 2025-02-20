@@ -21,7 +21,6 @@ const Dashboard = () => {
         };
         window.addEventListener("resize", handleResize);
 
-        // Initial check
         handleResize();
 
         return () => {

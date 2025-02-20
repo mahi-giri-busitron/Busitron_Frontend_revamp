@@ -25,7 +25,6 @@ const SideTopNavigation = (props) => {
             <div className="  w-full  h-[100px] flex justify-between items-center">
                 {maximizeSideBar && (
                     <div>
-                        {/* <div className="px-4 py-4 flex  align-middle"> */}
                         <h2 className="text-xl font-bold ">
                             Busitron
                             <i
@@ -33,8 +32,6 @@ const SideTopNavigation = (props) => {
                                 onClick={(e) => op.current.toggle(e)}
                             ></i>
                         </h2>
-
-                        {/* </div> */}
                         <p className="overflow-hidden text-ellipsis ">
                             Mahesh vaka
                         </p>
