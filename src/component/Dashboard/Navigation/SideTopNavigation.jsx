@@ -12,7 +12,6 @@ const SideTopNavigation = (props) => {
         navigate("/");
     };
     const handleOnDarkMode = (e) => {
-        console.log("darkmode");
         setChecked(e.value);
     };
     const handleOnEditProfile = () => {
