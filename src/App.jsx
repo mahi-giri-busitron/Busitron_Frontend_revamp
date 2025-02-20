@@ -19,6 +19,9 @@ import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
+import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
+import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
+import User_Management from "./component/Dashboard/User_Management.jsx";
 
 function App() {
     const location = useLocation();
@@ -77,6 +80,18 @@ function App() {
                 <Route element={<PrivateRoute />}>
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
+                        <Route
+                            path="financial-management"
+                            element={<Financial_Management />}
+                        />
+                        <Route
+                            path="performance-tracking"
+                            element={<Performance_Tracking />}
+                        />
+                        <Route
+                            path="user-management"
+                            element={<User_Management />}
+                        />
                         <Route path="project" element={<Project />} />
                         <Route path="task" element={<Task />} />
                         <Route path="ticket" element={<Ticket />} />
