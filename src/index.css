@@ -115,12 +115,6 @@ body {
     background: #555;
 }
 
-/* related to projects page */
-.p-carousel-next-icon,
-.p-carousel-prev-icon {
-    color: #ffffff;
-}
-
 .Dropdown .p-dropdown .p-dropdown-trigger {
     width: 33px;
 }

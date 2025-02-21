@@ -28,6 +28,7 @@ import AppSetting from "./component/Settings/AppSetting.jsx";
 import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
+import SingleTask from "./component/Dashboard/SingleTask.jsx";
 
 function App() {
     const location = useLocation();
@@ -83,7 +84,7 @@ function App() {
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
                 />
-                <Route element={<PrivateRoute />}>
+                {/* <Route element={<PrivateRoute />}> */}
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
                         <Route
@@ -100,6 +101,7 @@ function App() {
                         />
                         <Route path="project" element={<Project />} />
                         <Route path="task" element={<Task />} />
+                        <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
                         <Route path="email" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
@@ -131,7 +133,7 @@ function App() {
                             />
                         </Route>
                     </Route>
-                </Route>
+                {/* </Route> */}
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             {!isPrivateRoute && <Footer />}

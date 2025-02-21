@@ -2,12 +2,9 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import SideNavigation from "./Navigation/SideNavigation.jsx";
 import TopNavBar from "./Navigation/TopNavBar.jsx";
-import { Sidebar } from "primereact/sidebar";
-import { Button } from "primereact/button";
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = React.useState("");
-    const [visible, setVisible] = React.useState(false);
     const [maximizeSideBar, setMaximizeSideBar] = React.useState(true);
     const location = useLocation();
 

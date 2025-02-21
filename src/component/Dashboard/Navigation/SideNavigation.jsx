@@ -35,7 +35,8 @@ const SideNavigation = ({
                         >
                             <button
                                 className={` flex  justify-center pl-4  pr-2  py-3 w-full text-left hover:text-blue-600 transition duration-200 border-r-3 cursor-pointer ${
-                                    activeTab === each.path
+                                    activeTab === each.path ||
+                                    activeTab === each.path + "/"
                                         ? "text-blue-600 font-semibold border-r-3 border-blue-600"
                                         : "text-gray-500 font-medium border-white"
                                 }`}

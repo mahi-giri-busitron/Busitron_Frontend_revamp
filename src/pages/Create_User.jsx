@@ -28,7 +28,6 @@ const Create_User = () => {
         setChecked(false);
         setPreview(null);
     };
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -120,7 +119,10 @@ const Create_User = () => {
                             <Dropdown
                                 value={selectedCode}
                                 options={countryCodes}
-                                onChange={(e) => setSelectedCode(e.value)}
+                                onChange={(e) => {
+                                    setSelectedCode(e.value);
+                                    setValue("countryCode", e.value.code);
+                                }}
                                 placeholder="Select"
                                 className="sm:w-24 md:w-34 text-xs lg:text-sm"
                                 optionLabel="code"
@@ -200,6 +202,7 @@ const Create_User = () => {
                                 value={watch("phone") || ""}
                             />
                         </div>
+                        <input type="hidden" {...register("countryCode")} />
                         {errors.phone && (
                             <p className="text-red-500 text-xs mt-1">
                                 {errors.phone.message}
