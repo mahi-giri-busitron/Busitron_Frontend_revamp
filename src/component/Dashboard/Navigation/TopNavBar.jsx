@@ -7,15 +7,9 @@ const TopNavBar = (props) => {
     const location = useLocation();
     useEffect(() => {
         setActivePath(location.pathname);
-        // Your logic here (e.g., analytics tracking, updating state)
-    }, [location.pathname]); // Runs every time the path changes
+    }, [location.pathname]);
 
-    const {
-        // activeTab = "/dashboard",
-        setActiveTab,
-        maximizeSideBar,
-        setMaximizeSideBar,
-    } = props;
+    const { setActiveTab, maximizeSideBar, setMaximizeSideBar } = props;
     const [visible, setVisible] = useState(false);
 
     const getDashBoardHeader = () => {
