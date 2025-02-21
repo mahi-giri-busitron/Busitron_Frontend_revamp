@@ -1,46 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { scroller } from "react-scroll";
 import "primeicons/primeicons.css";
 
-const Navbar = () => {
+const Navbar = ({ sectionRefs }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const [scrolling, setScrolling] = useState(false);
     const [activeTab, setActiveTab] = useState("home");
-
-    useEffect(() => {
-        setMenuOpen(false);
-    }, [location]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolling(window.scrollY > 1);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    const handleNavClick = (nav) => {
-        setMenuOpen(false);
-        setActiveTab(nav.id);
-        const scrollToSection = () => {
-            const targetElement = document.getElementById(nav.id);
-            if (targetElement) {
-                scroller.scrollTo(nav.id, {
-                    duration: 900,
-                    smooth: "easeInOutQuart",
-                    offset: -80,
-                });
-            }
-        };
-        if (location.pathname === "/") {
-            setTimeout(scrollToSection, 300);
-        } else {
-            navigate(`/?scrollTo=${nav.id}`);
-        }
-    };
+    const navbarRef = useRef(null);
 
     const navLinks = [
         { id: "home", title: "Home" },
@@ -50,6 +19,52 @@ const Navbar = () => {
         { id: "location", title: "Location" },
         { id: "contact", title: "Contact" },
     ];
+
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolling(window.scrollY > 1);
+
+            for (const nav of navLinks) {
+                const section = sectionRefs.current[nav.id];
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100) {
+                        setActiveTab(nav.id);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const handleNavClick = (nav) => {
+        setMenuOpen(false);
+        setActiveTab(nav.id);
+
+        if (location.pathname === "/") {
+            setTimeout(() => {
+                scroller.scrollTo(nav.id, {
+                    duration: 900,
+                    smooth: "easeInOutQuart",
+                    offset: -80,
+                });
+            }, 300);
+        } else {
+            navigate(`/?scrollTo=${nav.id}`);
+        }
+    };
+
+    const handleLoginClick = () => {
+        window.scrollTo(0, 0);
+        navigate("/signin");
+    };
 
     const hideLoginPaths = [
         "/signin",
@@ -62,6 +77,7 @@ const Navbar = () => {
 
     return (
         <nav
+            ref={navbarRef}
             className={`fixed top-0 left-0 w-full p-4 z-50 transition-all duration-300 ${
                 scrolling ? "bg-white shadow-md" : "bg-transparent"
             }`}
@@ -72,6 +88,53 @@ const Navbar = () => {
                 </Link>
 
                 <ul className="hidden md:flex space-x-3 lg:space-x-10 font-semibold text-base lg:text-lg md:text-sm md:space-x-4">
+                    {navLinks.map((nav) => (
+                        <li key={nav.id}>
+                            <span
+                                className={`cursor-pointer hover:text-blue-500 transition capitalize ${
+                                    activeTab === nav.id
+                                        ? "text-blue-500 border-b-2 border-blue-500"
+                                        : "text-gray-900"
+                                }`}
+                                onClick={() => handleNavClick(nav)}
+                            >
+                                {nav.title}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="flex items-center space-x-4 sm:space-x-6">
+                    {!hideLoginPaths.includes(location.pathname) && (
+                        <button
+                            onClick={handleLoginClick}
+                            className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                        >
+                            Login
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setMenuOpen(true)}
+                        className="md:hidden text-2xl text-blue-600"
+                    >
+                        <i className="pi pi-bars" />
+                    </button>
+                </div>
+            </div>
+
+            <div
+                className={`fixed top-0 right-0 h-full w-[50%] bg-white shadow-lg p-2 md:hidden z-50 transform transition-transform duration-300 ${
+                    menuOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+            >
+                <button
+                    onClick={() => setMenuOpen(false)}
+                    className="absolute top-4 right-4 text-2xl text-gray-700"
+                >
+                    <i className="pi pi-times" />
+                </button>
+
+                <ul className="flex flex-col mt-12 space-y-5 text-md font-semibold">
                     {navLinks.map((nav) => (
                         <li key={nav.id}>
                             <span
@@ -88,64 +151,17 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                <div className="flex items-center space-x-4 sm:space-x-6">
+                <div className="mt-6">
                     {!hideLoginPaths.includes(location.pathname) && (
-                        <Link
-                            to="/signin"
-                            className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                        <button
+                            onClick={handleLoginClick}
+                            className="w-1/2 py-1 mx-auto text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
                         >
                             Login
-                        </Link>
+                        </button>
                     )}
-                    <button
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        className="md:hidden text-2xl text-blue-600"
-                    >
-                        <i
-                            className={`pi ${
-                                menuOpen ? "pi-times" : "pi-bars"
-                            }`}
-                        />
-                    </button>
                 </div>
             </div>
-
-            {menuOpen && (
-                <div className="fixed top-0 right-0 !h-[100%] w-[50%] bg-white shadow-lg p-4 md:hidden z-50">
-                    <button
-                        onClick={() => setMenuOpen(false)}
-                        className="absolute top-4 right-4 text-2xl text-gray-700"
-                    >
-                        <i className="pi pi-times" />
-                    </button>
-                    <ul className="flex flex-col mt-8 space-y-5 text-md font-semibold">
-                        {navLinks.map((nav) => (
-                            <li key={nav.id}>
-                                <span
-                                    className={`cursor-pointer hover:text-blue-500 transition capitalize ${
-                                        activeTab === nav.id
-                                            ? "text-blue-500"
-                                            : "text-gray-900"
-                                    }`}
-                                    onClick={() => handleNavClick(nav)}
-                                >
-                                    {nav.title}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="mt-6">
-                        {!hideLoginPaths.includes(location.pathname) && (
-                            <Link
-                                to="/signin"
-                                className="block w-1/2 py-2 text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
-                            >
-                                Login
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            )}
         </nav>
     );
 };
