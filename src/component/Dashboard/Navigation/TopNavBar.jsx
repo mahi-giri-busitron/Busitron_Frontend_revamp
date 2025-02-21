@@ -9,22 +9,26 @@ const TopNavBar = (props) => {
     const getDashBoardHeader = () => {
         switch (activeTab) {
             case "/dashboard":
+            case "/dashboard/":
                 return "Dashboard";
-
             case "/dashboard/project":
                 return "Projects";
             case "/dashboard/task":
                 return "Tasks";
             case "/dashboard/ticket":
                 return "Tickets";
-
             case "/dashboard/email":
                 return "Emails";
             case "/dashboard/profile":
                 return "Profile";
-
             case "/dashboard/setting":
                 return "Settings";
+            case "/dashboard/financial-management":
+                return "Financial Management";
+            case "/dashboard/performance-tracking":
+                return "Performance Tracking";
+            case "/dashboard/user-management":
+                return "User Management";
             default:
                 return "Dashboard";
         }
