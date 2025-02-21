@@ -55,26 +55,23 @@ const BusinessAddress = () => {
 
     const handleAddAddress = (data) => {
         if (editMode && currentAddress) {
-            // Only update the selected address
             setAddresses((prevAddresses) =>
-                prevAddresses.map(
-                    (addr) =>
-                        addr.id === currentAddress.id
-                            ? {
-                                  ...addr,
-                                  location: data.location,
-                                  address: data.address,
-                                  country: selectedCode.name,
-                                  taxName: data.taxName || "--",
-                                  taxNumber: data.taxNumber || "",
-                                  latitude: data.latitude || "",
-                                  longitude: data.longitude || "",
-                              }
-                            : addr // Keep other addresses unchanged
+                prevAddresses.map((addr) =>
+                    addr.id === currentAddress.id
+                        ? {
+                              ...addr,
+                              location: data.location,
+                              address: data.address,
+                              country: selectedCode.name,
+                              taxName: data.taxName || "--",
+                              taxNumber: data.taxNumber || "",
+                              latitude: data.latitude || "",
+                              longitude: data.longitude || "",
+                          }
+                        : addr
                 )
             );
         } else {
-            // Add new address if not in edit mode
             const newEntry = {
                 id: addresses.length + 1,
                 location: data.location,
@@ -109,72 +106,70 @@ const BusinessAddress = () => {
                 }}
             />
             <div className="py-5">
-            <DataTable value={addresses} className="p-datatable-sm">
-                <Column field="id" header="#" />
-                <Column field="location" header="Location" />
-                <Column field="address" header="Address" />
-                <Column field="country" header="Country" />
-                <Column field="taxName" header="Tax Name" />
-                <Column
-                    header="Default"
-                    body={(rowData) => (
-                        <RadioButton
-                            checked={rowData.default}
-                            onChange={() =>
-                                setAddresses(
-                                    addresses.map((addr) => ({
-                                        ...addr,
-                                        default: addr.id === rowData.id,
-                                    }))
-                                )
-                            }
-                        />
-                    )}
-                />
-                <Column
-                    header="Edit"
-                    body={(rowData) => (
-                        <Button
-                            label="Edit"
-                            icon="pi pi-pencil"
-                            className="p-button-text"
-                            onClick={() => {
-                                setEditMode(true);
-                                setCurrentAddress(rowData);
-                                setValue("location", rowData.location);
-                                setValue("address", rowData.address);
-                                setValue("taxName", rowData.taxName);
-                                setValue("taxNumber", rowData.taxNumber);
-                                setValue("latitude", rowData.latitude);
-                                setValue("longitude", rowData.longitude);
-                                setSelectedCode(
-                                    countryCodes.find(
-                                        (c) => c.name === rowData.country
+                <DataTable value={addresses} className="p-datatable-sm">
+                    <Column field="id" header="#" />
+                    <Column field="location" header="Location" />
+                    <Column field="address" header="Address" />
+                    <Column field="country" header="Country" />
+                    <Column field="taxName" header="Tax Name" />
+                    <Column
+                        header="Default"
+                        body={(rowData) => (
+                            <RadioButton
+                                checked={rowData.default}
+                                onChange={() =>
+                                    setAddresses(
+                                        addresses.map((addr) => ({
+                                            ...addr,
+                                            default: addr.id === rowData.id,
+                                        }))
                                     )
-                                );
+                                }
+                            />
+                        )}
+                    />
+                    <Column
+                        header="Edit"
+                        body={(rowData) => (
+                            <Button
+                                label="Edit"
+                                icon="pi pi-pencil"
+                                className="p-button-text"
+                                onClick={() => {
+                                    setEditMode(true);
+                                    setCurrentAddress(rowData);
+                                    setValue("location", rowData.location);
+                                    setValue("address", rowData.address);
+                                    setValue("taxName", rowData.taxName);
+                                    setValue("taxNumber", rowData.taxNumber);
+                                    setValue("latitude", rowData.latitude);
+                                    setValue("longitude", rowData.longitude);
+                                    setSelectedCode(
+                                        countryCodes.find(
+                                            (c) => c.name === rowData.country
+                                        )
+                                    );
 
-                                setShowDialog(true);
-                            }}
-                        />
-                    )}
-                />
+                                    setShowDialog(true);
+                                }}
+                            />
+                        )}
+                    />
 
-                <Column
-                    header="Actions"
-                    body={(rowData) => (
-                        <Button
-                            label="Delete"
-                            icon="pi pi-trash"
-                            className="p-button-danger p-button-sm"
-                            onClick={() => confirmDeleteAddress(rowData.id)}
-                        />
-                    )}
-                />
-            </DataTable>
+                    <Column
+                        header="Actions"
+                        body={(rowData) => (
+                            <Button
+                                label="Delete"
+                                icon="pi pi-trash"
+                                className="p-button-danger p-button-sm"
+                                onClick={() => confirmDeleteAddress(rowData.id)}
+                            />
+                        )}
+                    />
+                </DataTable>
             </div>
-            
 
-            {/* Address Dialog */}
             <Dialog
                 visible={showDialog}
                 onHide={() => setShowDialog(false)}
