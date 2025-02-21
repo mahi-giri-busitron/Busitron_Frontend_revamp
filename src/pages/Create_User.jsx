@@ -24,7 +24,6 @@ const Create_User = () => {
     );
 
     const onSubmit = (data) => {
-        console.log("Form ", data);
         reset();
         setChecked(false);
         setPreview(null);
