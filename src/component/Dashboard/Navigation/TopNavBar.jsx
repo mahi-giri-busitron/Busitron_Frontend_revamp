@@ -38,8 +38,8 @@ const TopNavBar = (props) => {
             <div className="flex gap-2 items-center">
                 <div className="md:hidden ">
                     <i
-                        className="pi pi-bars"
-                        style={{ color: "black", fontSize: "1.5rem" }}
+                        className="pi pi-bars cursor-pointer text-gray-600 hover:text-blue-600"
+                        style={{ fontSize: "1.5rem" }}
                         onClick={() => setVisible(true)}
                     ></i>
                 </div>
@@ -69,12 +69,19 @@ const TopNavBar = (props) => {
                 visible={visible}
                 onHide={() => setVisible(false)}
                 content={() => (
-                    <SideNavigation
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        maximizeSideBar={maximizeSideBar}
-                        setMaximizeSideBar={setMaximizeSideBar}
-                    />
+                    <React.Fragment className="relative">
+                        <i
+                            className=" absolute top-2 right-2 text-right pi pi-times-circle text-xl cursor-pointer hover:text-blue-600"
+                            onClick={() => setVisible(false)}
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                        <SideNavigation
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
+                            maximizeSideBar={maximizeSideBar}
+                            setMaximizeSideBar={setMaximizeSideBar}
+                        />
+                    </React.Fragment>
                 )}
             ></Sidebar>
         </div>

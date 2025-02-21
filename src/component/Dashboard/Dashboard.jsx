@@ -4,6 +4,7 @@ import SideNavigation from "./Navigation/SideNavigation.jsx";
 import TopNavBar from "./Navigation/TopNavBar.jsx";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = React.useState("");
@@ -30,9 +31,12 @@ const Dashboard = () => {
 
     return (
         <div className="flex h-screen">
-            <div
-                className={`hidden md:block ${
-                    maximizeSideBar && "w-1/5 min-w-[235px]"
+            <motion.div
+                initial={{ width: "0px" }}
+                animate={{ width: maximizeSideBar ? "20%" : "80px" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className={`hidden md:block drop-shadow-lg ${
+                    maximizeSideBar && " min-w-[235px] "
                 }`}
             >
                 <SideNavigation
@@ -41,8 +45,8 @@ const Dashboard = () => {
                     maximizeSideBar={maximizeSideBar}
                     setMaximizeSideBar={setMaximizeSideBar}
                 />
-            </div>
-            <div className="border  border-t-0 w-full">
+            </motion.div>
+            <div className="  border-t-0 w-full  ">
                 <div className="max-h-[100px]  bg-white w-full">
                     <TopNavBar
                         activeTab={activeTab}
@@ -51,7 +55,13 @@ const Dashboard = () => {
                         setMaximizeSideBar={setMaximizeSideBar}
                     />
                 </div>
-                <div>
+                <div
+                    className="overflow-auto "
+                    style={{
+                        height: "calc(100vh - 85px)",
+                        scrollbarWidth: "thin",
+                    }}
+                >
                     <Outlet />
                 </div>
             </div>
