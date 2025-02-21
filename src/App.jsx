@@ -83,7 +83,7 @@ function App() {
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
                 />
-                <Route element={<PrivateRoute />}>
+                {/* <Route element={<PrivateRoute />}> */}
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
                         <Route
@@ -131,7 +131,7 @@ function App() {
                             />
                         </Route>
                     </Route>
-                </Route>
+                {/* </Route> */}
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             {!isPrivateRoute && <Footer />}

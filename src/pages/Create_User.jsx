@@ -4,6 +4,7 @@ import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { countryCodes } from "../utils/countryCodes";
+import { Calendar } from "primereact/calendar";
 
 const Create_User = () => {
     const {
@@ -22,15 +23,16 @@ const Create_User = () => {
         countryCodes.find((c) => c.code === "+91")
     );
 
-    const onSubmit = () => {
+    const onSubmit = (data) => {
+        console.log("Form ", data);
         reset();
         setChecked(false);
         setPreview(null);
     };
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setValue("profilePic", file, { shouldValidate: true });
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
@@ -42,7 +44,7 @@ const Create_User = () => {
     const handleClick = () => {};
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="pt-16 flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-lg shadow-lg rounded-lg bg-white p-6 sm:p-8 my-2">
                 <h1 className="text-center font-semibold text-2xl text-gray-800 mb-4">
                     Add your details
@@ -75,14 +77,16 @@ const Create_User = () => {
                         type="file"
                         accept="image/*"
                         {...register("profilePic", {
-                            required: "Profile picture is required",
+                            required: preview
+                                ? false
+                                : "Profile picture is required",
                         })}
                         onChange={handleFileChange}
                         className="hidden"
                     />
-                    {errors.profilePic && (
+                    {errors.profilePicInput && (
                         <p className="text-red-500 text-xs mt-1">
-                            {errors.profilePic.message}
+                            {errors.profilePicInput.message}
                         </p>
                     )}
                 </div>
@@ -116,7 +120,10 @@ const Create_User = () => {
                             <Dropdown
                                 value={selectedCode}
                                 options={countryCodes}
-                                onChange={(e) => setSelectedCode(e.value)}
+                                onChange={(e) => {
+                                    setSelectedCode(e.value);
+                                    setValue("countryCode", e.value.code);
+                                }}
                                 placeholder="Select"
                                 className="sm:w-24 md:w-34 text-xs lg:text-sm"
                                 optionLabel="code"
@@ -196,6 +203,7 @@ const Create_User = () => {
                                 value={watch("phone") || ""}
                             />
                         </div>
+                        <input type="hidden" {...register("countryCode")} />
                         {errors.phone && (
                             <p className="text-red-500 text-xs mt-1">
                                 {errors.phone.message}
@@ -221,6 +229,39 @@ const Create_User = () => {
                         {errors.email && (
                             <p className="text-red-500 text-xs mt-1">
                                 {errors.email.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex flex-col">
+                        <label
+                            htmlFor="dob"
+                            className="font-medium text-gray-700"
+                        >
+                            Date of Birth
+                        </label>
+                        <Calendar
+                            id="dob"
+                            showIcon
+                            dateFormat="dd/mm/yy"
+                            placeholder="Date of Birth"
+                            value={watch("dob")}
+                            onChange={(e) => {
+                                setValue("dob", e.value, {
+                                    shouldValidate: true,
+                                });
+                                trigger("dob");
+                            }}
+                        />
+
+                        <input
+                            type="hidden"
+                            {...register("dob", {
+                                required: "Date of Birth is required",
+                            })}
+                        />
+                        {errors.dob && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.dob.message}
                             </p>
                         )}
                     </div>
