@@ -84,7 +84,7 @@ function App() {
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
                 />
-                {/* <Route element={<PrivateRoute />}> */}
+                <Route element={<PrivateRoute />}>
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
                         <Route
@@ -103,7 +103,7 @@ function App() {
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
-                        <Route path="email" element={<Email />} />
+                        <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
@@ -133,7 +133,7 @@ function App() {
                             />
                         </Route>
                     </Route>
-                {/* </Route> */}
+                </Route>
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             {!isPrivateRoute && <Footer />}

@@ -1,45 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import SideNavigation from "./SideNavigation.jsx";
+import { useLocation } from "react-router-dom";
 const TopNavBar = (props) => {
-    const { activeTab, setActiveTab, maximizeSideBar, setMaximizeSideBar } =
-        props;
+    const [activePath, setActivePath] = useState("");
+    const location = useLocation();
+    useEffect(() => {
+        setActivePath(location.pathname);
+        // Your logic here (e.g., analytics tracking, updating state)
+    }, [location.pathname]); // Runs every time the path changes
+
+    const {
+        // activeTab = "/dashboard",
+        setActiveTab,
+        maximizeSideBar,
+        setMaximizeSideBar,
+    } = props;
     const [visible, setVisible] = useState(false);
 
     const getDashBoardHeader = () => {
-        switch (activeTab) {
-            case "/dashboard":
-            case "/dashboard/":
+        switch (true) {
+            case activePath === "/dashboard" || activePath === "/dashboard/":
                 return "Dashboard";
-            case "/dashboard/project":
+            case activePath.startsWith("/dashboard/project"):
                 return "Projects";
-            case "/dashboard/task":
+            case activePath.startsWith("/dashboard/task"):
                 return "Tasks";
-            case "/dashboard/ticket":
+            case activePath.startsWith("/dashboard/ticket"):
                 return "Tickets";
-            case "/dashboard/email":
-                return "Emails";
-            case "/dashboard/profile":
+            case activePath.startsWith("/dashboard/message"):
+                return "Messages";
+            case activePath.startsWith("/dashboard/profile"):
                 return "Profile";
-            case "/dashboard/setting":
+            case activePath === "/dashboard/setting" ||
+                activePath === "/dashboard/setting/":
                 return "Settings";
-            case "/dashboard/financial-management":
+            case activePath === "/dashboard/setting/company-settings" ||
+                activePath === "/dashboard/setting/company-settings/":
+                return "Settings > Company-Settings";
+            case activePath === "/dashboard/setting/business-address" ||
+                activePath === "/dashboard/setting/business-address/":
+                return "Settings > Business-Settings";
+            case activePath === "/dashboard/setting/app-settings" ||
+                activePath === "/dashboard/setting/app-settings/":
+                return "Settings > App-Settings";
+            case activePath === "/dashboard/setting/role-permissions" ||
+                activePath === "/dashboard/setting/role-permissions/":
+                return "Settings > Role-Permissions";
+            case activePath === "/dashboard/setting/task-settings" ||
+                activePath === "/dashboard/setting/task-settings/":
+                return "Settings > Tast-Settings";
+            case activePath === "/dashboard/setting/module-settings" ||
+                activePath === "/dashboard/setting/module-settings/":
+                return "Settings > Module-Settings";
+            case activePath.startsWith("/dashboard/financial-management"):
                 return "Financial Management";
-            case "/dashboard/performance-tracking":
+            case activePath.startsWith("/dashboard/performance-tracking"):
                 return "Performance Tracking";
-            case "/dashboard/user-management":
+            case activePath.startsWith("/dashboard/user-management"):
                 return "User Management";
             default:
                 return "Dashboard";
         }
     };
     return (
-        <div className=" max-h-[85px]  h-[85px]     max-w-full flex justify-between border-b-2  border-gray-400 items-center px-5 py-3   sticky top-0 z-50">
+        <div className=" max-h-[85px]  h-[85px]     max-w-[100vw] flex justify-between border-b-2  border-gray-400 items-center px-5 py-3   sticky top-0 z-50">
             <div className="flex gap-2 items-center">
-                <div className="md:hidden ">
+                <div className="lg:hidden mr-2 flex  items-center">
                     <i
-                        className="pi pi-bars"
-                        style={{ color: "black", fontSize: "1.5rem" }}
+                        className="pi pi-bars cursor-pointer text-gray-600 hover:text-blue-600"
+                        style={{ fontSize: "1.5rem" }}
                         onClick={() => setVisible(true)}
                     ></i>
                 </div>
@@ -47,20 +77,11 @@ const TopNavBar = (props) => {
                     {getDashBoardHeader()}
                 </h2>
             </div>
-            <div className="flex items-center gap-4 rounded-full border-1 border-gray-400 px-2 py-2">
-                <div className="relative hidden lg:block">
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className=" pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none"
-                    />
-                    <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                </div>
-                <span className="lg:hidden">
-                    <i className="pi pi-search  text-gray-600 text-xl hover:text-blue-600"></i>{" "}
-                </span>
-                <i className="pi pi-bell text-gray-600 text-xl cursor-pointer hover:text-blue-600"></i>
-                <i className="pi pi-info-circle text-gray-600 text-xl cursor-pointer hover:text-blue-600"></i>
+            <div className="flex items-center gap-4 rounded-full border-1 border-gray-400 pr-4 pl-5 py-2">
+                <i
+                    className="pi pi-bell text-gray-600 text-xl cursor-pointer hover:text-blue-600"
+                    style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-600 text-white rounded-full">
                     AP
                 </div>
@@ -69,12 +90,19 @@ const TopNavBar = (props) => {
                 visible={visible}
                 onHide={() => setVisible(false)}
                 content={() => (
-                    <SideNavigation
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        maximizeSideBar={maximizeSideBar}
-                        setMaximizeSideBar={setMaximizeSideBar}
-                    />
+                    <React.Fragment className="relative">
+                        <i
+                            className=" absolute top-2 right-2 text-right pi pi-times-circle text-xl cursor-pointer hover:text-blue-600"
+                            onClick={() => setVisible(false)}
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                        <SideNavigation
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
+                            maximizeSideBar={maximizeSideBar}
+                            setMaximizeSideBar={setMaximizeSideBar}
+                        />
+                    </React.Fragment>
                 )}
             ></Sidebar>
         </div>

@@ -37,7 +37,7 @@ const SideTopNavigation = (props) => {
                         </p>
                     </div>
                 )}
-                <div className="hidden md:inline">
+                <div className="hidden lg:inline">
                     <i
                         className={`  pi ${
                             maximizeSideBar
@@ -76,7 +76,7 @@ const SideTopNavigation = (props) => {
                     </div>
                     <div
                         className="w-full flex gap-2  p-2 px-4    hover:bg-blue-400 hover:text-blue-900 text-gray-500 cursor-pointer"
-                        onClick={() => navigate("/dashboard/users")}
+                        
                     >
                         <button
                             className={`w-full text-left font-semibold   transition duration-200 cursor-pointer`}
