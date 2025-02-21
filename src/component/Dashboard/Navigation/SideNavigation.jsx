@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SideTopNavigation from "./SideTopNavigation.jsx";
 import { useState } from "react";
 const SideNavigation = ({
-    activeTab,
+    activeTab = "/dashboard",
     setActiveTab,
     maximizeSideBar,
     setMaximizeSideBar,
@@ -25,7 +25,14 @@ const SideNavigation = ({
                     setMaximizeSideBar={setMaximizeSideBar}
                     maximizeSideBar={maximizeSideBar}
                 />
-                <nav className="mt-4 text-cyan-50">
+
+                <nav
+                    className=" text-cyan-50 overflow-y-auto"
+                    style={{
+                        maxHeight: "calc(100vh - 140px)",
+                        scrollbarWidth: "thin",
+                    }}
+                >
                     {navData.map((each, index) => (
                         <Link
                             key={index}
@@ -34,9 +41,12 @@ const SideNavigation = ({
                             onClick={() => setActiveTab(each.path)}
                         >
                             <button
-                                className={` flex  justify-center pl-4  pr-2  py-3 w-full text-left hover:text-blue-600 transition duration-200 border-r-3 cursor-pointer ${
-                                    activeTab === each.path ||
-                                    activeTab === each.path + "/"
+                                className={` flex  justify-center  items-center pl-4  pr-2  py-3 w-full text-left hover:text-blue-600 transition duration-200 border-r-3 cursor-pointer ${
+                                    activeTab === each.path || 
+                                    activeTab === each.path + "/" ||
+                                    (each.path !== "/dashboard" &&
+                                        each.path !== "/" &&
+                                        activeTab.startsWith(each.path))
                                         ? "text-blue-600 font-semibold border-r-3 border-blue-600"
                                         : "text-gray-500 font-medium border-white"
                                 }`}
@@ -48,7 +58,7 @@ const SideNavigation = ({
 
                                 {maximizeSideBar && (
                                     <span className="ml-3 w-full">
-                                        {each.label}{" "}
+                                        {each.label}
                                     </span>
                                 )}
                             </button>
@@ -56,13 +66,16 @@ const SideNavigation = ({
                     ))}
                 </nav>
             </div>
-            <div className="px-4 md:px-6 py-3 w-full">
+            <div className="px-4  pb-3  pt-3  w-full border-t-1 border-gray-600">
                 <Link to="/" className="w-full">
                     <button
-                        className={`w-full text-left hover:text-blue-600 font-semibold text-gray-500 transition duration-200 cursor-pointer`}
+                        className={`  w-full text-left hover:text-blue-600 font-semibold text-gray-500 transition duration-200 cursor-pointer flex  justify-center items-center `}
                     >
-                        <i className={`mr-3 pi pi-sign-out`}></i>
-                        {maximizeSideBar && "Logout"}
+                        <i className={` pi pi-sign-out`}></i>
+
+                        {maximizeSideBar && (
+                            <span className="ml-3 w-full">Logout</span>
+                        )}
                     </button>
                 </Link>
             </div>
