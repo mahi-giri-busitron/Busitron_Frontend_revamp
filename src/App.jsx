@@ -7,7 +7,7 @@ import Home from "./component/Home.jsx";
 import Signin from "./component/Sign.jsx";
 import PrivateRoute from "./component/PrivateRoute.jsx";
 import OtpVerification from "./pages/OtpVerification.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
+import NotFoundPage from "./pages/NotFoundpage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
