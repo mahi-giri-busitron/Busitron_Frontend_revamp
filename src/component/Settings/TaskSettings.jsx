@@ -4,6 +4,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { Dropdown } from "primereact/dropdown";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
+import { TabMenu } from "primereact/tabmenu";
 
 const TaskSettings = () => {
     const [beforeDays, setBeforeDays] = useState(0);
@@ -12,6 +13,9 @@ const TaskSettings = () => {
     const [status, setStatus] = useState("Incomplete");
     const [taskboardLength, setTaskboardLength] = useState(10);
     const [toggleStates, setToggleStates] = useState({});
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const items = [{ label: "Task Settings", icon: "pi pi-list-check" }];
 
     const statusOptions = [
         { label: "Incomplete", value: "Incomplete" },
@@ -57,8 +61,17 @@ const TaskSettings = () => {
     return (
         <>
             <div className="w-full mx-auto">
-                <Card title="Task Settings">
-                    <h3 className="text-lg font-medium mb-4">Send Reminder</h3>
+                <div className="">
+                    <TabMenu
+                        model={items}
+                        activeIndex={activeIndex}
+                        onTabChange={(e) => setActiveIndex(e.index)}
+                    />
+                </div>
+
+                <div className="p-2  rounded-lg shadow-md bg-white">
+                    <div className="p-2">
+                    <h3 className="text-lg font-medium">Send Reminder</h3>
                     <div className="flex justify-between">
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">
@@ -142,7 +155,9 @@ const TaskSettings = () => {
                             />
                         </div>
                     </div>
-                </Card>
+                    </div>
+                    
+                </div>
             </div>
             <div className="p-4">
                 <div className="grid grid-cols-4 gap-4 mt-4">

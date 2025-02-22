@@ -12,7 +12,7 @@ import {
     sessionDrivers,
     rowLimits,
     currencies,
-    languages
+    languages,
 } from "../../utils/dropdowndata";
 
 const AppSettings = () => {
@@ -38,65 +38,38 @@ const AppSettings = () => {
         },
     });
 
-    const items = [
-        { label: "App Settings", icon: "pi pi-cog" },
-        { label: "Client Sign Up Settings", icon: "pi pi-user-plus" },
-        { label: "File Upload Settings", icon: "pi pi-upload" },
-        { label: "Google Map Settings", icon: "pi pi-map-marker" },
-    ];
+    const items = [{ label: "App Settings", icon: "pi pi-cog" }];
 
-
-    const onSubmit = (data) => {
-    };
+    const onSubmit = (data) => {};
 
     const renderDropdown = (name, label, options) => (
-      <div className="gap-2">
-          <label htmlFor={name} className="font-medium">
-              {label}
-          </label>
-          <Controller
-              name={name}
-              control={control}
-              rules={{ required: `${label} is required` }}
-              render={({ field }) => (
-                  <Dropdown
-                      id={name}
-                      {...field}
-                      options={options.map((opt) =>
-                          typeof opt === "object"
-                              ? { label: opt.label, value: opt.value } 
-                              : { label: opt, value: opt } 
-                      )}
-                      placeholder={`Select ${label}`}
-                      className={classNames("w-full", {
-                          "p-invalid": errors[name],
-                      })}
-                  />
-              )}
-          />
-          {errors[name] && (
-              <small className="p-error">{errors[name].message}</small>
-          )}
-      </div>
-  );
-  
-
-    const renderCheckbox = (name, label) => (
-        <div className="flex items-center gap-2">
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => (
-                    <Checkbox
-                        inputId={name}
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.checked)}
-                    />
-                )}
-            />
+        <div className="gap-2">
             <label htmlFor={name} className="font-medium">
                 {label}
             </label>
+            <Controller
+                name={name}
+                control={control}
+                rules={{ required: `${label} is required` }}
+                render={({ field }) => (
+                    <Dropdown
+                        id={name}
+                        {...field}
+                        options={options.map((opt) =>
+                            typeof opt === "object"
+                                ? { label: opt.label, value: opt.value }
+                                : { label: opt, value: opt }
+                        )}
+                        placeholder={`Select ${label}`}
+                        className={classNames("w-full", {
+                            "p-invalid": errors[name],
+                        })}
+                    />
+                )}
+            />
+            {errors[name] && (
+                <small className="p-error">{errors[name].message}</small>
+            )}
         </div>
     );
 
@@ -127,26 +100,6 @@ const AppSettings = () => {
                                 currencies
                             )}
                             {renderDropdown("language", "Language", languages)}{" "}
-                            {renderDropdown(
-                                "sessionDriver",
-                                "Session Driver",
-                                sessionDrivers
-                            )}
-                            {renderDropdown(
-                                "rowLimit",
-                                "Datatable Row Limit",
-                                rowLimits
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full mt-4">
-                            {renderCheckbox("appDebug", "App Debug")}
-                            {renderCheckbox("appUpdate", "App Update")}
-                            {renderCheckbox("enableCache", "Enable Cache")}
-                            {renderCheckbox(
-                                "employeeExport",
-                                "Employee can export data"
-                            )}
                         </div>
                     </div>
                 );

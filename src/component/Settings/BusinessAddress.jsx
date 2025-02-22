@@ -8,6 +8,7 @@ import { countryCodes } from "../../utils/countryCodes";
 import { useForm } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
+import { TabMenu } from "primereact/tabmenu";
 
 const BusinessAddress = () => {
     const {
@@ -17,7 +18,7 @@ const BusinessAddress = () => {
         reset,
         setValue,
     } = useForm();
-
+    const [activeIndex, setActiveIndex] = useState(0);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [addressToDelete, setAddressToDelete] = useState(null);
 
@@ -34,6 +35,7 @@ const BusinessAddress = () => {
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.name === "India")
     );
+    const items = [{ label: "Business Address", icon: "pi pi-briefcase" }];
 
     const [addresses, setAddresses] = useState([
         {
@@ -41,7 +43,6 @@ const BusinessAddress = () => {
             location: "Madhapur",
             address: "Madhapur Hyderabad",
             country: "India",
-            taxName: "--",
             taxNumber: "",
             latitude: "",
             longitude: "",
@@ -93,9 +94,15 @@ const BusinessAddress = () => {
     };
 
     return (
-        <div className="p-5 bg-white shadow-md rounded-lg">
-            <h2 className="headerTag">Business Address</h2>
-            <Button
+        <div className=" bg-white shadow-md rounded-lg">
+          
+            <TabMenu
+                model={items}
+                activeIndex={activeIndex}
+                onTabChange={(e) => setActiveIndex(e.index)}
+            />
+              <div className="p-5">
+              <Button
                 label="Add New Address"
                 className="m-200"
                 icon="pi pi-plus"
@@ -105,13 +112,14 @@ const BusinessAddress = () => {
                     setShowDialog(true);
                 }}
             />
+                </div>
+           
             <div className="py-5">
                 <DataTable value={addresses} className="p-datatable-sm">
                     <Column field="id" header="#" />
                     <Column field="location" header="Location" />
                     <Column field="address" header="Address" />
                     <Column field="country" header="Country" />
-                    <Column field="taxName" header="Tax Name" />
                     <Column
                         header="Default"
                         body={(rowData) => (
@@ -134,7 +142,7 @@ const BusinessAddress = () => {
                             <Button
                                 label="Edit"
                                 icon="pi pi-pencil"
-                                className="p-button-text"
+                                className="p-button items-start flex"
                                 onClick={() => {
                                     setEditMode(true);
                                     setCurrentAddress(rowData);
