@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TabMenu } from "primereact/tabmenu";
 import { Dropdown } from "primereact/dropdown";
-import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import {
     dateFormats,
     timeFormats,
     timezones,
-    sessionDrivers,
-    rowLimits,
     currencies,
     languages,
 } from "../../utils/dropdowndata";
@@ -103,14 +100,6 @@ const AppSettings = () => {
                         </div>
                     </div>
                 );
-            case 1:
-                return <div>Client Sign Up Settings Inputs</div>;
-            case 2:
-                return <div>File Upload Settings Inputs</div>;
-            case 3:
-                return <div>Google Map Settings Inputs</div>;
-            default:
-                return null;
         }
     };
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { InputNumber } from "primereact/inputnumber";
 import { RadioButton } from "primereact/radiobutton";
 import { Dropdown } from "primereact/dropdown";
-import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { TabMenu } from "primereact/tabmenu";
 
