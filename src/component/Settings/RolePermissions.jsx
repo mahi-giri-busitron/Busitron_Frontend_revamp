@@ -6,8 +6,11 @@ import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { TabMenu } from "primereact/tabmenu";
+
 
 const RolesPermissions = () => {
+    const [activeIndex, setActiveIndex] = useState(0);
     const [manageRoleVisible, setManageRoleVisible] = useState(false);
     const [expandedRole, setExpandedRole] = useState(null);
 
@@ -18,12 +21,11 @@ const RolesPermissions = () => {
             permissions: {},
         },
     });
+    const items = [{ label: "Roles & Permissions", icon: "pi pi-users" }];
 
     const permissionOptions = [
-        { label: "None", value: "None" },
-        { label: "Added", value: "Added" },
-        { label: "All", value: "All" },
-        { label: "Owned", value: "Owned" },
+        { label: "Yes", value: "Yes" },
+        { label: "No", value: "No" },
     ];
 
     const roles = [
@@ -33,8 +35,9 @@ const RolesPermissions = () => {
             unsyncedUsers: 0,
             deletable: false,
         },
-        { id: 2, role: "Employee", unsyncedUsers: 0, deletable: false },
-        { id: 3, role: "Client", unsyncedUsers: 0, deletable: false },
+        { id: 2, role: "3rd party Admin", unsyncedUsers: 0, deletable: false },
+
+        { id: 3, role: "Employee", unsyncedUsers: 0, deletable: false },
     ];
 
     const permissions = [
@@ -67,14 +70,21 @@ const RolesPermissions = () => {
     };
 
     return (
-        <div className="p-4">
-            <Button
-                label="Manage Role"
-                icon="pi pi-cog"
-                onClick={() => setManageRoleVisible(true)}
-                className="m-4"
+        <div>
+            <TabMenu
+                model={items}
+                activeIndex={activeIndex}
+                onTabChange={(e) => setActiveIndex(e.index)}
             />
-            <h2 className="text-xl font-semibold py-5">Roles & Permissions</h2>
+
+            <div className="mt-4">
+                <Button
+                    label="Manage Role"
+                    icon="pi pi-cog"
+                    onClick={() => setManageRoleVisible(true)}
+                    className="p-button-primary"
+                />
+            </div>
 
             <div className="mt-4 space-y-4">
                 {roles.map((role) => (

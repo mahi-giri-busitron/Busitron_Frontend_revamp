@@ -4,7 +4,7 @@ import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { Button } from 'primereact/button';
 
 const ModuleSettings = () => {
-  const roles = ['Admin', 'Employee', 'Client', 'Custom Modules'];
+  const roles = ['App Administrator', '3rd Party Admin', 'Employee'];
   const toggleOptions = [
     'Projects', 'Tickets', 'Invoices', 'Estimates',
     'Events', 'Messages', 'Tasks', 'Time Logs',
