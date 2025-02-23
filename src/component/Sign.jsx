@@ -21,7 +21,7 @@ const Signin = () => {
 
     return (
         <>
-            <div className="flex items-center justify-center min-h-screen bg-gray-50 md:pt-8">
+            <div className="flex items-center justify-center min-h-screen bg-gray-50 md:pt-8 ">
                 <Toaster position="top-right" />
 
                 <div className="relative flex flex-col md:flex-row w-full md:w-[1050px] h-auto md:h-[500px] rounded-xl shadow-lg overflow-hidden border border-gray-200 mt-[-75px] mx-4 md:mx-0">
