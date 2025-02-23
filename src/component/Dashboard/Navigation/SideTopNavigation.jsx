@@ -2,11 +2,13 @@ import React, { useRef, useState } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { InputSwitch } from "primereact/inputswitch";
 import { useNavigate } from "react-router-dom";
+import InviteMemberModal from "./InviteMember";
 const SideTopNavigation = (props) => {
     const { ProfileData, maximizeSideBar, setMaximizeSideBar } = props;
     const navigate = useNavigate();
     const op = useRef(null);
     const [checked, setChecked] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const handleOnLogout = () => {
         navigate("/");
@@ -19,6 +21,9 @@ const SideTopNavigation = (props) => {
     };
     const togglemaximizeSideBar = () => {
         setMaximizeSideBar((prev) => !prev);
+    };
+    const handleOnInviteMember = () => {
+        setVisible(true);
     };
     return (
         <div className=" flex px-5 py-3   items-center max-h-[85px]  h-[85px]    text-gray-900  border-b-2 border-gray-400 ">
@@ -74,12 +79,10 @@ const SideTopNavigation = (props) => {
                             style={{ fontSize: "20px" }}
                         ></i>
                     </div>
-                    <div
-                        className="w-full flex gap-2  p-2 px-4    hover:bg-blue-400 hover:text-blue-900 text-gray-500 cursor-pointer"
-                        
-                    >
+                    <div className="w-full flex gap-2  p-2 px-4    hover:bg-blue-400 hover:text-blue-900 text-gray-500 cursor-pointer">
                         <button
                             className={`w-full text-left font-semibold   transition duration-200 cursor-pointer`}
+                            onClick={handleOnInviteMember}
                         >
                             Invite Member
                         </button>
@@ -104,6 +107,7 @@ const SideTopNavigation = (props) => {
                     </div>
                 </div>
             </OverlayPanel>
+            <InviteMemberModal visible={visible} setVisible={setVisible} />
         </div>
     );
 };

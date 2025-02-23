@@ -12,49 +12,95 @@ const TopNavBar = (props) => {
     const { setActiveTab, maximizeSideBar, setMaximizeSideBar } = props;
     const [visible, setVisible] = useState(false);
 
+    const HeadingType1 = ({ headText = "DashBoard" }) => {
+        return <h2 className="text-2xl font-semibold">{headText}</h2>;
+    };
+    const HeadingType2 = ({
+        headText = "DashBoard",
+        childtext = "Sub setting",
+    }) => {
+        const symbol = ">";
+        return (
+            <h2 className="text-2xl font-semibold">
+                {headText} {symbol}{" "}
+                <span className="text-lg text-gray-600">{childtext}</span>
+            </h2>
+        );
+    };
+
     const getDashBoardHeader = () => {
         switch (true) {
             case activePath === "/dashboard" || activePath === "/dashboard/":
-                return "Dashboard";
+                return <HeadingType1 headText="Dashboard" />;
             case activePath.startsWith("/dashboard/project"):
-                return "Projects";
+                return <HeadingType1 headText="Projects" />;
             case activePath.startsWith("/dashboard/task"):
-                return "Tasks";
+                return <HeadingType1 headText="Tasks" />;
             case activePath.startsWith("/dashboard/ticket"):
-                return "Tickets";
+                return <HeadingType1 headText="Tickets" />;
             case activePath.startsWith("/dashboard/message"):
-                return "Messages";
+                return <HeadingType1 headText="Messages" />;
             case activePath.startsWith("/dashboard/profile"):
-                return "Profile";
+                return <HeadingType1 headText="Profile" />;
             case activePath === "/dashboard/setting" ||
                 activePath === "/dashboard/setting/":
-                return "Settings";
+                return <HeadingType1 headText="Settings" />;
             case activePath === "/dashboard/setting/company-settings" ||
                 activePath === "/dashboard/setting/company-settings/":
-                return "Settings > Company-Settings";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="Company-Settings"
+                    />
+                );
             case activePath === "/dashboard/setting/business-address" ||
                 activePath === "/dashboard/setting/business-address/":
-                return "Settings > Business-Settings";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="Business-Settings"
+                    />
+                );
             case activePath === "/dashboard/setting/app-settings" ||
                 activePath === "/dashboard/setting/app-settings/":
-                return "Settings > App-Settings";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="App-Settings"
+                    />
+                );
             case activePath === "/dashboard/setting/role-permissions" ||
                 activePath === "/dashboard/setting/role-permissions/":
-                return "Settings > Role-Permissions";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="Role-Permissions"
+                    />
+                );
             case activePath === "/dashboard/setting/task-settings" ||
                 activePath === "/dashboard/setting/task-settings/":
-                return "Settings > Tast-Settings";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="Task-Settings"
+                    />
+                );
             case activePath === "/dashboard/setting/module-settings" ||
                 activePath === "/dashboard/setting/module-settings/":
-                return "Settings > Module-Settings";
+                return (
+                    <HeadingType2
+                        headText="Settings"
+                        childtext="Module-Settings"
+                    />
+                );
             case activePath.startsWith("/dashboard/financial-management"):
-                return "Financial Management";
+                return <HeadingType1 headText="Financial Management" />;
             case activePath.startsWith("/dashboard/performance-tracking"):
-                return "Performance Tracking";
+                return <HeadingType1 headText="Performance Tracking" />;
             case activePath.startsWith("/dashboard/user-management"):
-                return "User Management";
+                return <HeadingType1 headText="User Management" />;
             default:
-                return "Dashboard";
+                return <HeadingType1 headText="Dashboard" />;
         }
     };
     return (
@@ -91,7 +137,7 @@ const TopNavBar = (props) => {
                             style={{ fontSize: "1.5rem" }}
                         />
                         <SideNavigation
-                            activeTab={activeTab}
+                            activeTab={activePath}
                             setActiveTab={setActiveTab}
                             maximizeSideBar={maximizeSideBar}
                             setMaximizeSideBar={setMaximizeSideBar}
