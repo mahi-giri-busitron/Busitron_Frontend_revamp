@@ -44,8 +44,9 @@ const Location = () => {
                 Our Offices
             </motion.h1>
 
+
             <div className="mx-auto px-2 max-w-[1240px]">
-                <section className="flex flex-col md:grid md:grid-cols-2 gap-14 md:mx-16 mx-10 lg:mx-10">
+                <section className={`flex flex-col gap-14 md:mx-16 mx-10 ${arr.length === 1 ? "items-center lg:mx-28" : "md:grid md:grid-cols-2 lg:mx-10"}`}>
                     {arr.map((item, index) => (
                         <motion.div
                             key={index}
@@ -53,7 +54,7 @@ const Location = () => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: index * 0.2 }}
-                            whileHover={{ scale: 1.05 }}
+                            whileHover={{ scale: 1.01 }}
                         >
                             <motion.img
                                 src={item.img}
