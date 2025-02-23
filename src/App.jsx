@@ -29,6 +29,9 @@ import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
+import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
+import SingleProject from "./component/Dashboard/SingleProject.jsx";
+import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
 
 function App() {
     const location = useLocation();
@@ -92,6 +95,10 @@ function App() {
                             element={<Financial_Management />}
                         />
                         <Route
+                            path="financial-management/:estimateId"
+                            element={<SingleEstimate />}
+                        />
+                        <Route
                             path="performance-tracking"
                             element={<Performance_Tracking />}
                         />
@@ -100,9 +107,11 @@ function App() {
                             element={<User_Management />}
                         />
                         <Route path="project" element={<Project />} />
+                        <Route path="project/:id" element={<SingleProject />} />
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
+                        <Route path="ticket/:id" element={<SingleTicket />} />
                         <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 

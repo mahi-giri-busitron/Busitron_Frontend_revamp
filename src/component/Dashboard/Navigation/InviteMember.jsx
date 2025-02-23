@@ -52,6 +52,15 @@ const InviteMemberModal = (props) => {
                         </div>
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
+                                Employee ID
+                            </label>
+                            <InputText
+                                placeholder="e.g abc123"
+                                className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                            />
+                        </div>
+                        <div>
+                            <label className="block font-semibold text-gray-700 mb-1">
                                 Message
                             </label>
                             <InputTextarea
