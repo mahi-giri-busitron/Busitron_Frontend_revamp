@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "primeicons/primeicons.css";
-import CreateProject from "./CreateProject";
+import CreateProject from "./CreateProject.jsx";
 
 const projects = [
     {
