@@ -5,6 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { countryCodes } from "../utils/countryCodes";
 import { Calendar } from "primereact/calendar";
+import { RadioButton } from "primereact/radiobutton";
 
 const Create_User = () => {
     const {
@@ -22,12 +23,28 @@ const Create_User = () => {
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.code === "+91")
     );
+    const [selectedGender, setSelectedGender] = useState(null);
 
     const onSubmit = (data) => {
+        console.log("form data", data);
         reset();
         setChecked(false);
         setPreview(null);
     };
+
+    const genderOptions = [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" },
+        { label: "Other", value: "other" },
+    ];
+
+    const maritalStatusOptions = [
+        { label: "Single", value: "single" },
+        { label: "Married", value: "married" },
+        { label: "Divorced", value: "divorced" },
+        { label: "Widowed", value: "widowed" },
+    ];
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -111,6 +128,46 @@ const Create_User = () => {
                             </p>
                         )}
                     </div>
+                    {/*Gender*/}
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Gender
+                        </label>
+                        <div className="flex gap-4 ">
+                            {genderOptions.map((option) => (
+                                <div
+                                    key={option.value}
+                                    className="flex items-center text-sm"
+                                >
+                                    <RadioButton
+                                        inputId={option.value}
+                                        {...register("gender", {
+                                            required: "Gender is required",
+                                        })}
+                                        value={option.value}
+                                        onChange={(e) =>
+                                            setValue("gender", e.value)
+                                        }
+                                        checked={
+                                            watch("gender") === option.value
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={option.value}
+                                        className="ml-2"
+                                    >
+                                        {option.label}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors.gender && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.gender.message}
+                            </p>
+                        )}
+                    </div>
+                    {/*phone*/}
                     <div>
                         <label className="font-medium text-gray-700">
                             Phone
@@ -231,6 +288,49 @@ const Create_User = () => {
                             </p>
                         )}
                     </div>
+
+                    {/*Statu*/}
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Marital Status
+                        </label>
+                        <div className="flex gap-4 text-sm p-1">
+                            {maritalStatusOptions.map((option) => (
+                                <div
+                                    key={option.value}
+                                    className="flex items-center"
+                                >
+                                    <RadioButton
+                                        inputId={option.value}
+                                        {...register("maritalStatus", {
+                                            required:
+                                                "Marital status is required",
+                                        })}
+                                        value={option.value}
+                                        onChange={(e) =>
+                                            setValue("maritalStatus", e.value)
+                                        }
+                                        checked={
+                                            watch("maritalStatus") ===
+                                            option.value
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={option.value}
+                                        className="ml-2"
+                                    >
+                                        {option.label}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors.maritalStatus && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.maritalStatus.message}
+                            </p>
+                        )}
+                    </div>
+
                     <div className="flex flex-col">
                         <label
                             htmlFor="dob"
