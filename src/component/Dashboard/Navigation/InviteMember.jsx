@@ -4,9 +4,25 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import "primeicons/primeicons.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const InviteMemberModal = (props) => {
     const { visible = false, setVisible } = props;
+    const [data, setData] = useState({
+        email: "",
+        designation: "",
+        employeeId: "",
+        message: "",
+    });
+
+    const navigate = useNavigate();
+
+    async function handleSubmit() {
+        const apiResponse = await axios.post("/api/v1/auth/register", data);
+        console.log(apiResponse);
+        if (apiResponse.data.success) navigate("/signin");
+    }
     return (
         <Dialog
             visible={visible}
@@ -39,6 +55,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g johndoe@gmail.com"
                                 className="w-full border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.email}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        email: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -48,6 +71,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g HR"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.designation}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        designation: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -57,6 +87,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g abc123"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.employeeId}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        employeeId: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -67,6 +104,13 @@ const InviteMemberModal = (props) => {
                                 rows={3}
                                 placeholder="Add message (Optional)"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.message}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        message: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                     </div>
@@ -76,6 +120,7 @@ const InviteMemberModal = (props) => {
                             icon="pi pi-send"
                             iconPos="left"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2"
+                            onClick={handleSubmit}
                         />
                     </div>
                 </div>

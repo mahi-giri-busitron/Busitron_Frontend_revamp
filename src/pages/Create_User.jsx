@@ -6,6 +6,11 @@ import { Dropdown } from "primereact/dropdown";
 import { countryCodes } from "../utils/countryCodes";
 import { Calendar } from "primereact/calendar";
 import { RadioButton } from "primereact/radiobutton";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../redux/userSlice.js";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useNavigate } from "react-router-dom";
 
 const Create_User = () => {
     const {
@@ -18,15 +23,23 @@ const Create_User = () => {
         trigger,
     } = useForm();
 
+    const dispatch = useDispatch();
     const [checked, setChecked] = useState(false);
     const [preview, setPreview] = useState(null);
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.code === "+91")
     );
-    const [selectedGender, setSelectedGender] = useState(null);
 
-    const onSubmit = (data) => {
-        console.log("form data", data);
+    const { currentUser, loading } = useSelector((state) => state.user);
+    const navigate = useNavigate();
+
+    const onSubmit = async (data) => {
+        const apiResult = await dispatch(updateUser({ data }));
+
+        if (updateUser.fulfilled.match(apiResult)) {
+            navigate("/dashboard");
+        }
+
         reset();
         setChecked(false);
         setPreview(null);
@@ -57,8 +70,6 @@ const Create_User = () => {
         }
     };
 
-    const handleClick = () => {};
-
     return (
         <div className="pt-16 flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-lg shadow-lg rounded-lg bg-white p-6 sm:p-8 my-2">
@@ -82,7 +93,6 @@ const Create_User = () => {
                         <label
                             htmlFor="profilePicInput"
                             className="absolute flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full shadow-lg cursor-pointer right-0 bottom-0"
-                            onClick={handleClick}
                         >
                             <i className="pi pi-pencil text-white text-lg"></i>
                         </label>
@@ -274,6 +284,8 @@ const Create_User = () => {
                         </label>
                         <InputText
                             placeholder="name@example.com"
+                            value={currentUser?.data?.email}
+                            disabled
                             {...register("email", {
                                 required: "Email is required",
                                 pattern: {
@@ -385,17 +397,31 @@ const Create_User = () => {
                             {errors.terms.message}
                         </p>
                     )}
-                    <button
-                        type="submit"
-                        className={`w-full py-3 rounded-md font-medium text-white ${
-                            checked
-                                ? "bg-blue-600 hover:bg-blue-500"
-                                : "bg-gray-400"
-                        }`}
-                        disabled={!checked}
-                    >
-                        Submit
-                    </button>
+                    {loading ? (
+                        <div className="w-full flex items-center justify-center">
+                            <ProgressSpinner
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                }}
+                                strokeWidth="8"
+                                fill="var(--surface-ground)"
+                                animationDuration=".5s"
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            type="submit"
+                            className={`w-full py-3 rounded-md font-medium text-white ${
+                                checked
+                                    ? "bg-blue-600 hover:bg-blue-500"
+                                    : "bg-gray-400"
+                            }`}
+                            disabled={!checked}
+                        >
+                            Submit
+                        </button>
+                    )}
                 </form>
             </div>
         </div>
