@@ -20,7 +20,7 @@ import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
 import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
 import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
-import User_Management from "./component/Dashboard/Users/User_Management.jsx";
+import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
 import AppSetting from "./component/Settings/AppSetting.jsx";
@@ -104,7 +104,7 @@ function App() {
                         />
                         <Route
                             path="user-management"
-                            element={<User_Management />}
+                            element={<UserManagement />}
                         />
                         <Route path="project" element={<Project />} />
                         <Route path="project/:id" element={<SingleProject />} />

@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { OverlayPanel } from "primereact/overlaypanel";
-import InviteMemberModal from "../Navigation/InviteMember";
+import InviteMemberModal from "../Navigation/InviteMember.jsx";
 import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
 export default function User_Management() {
@@ -189,19 +189,23 @@ export default function User_Management() {
                             .includes(filters.search.toLowerCase())
                 )}
                 emptyMessage="No data available in table"
-                responsiveLayout="scroll"
                 paginator
-                rows={5}
+                rows={10}
                 rowsPerPageOptions={[5, 10, 25, 50]}
+                tableStyle={{ minWidth: "60rem" }}
+                tableClassName="custom-table"
+                paginatorClassName="custom-pagination"
+                currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
             >
-                <Column field="sno" header="S.No" />
-                <Column field="empId" header="EMP ID" />
-                <Column field="name" header="Name" body={nameTemplete} />
-                <Column field="email" header="Email" body={emailTemplate} />
-                <Column field="mobile" header="Mobile" />
-                <Column field="designation" header="Designation" />
-                <Column field="dob" header="Dob" />
-                <Column field="role" header="Role" />
+                <Column field="sno" header="S.No"  headerClassName="custom-table-header" sortable data-p-resizable-column={true} resizeable/>
+                <Column field="empId" header="EMP ID" headerClassName="custom-table-header" />
+                <Column field="name" header="Name" body={nameTemplete}  headerClassName="custom-table-header"/>
+                <Column field="email" header="Email" body={emailTemplate}  headerClassName="custom-table-header"/>
+                <Column field="mobile" header="Mobile" headerClassName="custom-table-header" />
+                <Column field="designation" header="Designation"  headerClassName="custom-table-header"/>
+                <Column field="dob" header="Dob" headerClassName="custom-table-header" />
+                <Column field="role" header="Role"  headerClassName="custom-table-header" class/>
                 <Column
                     header="Action"
                     body={(rowData) => (
