@@ -209,7 +209,7 @@ const ProjectList = () => {
                     <div>{indexOfFirstProject + index + 1}</div>
                     <div
                         className="text-gray-600 cursor-pointer hover:underline w-[85%] text-ellipsis overflow-hidden whitespace-nowrap"
-                        onClick={() => navigate(`/project/${project.id}`)}
+                        onClick={() => navigate(`/dashboard/project/${project.id}`)}
                     >
                         {project.name}
                     </div>
