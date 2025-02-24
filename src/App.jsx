@@ -11,7 +11,6 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
-import Project from "./component/Dashboard/Project.jsx";
 import Task from "./component/Dashboard/Task.jsx";
 import Ticket from "./component/Dashboard/Ticket.jsx";
 import Email from "./component/Dashboard/Email.jsx";
@@ -30,8 +29,9 @@ import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
 import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
-import SingleProject from "./component/Dashboard/SingleProject.jsx";
 import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
+import Project from "./component/Dashboard/Project/Project.jsx";
+import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
 
 function App() {
     const location = useLocation();
