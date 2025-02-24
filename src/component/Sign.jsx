@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import LOGOFOO from "../assets/svgs/logoFooter.jsx";
 import svg from "../assets/sign.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { signinUser } from "../redux/userSlice.js";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const Signin = () => {
     const {
@@ -14,9 +17,16 @@ const Signin = () => {
         formState: { errors },
     } = useForm();
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { loading } = useSelector((state) => state.user);
 
-    const onSubmit = (data) => {
-        toast.success("Sign in successful!");
+    const onSubmit = async (data) => {
+        const apiResult = await dispatch(signinUser({ ...data }));
+
+        if (signinUser.fulfilled.match(apiResult)) {
+            navigate("/signin/otp-verification");
+        }
     };
 
     return (
@@ -129,11 +139,23 @@ const Signin = () => {
                                         </Link>
                                     </div>
                                 </div>
-                                <Button
-                                    type="submit"
-                                    label="Sign In"
-                                    className="w-full md:w-4/5 p-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-700 transition"
-                                />
+                                {loading ? (
+                                    <ProgressSpinner
+                                        style={{
+                                            width: "50px",
+                                            height: "50px",
+                                        }}
+                                        strokeWidth="8"
+                                        fill="var(--surface-ground)"
+                                        animationDuration=".5s"
+                                    />
+                                ) : (
+                                    <Button
+                                        type="submit"
+                                        label="Sign In"
+                                        className="w-full md:w-4/5 p-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-700 transition"
+                                    />
+                                )}
                             </form>
                         </div>
                     </div>
