@@ -12,8 +12,9 @@
     box-shadow: 0.2s;
     border-radius: 30px;
 }
+
 .button_wrapper_left .p-button:hover {
-    border: 1px solid #00715d;
+    border: 2px solid #00715d;
     background-color: #ffffff;
     color: #00715d;
 }
@@ -65,6 +66,7 @@
 .image_wrapper_product:hover .overlay {
     opacity: 1;
 }
+
 .image_wrapper_product .overlay {
     position: absolute;
     top: 0;
@@ -123,4 +125,78 @@ body {
 
 .Dropdown .p-dropdown .p-dropdown-trigger {
     width: 33px;
+}
+
+
+
+.profile_parent_wrapper {
+    background-color: #f2f4f7;
+}
+
+.Prifile_wrapper .p-inputtext {
+    padding: 8px 20px;
+
+}
+
+.Prifile_wrapper {
+
+
+    padding: 20px 20px;
+    height: 100%;
+    max-height: 75vh;
+    overflow: auto;
+
+}
+
+.Prifile_wrapper .p-tabview {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
+
+.profile_button {
+    padding: 8px 20px;
+    border-top: 2px solid #00715d;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #ffffff;
+}
+
+
+.profile_parent_wrapper .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    color: #00715d;
+    border-bottom: 2px solid #00715d;
+}
+
+.profile_button .p-button {
+    border: 0;
+    background-color: #00715d;
+    color: #ffff;
+    border-radius: 20px;
+
+}
+
+.profile_button .p-button:hover {
+
+    border: 1px solid #00715d;
+    color: #00715d;
+    background-color: #ffff;
+}
+
+.profile_button .p-button:focus {
+    box-shadow: none;
+}
+
+.detail_card ul li {
+    display: flex;
+    align-items: center;
+}
+
+.detail_card ul li p:last-child {
+    margin-left: 20px;
+}
+
+.detail_card ul li p:first-child {
+    width: 100%;
+    max-width: 50px
 }
