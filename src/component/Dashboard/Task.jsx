@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { ButtonGroup } from "primereact/buttongroup";
@@ -8,10 +7,8 @@ import { InputText } from "primereact/inputtext";
 import { Paginator } from "primereact/paginator";
 import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
-import FormTest from "../../pages/FormTest";
 
 const Task = () => {
-
     const actionTemplate = () => {
         return (
             <div className="flex gap-2">
@@ -21,21 +18,21 @@ const Task = () => {
     };
 
     const headers = [
-        { label : "S.No" , key : "sno"},
+        { label: "S.No", key: "sno" },
         { label: "Task No", key: "taskNo" },
         { label: "Task", key: "task" },
-        { label: "Assigned By", key: "assignedBy" },       
+        { label: "Assigned By", key: "assignedBy" },
         // { label: "Start Date", key: "startDate" },
         // { label: "Due Date", key: "dueDate" },
         { label: "Status", key: "status" },
         // { label: "Action", key: "action" },
     ];
 
-        const taskData = [
+    const taskData = [
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T001",
-            sno : 1,
+            sno: 1,
             status: "In Progress",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
@@ -46,9 +43,140 @@ const Task = () => {
             // action : actionTemplate()
         },
         {
-            task: "API Integration",
+            task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T002",
-            sno : 2,
+            sno: 2,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T003",
+            sno: 3,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T004",
+            sno: 4,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T005",
+            sno: 5,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T006",
+            sno: 6,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T007",
+            sno: 7,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T008",
+            sno: 8,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T009",
+            sno: 9,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T0010",
+            sno: 10,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+        {
+            task: "Build UiasdfadsfdfDFwdfdsf",
+            taskNo: "T0011",
+            sno: 11,
+            status: "In Progress",
+            completedOn: "2024-02-18",
+            startDate: "10-02-2012",
+            dueDate: "2024-02-20",
+            estimatedTime: "5h",
+            hoursLogged: "4h",
+            assignedBy: "Alice",
+            // action : actionTemplate()
+        },
+
+        {
+            task: "API Integration",
+            taskNo: "T0012",
+            sno: 12,
             status: "Completed",
             completedOn: "2024-02-19",
             startDate: "2024-02-12",
@@ -60,8 +188,8 @@ const Task = () => {
         },
         {
             task: "Frontend",
-            taskNo: "T003",
-            sno : 3,
+            taskNo: "T0013",
+            sno: 13,
             status: "In Progress",
             completedOn: "2024-02-18",
             startDate: "2024-02-10",
@@ -73,8 +201,8 @@ const Task = () => {
         },
         {
             task: "Backend API",
-            taskNo: "T004",
-            sno : 4,
+            taskNo: "T0014",
+            sno: 14,
             status: "Completed",
             completedOn: "2024-02-19",
             startDate: "2024-02-12",
@@ -86,8 +214,8 @@ const Task = () => {
         },
         {
             task: "Database Setup",
-            taskNo: "T005",
-            sno : 5,
+            taskNo: "T0015",
+            sno: 15,
             status: "In Progress",
             completedOn: "2024-02-18",
             startDate: "2024-02-10",
@@ -99,8 +227,8 @@ const Task = () => {
         },
         {
             task: "Build UI",
-            taskNo: "T001",
-            sno : 6,
+            taskNo: "T0016",
+            sno: 16,
             status: "In Progress",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
@@ -112,8 +240,8 @@ const Task = () => {
         },
         {
             task: "Build UI",
-            taskNo: "T001",
-            sno : 7,
+            taskNo: "T0017",
+            sno: 17,
             status: "In Progress",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
@@ -125,24 +253,23 @@ const Task = () => {
         },
     ];
 
-
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
 
-    const [show,setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
     const onPageChange = (event) => {
         setFirst(event.first);
         setRows(event.rows);
     };
-    
+
     return (
         <>
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
                     <Button
                         label="Add Task"
-                        onClick={()=> setShow(!show)}
+                        onClick={() => setShow(!show)}
                         className="h-9"
                         size="small"
                         icon="pi pi-plus"
@@ -182,14 +309,14 @@ const Task = () => {
                     paginator
                     rows={10}
                     removableSort
-                    rowsPerPageOptions={[5,10,15,20]}
-                    tableStyle={{ minWidth: "60rem"}}
+                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    tableStyle={{ minWidth: "60rem" }}
                     tableClassName="custom-table"
                     paginatorClassName="custom-pagination"
                 >
                     {headers.map((val) => (
                         <Column
-                            sortable={val.key=="sno" || val.key == "taskNo"}
+                            sortable={val.key == "sno" || val.key == "taskNo"}
                             key={val.key}
                             field={val.key}
                             header={val.label}
@@ -210,7 +337,7 @@ const Task = () => {
                                     className="text-red-500 hover:text-red-700"
                                     onClick={() => handleDelete(rowData)}
                                 >
-                                   <i className="pi pi-trash cursor-pointer"></i>
+                                    <i className="pi pi-trash cursor-pointer"></i>
                                 </button>
                             </div>
                         )}
@@ -222,12 +349,12 @@ const Task = () => {
             <Dialog
                 header="Add Task"
                 visible={show}
-                style={{ width: '75vw'}}
+                style={{ width: "75vw" }}
                 onHide={() => setShow(false)}
                 modal
                 className="p-fluid"
             >
-               <AddTask setShow={setShow}/>
+                <AddTask setShow={setShow} />
             </Dialog>
         </>
     );

@@ -168,7 +168,7 @@ const AddTask = ({ setShow }) => {
                                         {...field}
                                         options={assignedToValues}
                                         optionLabel="label"
-                                        placeholder="Select Projects"
+                                        placeholder="Select Assigned Person"
                                         className="h-10 items-center"
                                         onChange={(e) =>field.onChange(e.value)}
                                     />
