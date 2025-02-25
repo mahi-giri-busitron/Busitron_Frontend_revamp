@@ -5,6 +5,12 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { countryCodes } from "../utils/countryCodes";
 import { Calendar } from "primereact/calendar";
+import { RadioButton } from "primereact/radiobutton";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../redux/userSlice.js";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useNavigate } from "react-router-dom";
 
 const Create_User = () => {
     const {
@@ -17,17 +23,39 @@ const Create_User = () => {
         trigger,
     } = useForm();
 
+    const dispatch = useDispatch();
     const [checked, setChecked] = useState(false);
     const [preview, setPreview] = useState(null);
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.code === "+91")
     );
 
-    const onSubmit = (data) => {
+    const { currentUser, loading } = useSelector((state) => state.user);
+    const navigate = useNavigate();
+
+    const onSubmit = async (formData) => {
+        const apiResult = await dispatch(updateUser(formData));
+
+        if (updateUser.fulfilled.match(apiResult)) navigate("/dashboard");
+
         reset();
         setChecked(false);
         setPreview(null);
     };
+
+    const genderOptions = [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" },
+        { label: "Other", value: "other" },
+    ];
+
+    const maritalStatusOptions = [
+        { label: "Single", value: "single" },
+        { label: "Married", value: "married" },
+        { label: "Divorced", value: "divorced" },
+        { label: "Widowed", value: "widowed" },
+    ];
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -39,8 +67,6 @@ const Create_User = () => {
             reader.readAsDataURL(file);
         }
     };
-
-    const handleClick = () => {};
 
     return (
         <div className="pt-16 flex justify-center items-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
@@ -65,7 +91,6 @@ const Create_User = () => {
                         <label
                             htmlFor="profilePicInput"
                             className="absolute flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full shadow-lg cursor-pointer right-0 bottom-0"
-                            onClick={handleClick}
                         >
                             <i className="pi pi-pencil text-white text-lg"></i>
                         </label>
@@ -111,6 +136,46 @@ const Create_User = () => {
                             </p>
                         )}
                     </div>
+                    {/*Gender*/}
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Gender
+                        </label>
+                        <div className="flex gap-4 ">
+                            {genderOptions.map((option) => (
+                                <div
+                                    key={option.value}
+                                    className="flex items-center text-sm"
+                                >
+                                    <RadioButton
+                                        inputId={option.value}
+                                        {...register("gender", {
+                                            required: "Gender is required",
+                                        })}
+                                        value={option.value}
+                                        onChange={(e) =>
+                                            setValue("gender", e.value)
+                                        }
+                                        checked={
+                                            watch("gender") === option.value
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={option.value}
+                                        className="ml-2"
+                                    >
+                                        {option.label}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors.gender && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.gender.message}
+                            </p>
+                        )}
+                    </div>
+                    {/*phone*/}
                     <div>
                         <label className="font-medium text-gray-700">
                             Phone
@@ -217,6 +282,8 @@ const Create_User = () => {
                         </label>
                         <InputText
                             placeholder="name@example.com"
+                            value={currentUser?.data?.email}
+                            disabled
                             {...register("email", {
                                 required: "Email is required",
                                 pattern: {
@@ -231,6 +298,48 @@ const Create_User = () => {
                             </p>
                         )}
                     </div>
+
+                    <div className="flex flex-col">
+                        <label className="font-medium text-gray-700">
+                            Marital Status
+                        </label>
+                        <div className="flex gap-4 text-sm p-1">
+                            {maritalStatusOptions.map((option) => (
+                                <div
+                                    key={option.value}
+                                    className="flex items-center"
+                                >
+                                    <RadioButton
+                                        inputId={option.value}
+                                        {...register("maritalStatus", {
+                                            required:
+                                                "Marital status is required",
+                                        })}
+                                        value={option.value}
+                                        onChange={(e) =>
+                                            setValue("maritalStatus", e.value)
+                                        }
+                                        checked={
+                                            watch("maritalStatus") ===
+                                            option.value
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={option.value}
+                                        className="ml-2"
+                                    >
+                                        {option.label}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors.maritalStatus && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.maritalStatus.message}
+                            </p>
+                        )}
+                    </div>
+
                     <div className="flex flex-col">
                         <label
                             htmlFor="dob"
@@ -285,17 +394,31 @@ const Create_User = () => {
                             {errors.terms.message}
                         </p>
                     )}
-                    <button
-                        type="submit"
-                        className={`w-full py-3 rounded-md font-medium text-white ${
-                            checked
-                                ? "bg-blue-600 hover:bg-blue-500"
-                                : "bg-gray-400"
-                        }`}
-                        disabled={!checked}
-                    >
-                        Submit
-                    </button>
+                    {loading ? (
+                        <div className="w-full flex items-center justify-center">
+                            <ProgressSpinner
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                }}
+                                strokeWidth="8"
+                                fill="var(--surface-ground)"
+                                animationDuration=".5s"
+                            />
+                        </div>
+                    ) : (
+                        <button
+                            type="submit"
+                            className={`w-full py-3 rounded-md font-medium text-white ${
+                                checked
+                                    ? "bg-blue-600 hover:bg-blue-500"
+                                    : "bg-gray-400"
+                            }`}
+                            disabled={!checked}
+                        >
+                            Submit
+                        </button>
+                    )}
                 </form>
             </div>
         </div>

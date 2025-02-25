@@ -38,7 +38,7 @@ const DashboardEmployeeList = () => {
                     <p className="flex-1 min-w-[150px]">Email</p>
                     <p className="w-32 pl-3">DOB</p>
                 </div>
-            </div>
+            </div>  
             <div className="border-gray-200 rounded-md mt-2">
                 {employees.map((employee, index) => (
                     <div

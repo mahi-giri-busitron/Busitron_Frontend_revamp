@@ -11,8 +11,14 @@ const Settings = () => {
 
     useEffect(() => {
         const currentPath = location.pathname;
+        if (
+            location.pathname === "/dashboard/setting" ||
+            location.pathname === "/dashboard/setting/"
+        ) {
+            navigate("/dashboard/setting/company-settings");
+        }
         setActiveTab(currentPath);
-    }, []);
+    }, [location.pathname]);
 
     return (
         <div className="flex h-full w-full ">

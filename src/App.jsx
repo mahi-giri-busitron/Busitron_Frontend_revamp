@@ -11,7 +11,6 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
-import Project from "./component/Dashboard/Project.jsx";
 import Task from "./component/Dashboard/Task.jsx";
 import Ticket from "./component/Dashboard/Ticket.jsx";
 import Email from "./component/dashboard/Messages.jsx";
@@ -21,7 +20,7 @@ import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
 import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
 import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
-import User_Management from "./component/Dashboard/User_Management.jsx";
+import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
 import AppSetting from "./component/Settings/AppSetting.jsx";
@@ -30,7 +29,11 @@ import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
 import Messages from "./component/dashboard/Messages.jsx";
-
+import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
+import Project from "./component/Dashboard/Project/Project.jsx";
+import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
+import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
+import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
 function App() {
     const location = useLocation();
 
@@ -80,12 +83,12 @@ function App() {
                 />
                 <Route path="/signin/create-user" element={<Create_User />} />
 
-                <Route path="/enter-new-password" element={<ResetPassword />} />
+                <Route path="/:email/enter-new-password" element={<ResetPassword />} />
                 <Route
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
                 />
-                {/* <Route element={<PrivateRoute />}> */}
+                <Route element={<PrivateRoute />}>
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
                         <Route
@@ -93,18 +96,25 @@ function App() {
                             element={<Financial_Management />}
                         />
                         <Route
+                            path="financial-management/:estimateId"
+                            element={<SingleEstimate />}
+                        />
+                        <Route
                             path="performance-tracking"
                             element={<Performance_Tracking />}
                         />
                         <Route
                             path="user-management"
-                            element={<User_Management />}
+                            element={<UserManagement />}
                         />
                         <Route path="project" element={<Project />} />
+                        <Route path="project/:id" element={<SingleProject />} />
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
                         <Route path="message" element={< Messages/>} />
+                        <Route path="ticket/:id" element={<SingleTicket />} />
+                        <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
@@ -133,8 +143,12 @@ function App() {
                                 element={<ModuleSettings />}
                             />
                         </Route>
+                        <Route
+                            path="/dashboard/user-management/emp/:empid"
+                            element={<UserDetails />}
+                        />
                     </Route>
-                {/* </Route> */}
+                </Route>
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             {!isPrivateRoute && <Footer />}
