@@ -95,25 +95,24 @@ const BusinessAddress = () => {
 
     return (
         <div className=" bg-white shadow-md rounded-lg">
-          
             <TabMenu
                 model={items}
                 activeIndex={activeIndex}
                 onTabChange={(e) => setActiveIndex(e.index)}
             />
-              <div className="p-5">
-              <Button
-                label="Add New Address"
-                className="m-200"
-                icon="pi pi-plus"
-                onClick={() => {
-                    reset();
-                    setEditMode(false);
-                    setShowDialog(true);
-                }}
-            />
-                </div>
-           
+            <div className="p-5">
+                <Button
+                    label="Add New Address"
+                    className="m-200"
+                    icon="pi pi-plus"
+                    onClick={() => {
+                        reset();
+                        setEditMode(false);
+                        setShowDialog(true);
+                    }}
+                />
+            </div>
+
             <div className="py-5">
                 <DataTable value={addresses} className="p-datatable-sm">
                     <Column field="id" header="#" />
