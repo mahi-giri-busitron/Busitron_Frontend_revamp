@@ -14,7 +14,7 @@ import Create_User from "./pages/Create_User.jsx";
 import Project from "./component/Dashboard/Project.jsx";
 import Task from "./component/Dashboard/Task.jsx";
 import Ticket from "./component/Dashboard/Ticket.jsx";
-import Email from "./component/Dashboard/Email.jsx";
+import Email from "./component/dashboard/Messages.jsx";
 import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
@@ -29,6 +29,7 @@ import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
+import Messages from "./component/dashboard/Messages.jsx";
 
 function App() {
     const location = useLocation();
@@ -84,7 +85,7 @@ function App() {
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
                 />
-                <Route element={<PrivateRoute />}>
+                {/* <Route element={<PrivateRoute />}> */}
                     <Route path="/dashboard" element={<Dashboard />}>
                         <Route path="" element={<DashboardHome />} />
                         <Route
@@ -103,7 +104,7 @@ function App() {
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
-                        <Route path="message" element={<Email />} />
+                        <Route path="message" element={< Messages/>} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
@@ -133,7 +134,7 @@ function App() {
                             />
                         </Route>
                     </Route>
-                </Route>
+                {/* </Route> */}
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
             {!isPrivateRoute && <Footer />}
