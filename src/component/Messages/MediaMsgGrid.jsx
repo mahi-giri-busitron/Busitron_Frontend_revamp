@@ -143,7 +143,6 @@ export default function MediaMsgGrid({ media, incoming }) {
 }
 
 function MediaItem({ media, index, openLightbox, lightboxOpen }) {
-    console.log("light box open", media);
     return (
         <>
             {media.type === "video" ? (

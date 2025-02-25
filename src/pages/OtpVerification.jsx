@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { otpVerify, resendOtp } from "../redux/userSlice";
 import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
 
 const maskEmail = (email) => {
     const [local, domain] = email.split("@");
@@ -14,7 +15,7 @@ const maskEmail = (email) => {
 
 const OtpVerification = () => {
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(false); // Unified loading state
+    const [loading, setLoading] = useState(false);
 
     const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
@@ -23,21 +24,25 @@ const OtpVerification = () => {
     if (currentUser.data.isValid) return <Navigate to="/dashboard" />;
 
     async function verifyOtp() {
-        setLoading("verify"); // Set loading for verification
+        setLoading("verify");
         const apiResult = await dispatch(otpVerify({ otp: token }));
         setLoading(false);
 
         if (otpVerify.fulfilled.match(apiResult)) {
+            toast.success("User verified successfully!");
             navigate("/signin/create-user");
+        } else {
+            toast.error(apiResult?.payload || "Something went wrong!");
         }
     }
 
     async function resendotp() {
-        setLoading("resend"); // Set loading for resending OTP
+        setLoading("resend");
         try {
             await dispatch(resendOtp());
+            toast.success("OTP resent successfully!");
         } catch (error) {
-            console.error("Error resending OTP:", error);
+            toast.error(apiResult?.payload || "Something went wrong!");
         }
         setLoading(false);
     }

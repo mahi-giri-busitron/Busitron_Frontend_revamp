@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SideTopNavigation from "./SideTopNavigation.jsx";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../../../redux/userSlice.js";
+import toast from "react-hot-toast";
 
 const SideNavigation = ({
     activeTab = "/dashboard",
@@ -21,9 +22,9 @@ const SideNavigation = ({
 
     const handleClick = async () => {
         const apiResult = await dispatch(signOutUser());
-
         if (signOutUser.fulfilled.match(apiResult)) {
             navigate("/signin");
+            toast.success("Signed Out Successfully!");
         }
     };
     

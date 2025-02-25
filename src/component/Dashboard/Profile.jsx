@@ -8,6 +8,7 @@ import { Button } from "primereact/button";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/userSlice";
 import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
 
 const genderOptions = [
     { label: "male", value: "male" },
@@ -86,6 +87,7 @@ const Profile = () => {
         }
 
         await dispatch(updateUser(formData));
+        toast.success("Profile updated successfully");
     }
 
     return (
