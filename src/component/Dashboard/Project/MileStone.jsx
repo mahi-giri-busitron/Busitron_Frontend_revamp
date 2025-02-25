@@ -21,19 +21,24 @@ const Milestone = () => {
     ];
 
     const onSubmit = (data) => {
-        console.log("data :", data);
+        const parsedData = {
+            ...data,
+            cost: parseInt(data.cost, 10) || 0,
+            budgetCost: parseInt(data.budgetCost, 10) || 0,
+        };
+
         if (editingId !== null) {
             setMilestones(
                 milestones.map((milestone) =>
                     milestone.id === editingId
-                        ? { ...milestone, ...data }
+                        ? { ...milestone, ...parsedData }
                         : milestone
                 )
             );
         } else {
             setMilestones([
                 ...milestones,
-                { id: milestones.length + 1, ...data },
+                { id: milestones.length + 1, taskCount: milestones.length + 1, ...parsedData },
             ]);
         }
         setVisible(false);
@@ -60,14 +65,11 @@ const Milestone = () => {
 
             <h2 className="text-2xl font-semibold mb-6">MILESTONES</h2>
 
-            <DataTable
-                value={milestones}
-                className="shadow-lg rounded border-none p-5"
-            >
+            <DataTable value={milestones} className="shadow-lg rounded border-none p-5">
                 <Column field="title" header="Milestone Title" />
-                <Column field="cost" header="Milestone Cost" /> 
+                <Column field="cost" header="Milestone Cost" />
                 <Column field="status" header="Status" />
-                <Column field="budgetCost" header="Budget Cost" />
+                <Column field="taskCount" header="Task Count" />
                 <Column
                     header="Action"
                     body={(rowData) => (
@@ -83,8 +85,7 @@ const Milestone = () => {
                                 onClick={() =>
                                     setMilestones(
                                         milestones.filter(
-                                            (milestone) =>
-                                                milestone.id !== rowData.id
+                                            (milestone) => milestone.id !== rowData.id
                                         )
                                     )
                                 }
@@ -104,9 +105,7 @@ const Milestone = () => {
             >
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h3 className="text-2xl font-semibold mb-4">
-                        {editingId !== null
-                            ? "Edit Milestone"
-                            : "Create Milestone"}
+                        {editingId !== null ? "Edit Milestone" : "Create Milestone"}
                     </h3>
                     <hr className="mb-1 border-gray-300" />
 
@@ -139,6 +138,9 @@ const Milestone = () => {
                                         placeholder="E.g. 10000"
                                         className="w-full p-2 border rounded-md shadow-sm hover:border-blue-500"
                                         {...field}
+                                        onChange={(e) =>
+                                            field.onChange(e.target.value.replace(/\D/g, ""))
+                                        }
                                     />
                                 )}
                             />
@@ -147,7 +149,7 @@ const Milestone = () => {
 
                     <div className="flex gap-7 mb-6">
                         <div className="flex-1">
-                            <label className="block text-m justify-center font-medium mb-1 text-gray-600">
+                            <label className="block text-m font-medium mb-1 text-gray-600">
                                 Status
                             </label>
                             <Controller
@@ -156,8 +158,8 @@ const Milestone = () => {
                                 render={({ field }) => (
                                     <Dropdown
                                         options={statusOptions}
-                                        placeholder="Select Status "
-                                        className="w-full justify-center  border rounded-lg shadow-sm hover:border-blue-500"
+                                        placeholder="Select Status"
+                                        className="w-full border rounded-lg shadow-sm hover:border-blue-500"
                                         {...field}
                                     />
                                 )}
@@ -175,6 +177,9 @@ const Milestone = () => {
                                         placeholder="Enter Amount"
                                         className="w-full p-2 border rounded-md shadow-sm hover:border-blue-500"
                                         {...field}
+                                        onChange={(e) =>
+                                            field.onChange(e.target.value.replace(/\D/g, ""))
+                                        }
                                     />
                                 )}
                             />
@@ -191,6 +196,7 @@ const Milestone = () => {
                                 control={control}
                                 render={({ field }) => (
                                     <Calendar
+                                        dateFormat="dd/mm/yy"
                                         className="w-full p-2 shadow-sm"
                                         showIcon
                                         {...field}
@@ -207,6 +213,7 @@ const Milestone = () => {
                                 control={control}
                                 render={({ field }) => (
                                     <Calendar
+                                        dateFormat="dd/mm/yy"
                                         className="w-full p-2 shadow-sm"
                                         showIcon
                                         {...field}
@@ -217,16 +224,8 @@ const Milestone = () => {
                     </div>
 
                     <div className="mt-4 flex justify-end gap-3">
-                        <Button
-                            label="Close"
-                            className="p-button-text"
-                            onClick={() => setVisible(false)}
-                        />
-                        <Button
-                            label="Save"
-                            type="submit"
-                            className="bg-blue-500 text-white px-2 py-2 rounded-md"
-                        />
+                        <Button label="Close" className="p-button-text" onClick={() => setVisible(false)} />
+                        <Button label="Save" type="submit" className="bg-blue-500 text-white px-2 py-2 rounded-md" />
                     </div>
                 </form>
             </Dialog>
