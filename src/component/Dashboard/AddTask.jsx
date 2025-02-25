@@ -10,25 +10,33 @@ import { Controller, useForm } from "react-hook-form";
 import moment from "moment";
 
 const AddTask = ({ setShow }) => {
-
-    const {control,register,handleSubmit,formState: { errors },setValue, trigger} = useForm();
+    const {
+        control,
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        trigger,
+    } = useForm();
 
     let priorityList = ["Low", "Medium", "High"];
     let taskCategoryList = ["Add", "Delete", "Update", "View"];
     let projectsList = ["FUll Stack ", "Front End", "Backend"];
     let assignedToValues = ["Rahul", "Akram", "Manash"];
 
-    let disabledPastDate = new Date();   
-    const [selectedFile, setSelectedFile] = useState(null)
+    let disabledPastDate = new Date();
+    const [selectedFile, setSelectedFile] = useState(null);
 
     function onSubmit(data) {
-        // console.log(data);
         let modifyData = {
             ...data,
-            dueDate :  data.dueDate ? moment(data.dueDate, "DDMMYYYY").format("DD-MM-YYYY") : "",
-            startDate: data.startDate ? moment(data.startDate, "DDMMYYYY").format("DD-MM-YYYY") : "",
+            dueDate: data.dueDate
+                ? moment(data.dueDate, "DDMMYYYY").format("DD-MM-YYYY")
+                : "",
+            startDate: data.startDate
+                ? moment(data.startDate, "DDMMYYYY").format("DD-MM-YYYY")
+                : "",
         };
-        // console.log("modifyData", modifyData);
     }
 
     return (
@@ -63,7 +71,9 @@ const AddTask = ({ setShow }) => {
                                         optionLabel="label"
                                         placeholder="Select Task Category"
                                         className="w-full h-10 items-center"
-                                        onChange={(e) =>field.onChange(e.value)}
+                                        onChange={(e) =>
+                                            field.onChange(e.value)
+                                        }
                                     />
                                 )}
                             />
@@ -89,7 +99,9 @@ const AddTask = ({ setShow }) => {
                                         optionLabel="label"
                                         placeholder="Select Projects"
                                         className="h-10 items-center"
-                                        onChange={(e) =>field.onChange(e.value)}
+                                        onChange={(e) =>
+                                            field.onChange(e.value)
+                                        }
                                     />
                                 )}
                             />
@@ -116,8 +128,8 @@ const AddTask = ({ setShow }) => {
                                             dateFormat="dd/mm/yy"
                                             className="h-10"
                                             minDate={disabledPastDate}
-                                            onChange={(e)=>{
-                                                field.onChange(e.value)
+                                            onChange={(e) => {
+                                                field.onChange(e.value);
                                             }}
                                             showIcon
                                         />
@@ -144,7 +156,9 @@ const AddTask = ({ setShow }) => {
                                             className="h-10"
                                             value={field.value}
                                             minDate={disabledPastDate}
-                                            onChange={(e) =>field.onChange(e.value)}
+                                            onChange={(e) =>
+                                                field.onChange(e.value)
+                                            }
                                             showIcon
                                         />
                                     )}
@@ -172,7 +186,9 @@ const AddTask = ({ setShow }) => {
                                         optionLabel="label"
                                         placeholder="Select Assigned Person"
                                         className="h-10 items-center"
-                                        onChange={(e) =>field.onChange(e.value)}
+                                        onChange={(e) =>
+                                            field.onChange(e.value)
+                                        }
                                     />
                                 )}
                             />
@@ -191,8 +207,12 @@ const AddTask = ({ setShow }) => {
                                 name="description"
                                 className="w-full mt-1"
                                 onTextChange={(e) => {
-                                    let removeTag =e.htmlValue && e.htmlValue.replace(/<\/?p>/g, "");
-                                    setValue("description", removeTag, {shouldValidate: true});
+                                    let removeTag =
+                                        e.htmlValue &&
+                                        e.htmlValue.replace(/<\/?p>/g, "");
+                                    setValue("description", removeTag, {
+                                        shouldValidate: true,
+                                    });
                                     trigger("description");
                                 }}
                             />
@@ -243,7 +263,9 @@ const AddTask = ({ setShow }) => {
                                         optionLabel="label"
                                         placeholder="Select Milestone"
                                         className="h-10 items-center"
-                                        onChange={(e) =>field.onChange(e.value)}
+                                        onChange={(e) =>
+                                            field.onChange(e.value)
+                                        }
                                     />
                                 )}
                             />
@@ -266,7 +288,9 @@ const AddTask = ({ setShow }) => {
                                         optionLabel="label"
                                         placeholder="Select Priority"
                                         className="h-10 items-center"
-                                        onChange={(e) =>field.onChange(e.value)}
+                                        onChange={(e) =>
+                                            field.onChange(e.value)
+                                        }
                                     />
                                 )}
                             />
