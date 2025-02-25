@@ -20,7 +20,7 @@ import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
 import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
 import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
-import User_Management from "./component/Dashboard/User_Management.jsx";
+import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
 import AppSetting from "./component/Settings/AppSetting.jsx";
@@ -29,10 +29,10 @@ import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
 import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
-import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
 import Project from "./component/Dashboard/Project/Project.jsx";
 import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
-
+import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
+import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
 function App() {
     const location = useLocation();
 
@@ -104,7 +104,7 @@ function App() {
                         />
                         <Route
                             path="user-management"
-                            element={<User_Management />}
+                            element={<UserManagement />}
                         />
                         <Route path="project" element={<Project />} />
                         <Route path="project/:id" element={<SingleProject />} />
@@ -141,6 +141,10 @@ function App() {
                                 element={<ModuleSettings />}
                             />
                         </Route>
+                        <Route
+                            path="/dashboard/user-management/emp/:empid"
+                            element={<UserDetails />}
+                        />
                     </Route>
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
