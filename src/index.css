@@ -179,15 +179,6 @@ body {
 
 }
 
-.profile_button {
-    padding: 8px 20px;
-    border-top: 2px solid #00715d;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #ffffff;
-}
-
 .profile_parent_wrapper .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     color: #00715d;
     border-bottom: 2px solid #00715d;
@@ -197,17 +188,13 @@ body {
     border: 0;
     background-color: #00715d;
     color: #ffff;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .profile_button .p-button:hover {
     border: 1px solid #00715d;
     color: #00715d;
     background-color: #ffff;
-}
-
-.profile_button .p-button:focus {
-    box-shadow: none;
 }
 
 .detail_card ul li {

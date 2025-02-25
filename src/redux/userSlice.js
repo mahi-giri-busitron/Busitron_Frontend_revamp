@@ -46,11 +46,11 @@ export const resendOtp = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
     "user/profileUpdate",
-    async (userData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue }) => {
         try {
             const response = await axios.put(
                 "/api/v1/auth/profileUpdate",
-                userData.data,
+                formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",

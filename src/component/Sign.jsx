@@ -23,10 +23,8 @@ const Signin = () => {
 
     const onSubmit = async (data) => {
         const apiResult = await dispatch(signinUser({ ...data }));
-
-        if (signinUser.fulfilled.match(apiResult)) {
+        if (signinUser.fulfilled.match(apiResult))
             navigate("/signin/otp-verification");
-        }
     };
 
     return (
