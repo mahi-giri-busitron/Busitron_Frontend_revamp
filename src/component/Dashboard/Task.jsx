@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import { ButtonGroup } from "primereact/buttongroup";
 import { DataTable } from "primereact/datatable";
@@ -7,40 +7,31 @@ import { InputText } from "primereact/inputtext";
 import { Paginator } from "primereact/paginator";
 import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
+import { useForm } from "react-hook-form";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const Task = () => {
-    const actionTemplate = () => {
-        return (
-            <div className="flex gap-2">
-                <i className="pi pi-ellipsis-v cursor-pointer"></i>
-            </div>
-        );
-    };
 
     const headers = [
         { label: "S.No", key: "sno" },
         { label: "Task No", key: "taskNo" },
         { label: "Task", key: "task" },
         { label: "Assigned By", key: "assignedBy" },
-        // { label: "Start Date", key: "startDate" },
-        // { label: "Due Date", key: "dueDate" },
-        { label: "Status", key: "status" },
         // { label: "Action", key: "action" },
     ];
 
-    const taskData = [
+    const initialData = [
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T001",
             sno: 1,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -52,21 +43,19 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T003",
             sno: 3,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -78,21 +67,19 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T005",
             sno: 5,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -104,60 +91,55 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T007",
             sno: 7,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T008",
             sno: 8,
-            status: "In Progress",
+            status: "Pending",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T009",
             sno: 9,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
             taskNo: "T0010",
             sno: 10,
-            status: "In Progress",
+            status: "Pending",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -169,10 +151,8 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",
-            // action : actionTemplate()
+            assignedBy: "Alice",           
         },
-
         {
             task: "API Integration",
             taskNo: "T0012",
@@ -184,20 +164,18 @@ const Task = () => {
             estimatedTime: "8h",
             hoursLogged: "6h",
             assignedBy: "Bob",
-            // action : actionTemplate()
         },
         {
             task: "Frontend",
             taskNo: "T0013",
             sno: 13,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "2024-02-10",
             dueDate: "2024-02-20",
             estimatedTime: "4h",
             hoursLogged: "3h",
             assignedBy: "Charlie",
-            // action : actionTemplate()
         },
         {
             task: "Backend API",
@@ -210,61 +188,111 @@ const Task = () => {
             estimatedTime: "7h",
             hoursLogged: "7h",
             assignedBy: "David",
-            // action : actionTemplate()
         },
         {
             task: "Database Setup",
             taskNo: "T0015",
             sno: 15,
-            status: "In Progress",
+            status: "Completed",
             completedOn: "2024-02-18",
             startDate: "2024-02-10",
             dueDate: "2024-02-20",
             estimatedTime: "6h",
             hoursLogged: "5h",
             assignedBy: "Eve",
-            // action : actionTemplate()
         },
         {
             task: "Build UI",
             taskNo: "T0016",
             sno: 16,
-            status: "In Progress",
+            status: "Pending",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
             assignedBy: "Alice",
-            // action : actionTemplate()
         },
         {
             task: "Build UI",
             taskNo: "T0017",
             sno: 17,
-            status: "In Progress",
+            status: "Pending",
             completedOn: "2024-02-18",
             startDate: "10-02-2012",
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
             assignedBy: "Alice",
-            // action : actionTemplate()
         },
     ];
 
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
-
     const [show, setShow] = useState(false);
-
+    
+    const { register, watch } = useForm({
+        defaultValues: { taskName: "" },
+    });
     const onPageChange = (event) => {
         setFirst(event.first);
         setRows(event.rows);
     };
 
+    const taskName = watch("taskName");   
+
+    const [tableData ,setTableData] = useState(initialData);
+
+
+    useEffect(()=>{
+        let filteredData = initialData.filter(val => val.task.toLowerCase().includes(taskName.toLowerCase()));
+        setTableData(filteredData);
+    },[taskName])
+
+    const statusTemplate = (rowData) => {
+        let statusColor;
+        switch (rowData.status) {
+            case "Pending":
+                statusColor = "bg-gray-100 text-gray-800";
+                break;
+            case "In Progress":
+                statusColor = "bg-orange-100 text-orange-800";
+                break;
+            case "Completed":
+                statusColor = "bg-green-100 text-green-800";
+                break;
+            default:
+                statusColor = "bg-gray-100 text-gray-800";
+        }
+
+        return (
+            <span className={`px-2 py-1 rounded-md text-sm ${statusColor}`}>
+                {rowData.status}
+            </span>
+        );
+    };
+
+    function handleDelete(id)
+    {
+        let modifyData = initialData.filter(taskId => taskId.taskNo !== id);
+        setTableData(modifyData);
+    }
+
+    const deleteConfirmation = (id) => {
+        confirmDialog({
+            message: "Are you sure you want to delete this record?",
+            header: "Delete Confirmation",
+            icon: "pi pi-info-circle",
+            defaultFocus: "reject",
+            acceptClassName: "p-button-danger",
+            accept: () => handleDelete(id),
+            reject: () => console.log("Delete Cancelled"),
+        });
+    };
+
     return (
         <>
+        <ConfirmDialog />
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
                     <Button
@@ -283,14 +311,6 @@ const Task = () => {
                         severity="secondary"
                         outlined
                     />
-                    {/* <Button
-                        label="Export"
-                        className="h-9"
-                        size="small"
-                        icon="pi pi-file-export"
-                        severity="secondary"
-                        outlined
-                    /> */}
                 </div>
 
                 <div className="w-full md:w-72">
@@ -298,14 +318,14 @@ const Task = () => {
                         <span className="p-inputgroup-addon cursor-pointer">
                             <i className="pi pi-search"></i>
                         </span>
-                        <InputText placeholder="Start Searching...." />
+                        <InputText placeholder="Start Searching...."  {...register("taskName")}/>
                     </div>
                 </div>
             </div>
 
             <div className="mx-5">
                 <DataTable
-                    value={taskData}
+                    value={tableData}
                     paginator
                     rows={10}
                     removableSort
@@ -313,6 +333,7 @@ const Task = () => {
                     tableStyle={{ minWidth: "60rem" }}
                     tableClassName="custom-table"
                     paginatorClassName="custom-pagination"
+                    emptyMessage={<p className="text-red-500 text-md text-center">No tasks found. Add a new task!</p>}
                 >
                     {headers.map((val) => (
                         <Column
@@ -324,25 +345,32 @@ const Task = () => {
                         />
                     ))}
                     <Column
+                        header="Status"
+                        headerClassName="custom-table-header"
+                        body={statusTemplate}
+                    />
+                    <Column
                         header="Action"
                         body={(rowData) => (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 items-center">
                                 <button
-                                    className="text-blue-500 hover:text-blue-700"
+                                    title="View"
+                                    className="text-blue-500 hover:text-blue-700 hover:animate-ping"
                                     onClick={() => handleView(rowData)}
                                 >
                                     <i className="pi pi-eye mx-2 cursor-pointer"></i>
                                 </button>
-                                <button
-                                    className="text-red-500 hover:text-red-700"
-                                    onClick={() => handleDelete(rowData)}
+                                <button 
+                                    title="Delete"
+                                    className="text-red-500 hover:text-red-700 hover:animate-bounce"
+                                    onClick={()=>deleteConfirmation(rowData.taskNo)}
                                 >
                                     <i className="pi pi-trash cursor-pointer"></i>
                                 </button>
                             </div>
                         )}
                         headerClassName="custom-table-header"
-                    />
+                    />                  
                 </DataTable>
             </div>
 
