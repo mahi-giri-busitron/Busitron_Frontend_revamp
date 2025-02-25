@@ -82,7 +82,7 @@ function App() {
                 />
                 <Route path="/signin/create-user" element={<Create_User />} />
 
-                <Route path="/enter-new-password" element={<ResetPassword />} />
+                <Route path="/:email/enter-new-password" element={<ResetPassword />} />
                 <Route
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}

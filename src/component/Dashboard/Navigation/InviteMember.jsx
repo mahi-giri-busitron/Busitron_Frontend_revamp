@@ -5,10 +5,13 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import "primeicons/primeicons.css";
 import axios from "axios";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate } from "react-router-dom";
 
 const InviteMemberModal = (props) => {
     const { visible = false, setVisible } = props;
+    const [loading, setLoading] = useState(false);
+
     const [data, setData] = useState({
         email: "",
         designation: "",
@@ -19,9 +22,15 @@ const InviteMemberModal = (props) => {
     const navigate = useNavigate();
 
     async function handleSubmit() {
-        const apiResponse = await axios.post("/api/v1/auth/register", data);
-        console.log(apiResponse);
-        if (apiResponse.data.success) navigate("/signin");
+        try {
+            setLoading(true);
+            const apiResponse = await axios.post("/api/v1/auth/register", data);
+            if (apiResponse.data.success) navigate("/signin");
+        } catch (error) {
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
     }
     return (
         <Dialog
@@ -115,13 +124,25 @@ const InviteMemberModal = (props) => {
                         </div>
                     </div>
                     <div className="mt-4 flex justify-start">
-                        <Button
-                            label="Send Invite"
-                            icon="pi pi-send"
-                            iconPos="left"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2"
-                            onClick={handleSubmit}
-                        />
+                        {loading ? (
+                            <ProgressSpinner
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                }}
+                                strokeWidth="8"
+                                fill="var(--surface-ground)"
+                                animationDuration=".5s"
+                            />
+                        ) : (
+                            <Button
+                                label="Send Invite"
+                                icon="pi pi-send"
+                                iconPos="left"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2"
+                                onClick={handleSubmit}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

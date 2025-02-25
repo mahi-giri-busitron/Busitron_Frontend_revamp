@@ -33,12 +33,10 @@ const Create_User = () => {
     const { currentUser, loading } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
-        const apiResult = await dispatch(updateUser({ data }));
+    const onSubmit = async (formData) => {
+        const apiResult = await dispatch(updateUser(formData));
 
-        if (updateUser.fulfilled.match(apiResult)) {
-            navigate("/dashboard");
-        }
+        if (updateUser.fulfilled.match(apiResult)) navigate("/dashboard");
 
         reset();
         setChecked(false);
@@ -301,7 +299,6 @@ const Create_User = () => {
                         )}
                     </div>
 
-                    {/*Statu*/}
                     <div className="flex flex-col">
                         <label className="font-medium text-gray-700">
                             Marital Status
