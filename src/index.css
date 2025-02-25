@@ -94,6 +94,43 @@ body {
     color: #ffffff;
 }
 
+/* Task */
+
+.custom-table-header {
+    text-align: left;
+    padding: 0.8rem;
+    border: 1px solid #e5e7eb;
+    border-width: 0 0 1px 0;
+    font-weight: 700;
+    font-size: 14px;
+    color: #374151;
+    background: #f9fafb;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.custom-table tbody tr td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    transition: background-color 0.4s ease, transform 0.3s ease;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.custom-table tbody tr td{
+    padding: 0.6rem 0.8rem;
+    transition: background-color 0.6s ease, transform 0.6s ease;
+}
+
+.custom-table tbody tr:hover{
+    background-color: #f3f4f6;
+    /* transform: scale(1.01);  */
+}
+
+.custom-pagination {
+    padding: 0.2rem;
+}
+
 /* scrollbar   */
 
 ::-webkit-scrollbar {
@@ -117,17 +154,9 @@ body {
     background: #555;
 }
 
-/* related to projects page */
-.p-carousel-next-icon,
-.p-carousel-prev-icon {
-    color: #ffffff;
-}
-
 .Dropdown .p-dropdown .p-dropdown-trigger {
     width: 33px;
 }
-
-
 
 .profile_parent_wrapper {
     background-color: #f2f4f7;
@@ -135,12 +164,9 @@ body {
 
 .Prifile_wrapper .p-inputtext {
     padding: 8px 20px;
-
 }
 
 .Prifile_wrapper {
-
-
     padding: 20px 20px;
     height: 100%;
     max-height: 75vh;
@@ -162,7 +188,6 @@ body {
     background-color: #ffffff;
 }
 
-
 .profile_parent_wrapper .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     color: #00715d;
     border-bottom: 2px solid #00715d;
@@ -173,11 +198,9 @@ body {
     background-color: #00715d;
     color: #ffff;
     border-radius: 20px;
-
 }
 
 .profile_button .p-button:hover {
-
     border: 1px solid #00715d;
     color: #00715d;
     background-color: #ffff;
@@ -199,4 +222,16 @@ body {
 .detail_card ul li p:first-child {
     width: 100%;
     max-width: 50px
+}
+
+.labelTag{
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.headerTag {
+    font-size: 30px;
+    font-weight: 600;
+    padding: 5px;
+    margin: 5px;
 }

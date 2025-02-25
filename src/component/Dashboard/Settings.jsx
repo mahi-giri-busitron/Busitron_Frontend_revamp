@@ -1,28 +1,59 @@
 import { Button } from "primereact/button";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { GetSettingNavigation } from "../Settings/SettingConst.js";
+import { useEffect, useState } from "react";
 
 const Settings = () => {
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState("");
     const settingsNav = GetSettingNavigation();
 
+    useEffect(() => {
+        const currentPath = location.pathname;
+        if (
+            location.pathname === "/dashboard/setting" ||
+            location.pathname === "/dashboard/setting/"
+        ) {
+            navigate("/dashboard/setting/company-settings");
+        }
+        setActiveTab(currentPath);
+    }, [location.pathname]);
+
     return (
-        <div className="flex h-screen">
+        <div className="flex h-full w-full ">
             <div className="flex-1 flex">
-                <div className="w-1/5 bg-white shadow-lg p-4">
+                <div
+                    className="w-1/5 bg-white shadow-lg p-4 overflow-auto h-full"
+                    style={{ scrollbarWidth: "thin" }}
+                >
                     <nav className="flex flex-col">
                         {settingsNav.map((item) => (
-                            <Button
+                            <div
+                                className={` flex   items-center pl-4  pr-2  py-3 w-full text-left hover:text-blue-600 transition duration-200 border-r-3 cursor-pointer ${
+                                    activeTab === item.path ||
+                                    activeTab === item.path + "/" ||
+                                    (item.path !== "/dashboard" &&
+                                        item.path !== "/" &&
+                                        activeTab.startsWith(item.path))
+                                        ? "text-blue-600 font-semibold border-r-3 border-blue-600"
+                                        : "text-gray-500 font-medium border-white"
+                                }`}
                                 key={item.key}
-                                label={item.label}
-                                onClick={() => navigate(item.path)}
-                                text
-                            />
+                                onClick={() => {
+                                    navigate(item.path);
+                                    setActiveTab(item.path);
+                                }}
+                            >
+                                {item.label}
+                            </div>
                         ))}
                     </nav>
                 </div>
-                <div className="flex-1 p-6">
+                <div
+                    className=" p-6 overflow-auto w-full "
+                    style={{ scrollbarWidth: "thin" }}
+                >
                     <Outlet />
                 </div>
             </div>

@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Signin User
 export const signinUser = createAsyncThunk(
     "user/signin",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.post("/api/auth/signin", userData);
+            const response = await axios.post("/api/v1/auth/login", userData);
             return response.data;
         } catch (error) {
             return rejectWithValue(
@@ -16,16 +15,52 @@ export const signinUser = createAsyncThunk(
     }
 );
 
-// Update User
-export const updateUser = createAsyncThunk(
-    "user/update",
-    async (userData, { rejectWithValue }) => {
+export const otpVerify = createAsyncThunk(
+    "user/Otp",
+    async (otpData, { rejectWithValue }) => {
         try {
-            const response = await axios.put("/api/user/update", userData);
+            const response = await axios.post("/api/v1/auth/otp", otpData);
+
             return response.data;
         } catch (error) {
             return rejectWithValue(
-                error.response?.data?.message || "Update failed"
+                error.response?.data?.message || "Signin failed"
+            );
+        }
+    }
+);
+
+export const resendOtp = createAsyncThunk(
+    "user/resendOtp",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.post("/api/v1/auth/re-sendOtp");
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Resend OTP failed"
+            );
+        }
+    }
+);
+
+export const updateUser = createAsyncThunk(
+    "user/profileUpdate",
+    async (userData, { rejectWithValue }) => {
+        try {
+            const response = await axios.put(
+                "/api/v1/auth/profileUpdate",
+                userData.data,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "user profile updation failed"
             );
         }
     }
@@ -51,7 +86,7 @@ export const signOutUser = createAsyncThunk(
     "user/signout",
     async (_, { rejectWithValue }) => {
         try {
-            await axios.post("/api/auth/signout");
+            await axios.post("/api/v1/auth/logout");
             return true;
         } catch (error) {
             return rejectWithValue(
@@ -82,6 +117,20 @@ const userSlice = createSlice({
                 state.currentUser = action.payload;
             })
             .addCase(signinUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            // Otp verification
+            .addCase(otpVerify.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(otpVerify.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentUser = action.payload;
+            })
+            .addCase(otpVerify.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
