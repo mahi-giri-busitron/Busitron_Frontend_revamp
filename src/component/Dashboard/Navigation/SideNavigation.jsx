@@ -4,6 +4,7 @@ import SideTopNavigation from "./SideTopNavigation.jsx";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../../../redux/userSlice.js";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const SideNavigation = ({
     activeTab = "/dashboard",
@@ -15,9 +16,12 @@ const SideNavigation = ({
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const { currentUser } = useSelector((state) => state.user);
+
     const ProfileData = {
-        name: "mahesh",
-        designation: "Full Satck Developer ",
+        name: currentUser?.data?.name,
+        designation: currentUser?.data?.designation,
+        avatar: currentUser?.data?.avatar,
     };
 
     const handleClick = async () => {
