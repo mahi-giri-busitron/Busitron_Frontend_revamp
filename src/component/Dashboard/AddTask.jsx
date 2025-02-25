@@ -113,6 +113,7 @@ const AddTask = ({ setShow }) => {
                                         <Calendar
                                             id="buttondisplay"
                                             value={field.value}
+                                            dateFormat="dd/mm/yy"
                                             className="h-10"
                                             minDate={disabledPastDate}
                                             onChange={(e)=>{
@@ -139,6 +140,7 @@ const AddTask = ({ setShow }) => {
                                     render={({ field }) => (
                                         <Calendar
                                             id="buttondisplay"
+                                            dateFormat="dd/mm/yy"
                                             className="h-10"
                                             value={field.value}
                                             minDate={disabledPastDate}
@@ -299,7 +301,7 @@ const AddTask = ({ setShow }) => {
                                 auto
                                 customUpload
                                 chooseLabel="Browse"
-                                className="text-sm"
+                                className="text-sm leading-none"
                                 uploadHandler={(e) => {
                                     setSelectedFile(e.files[0])
                                     setValue("file", e.files[0], { shouldValidate: true });
