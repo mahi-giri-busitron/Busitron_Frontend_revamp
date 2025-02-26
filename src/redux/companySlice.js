@@ -76,28 +76,7 @@ const companySlice = createSlice({
         error: null,
         loading: false,
     },
-    reducers: {
-        // Update date in existing json
-        updatedData: (state, action) => {
-            console.log(state);
-            console.log(action.payload);
-            state.company.location = action.payload;
-        } 
-
-
-
-        // reducers: {
-        //     incremented: state => {
-        //       // Redux Toolkit allows us to write "mutating" logic in reducers. It
-        //       // doesn't actually mutate the state because it uses the Immer library,
-        //       // which detects changes to a "draft state" and produces a brand new
-        //       // immutable state based off those changes
-        //       state.value += 1
-        //     },
-        //     decremented: state => {
-        //       state.value -= 1
-        //     }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             // Get company setting
@@ -149,11 +128,7 @@ const companySlice = createSlice({
             })
             .addCase(deleteCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
-                const deletedId = action.meta.arg.id;
-                state.company.data.location =
-                    state.company.data.location.filter(
-                        (each) => each.id !== deletedId
-                    );
+                state.company = action.payload
             })
             .addCase(deleteCompanyLocation.rejected, (state, action) => {
                 state.loading = false;
@@ -162,7 +137,4 @@ const companySlice = createSlice({
     },
 });
 
-export const { updatedData } = companySlice.actions;
-
 export default companySlice.reducer;
-

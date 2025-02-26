@@ -13,7 +13,6 @@ import {
     createCompanyLocation,
     deleteCompanyLocation,
     editCompanyLocation,
-    updatedData,
 } from "../../redux/companySlice";
 import toast from "react-hot-toast";
 
@@ -43,11 +42,8 @@ const BusinessAddress = () => {
         pinCode: "",
     });
 
-    // console.log(company.data.location);
-    
-
     useEffect(() => {
-        setAddresses(company?.data[0].location);
+        setAddresses(company?.data[0]?.location || []);
     }, [company]);
 
     const dispatch = useDispatch();
@@ -116,7 +112,10 @@ const BusinessAddress = () => {
 
         if (!editMode) {
             const apiResult = await dispatch(
-                createCompanyLocation({ companyID: company?.data[0]._id, newAddr })
+                createCompanyLocation({
+                    companyID: company?.data[0]._id,
+                    newAddr,
+                })
             );
             if (createCompanyLocation.fulfilled.match(apiResult)) {
                 toast.success("Address added successfully!");
@@ -132,9 +131,6 @@ const BusinessAddress = () => {
                     editAddress,
                 })
             );
-            const response = await dispatch(updatedData)
-            console.log(response);
-            
             if (editCompanyLocation.fulfilled.match(apiResult)) {
                 toast.success("Address edited successfully!");
             } else {

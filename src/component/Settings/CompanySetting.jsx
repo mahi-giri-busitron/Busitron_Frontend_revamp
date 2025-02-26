@@ -43,7 +43,15 @@ const CompanySettings = () => {
     };
 
     const handleSave = async () => {
-        await axios.put("/api/v1/setting/update_company_setting", company);
+        const apiResult = await axios.put(
+            "/api/v1/setting/update_company_setting",
+            company
+        );
+        if (apiResult.status === 200) {
+            toast.success("Company settings saved successfully!");
+        } else {
+            toast.error(apiResult.data.message || "Something went wrong!");
+        }
     };
 
     useEffect(() => {
