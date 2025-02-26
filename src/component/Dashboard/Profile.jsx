@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -41,7 +40,6 @@ const Profile = () => {
         designation: currentUser?.data?.designation || "",
         employeeId: currentUser?.data?.employeeId || "",
         avatar: currentUser?.data?.avatar || "",
-        password: "",
         address: currentUser?.data?.address || "",
     });
 
@@ -82,7 +80,6 @@ const Profile = () => {
         formData.append("gender", userData.gender);
         formData.append("maritalStatus", userData.maritalStatus);
         if (userData.avatar) formData.append("profilePic", userData.avatar);
-        if (userData.password) formData.append("password", userData.password);
         formData.append("address", userData.address);
 
         const apiResponse = await dispatch(updateUser(formData));
@@ -94,11 +91,6 @@ const Profile = () => {
         } else {
             toast.error(apiResponse?.payload || "Something went wrong!");
         }
-
-        setUserData((prev) => ({
-            ...prev,
-            password: "",
-        }));
     }
 
     return (
@@ -157,19 +149,6 @@ const Profile = () => {
                                             className="w-full"
                                             disabled
                                             value={userData.email}
-                                        />
-                                    </div>
-                                    <div>
-                                        <p>Your Password</p>
-                                        <Password
-                                            className="w-full"
-                                            value={userData.password}
-                                            onChange={(e) =>
-                                                handleChange(
-                                                    e.target.value,
-                                                    "password"
-                                                )
-                                            }
                                         />
                                     </div>
                                     <div>

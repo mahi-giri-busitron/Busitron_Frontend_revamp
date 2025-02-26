@@ -3,9 +3,14 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { TabMenu } from "primereact/tabmenu";
 import axios from "axios";
+import { getCompanySetting } from "../../redux/companySlice";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 const CompanySettings = () => {
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const dispatch = useDispatch();
 
     const [company, setCompany] = useState({
         id: "",
@@ -22,18 +27,23 @@ const CompanySettings = () => {
     };
 
     const fetchCompanyData = async () => {
-        const response = await axios.get("/api/v1/setting/company_setting");
+        const apiResult = await dispatch(getCompanySetting());
+        if (getCompanySetting.fulfilled.match(apiResult)) {
+            toast.success("Company data fetched successfully!");
+        } else {
+            toast.error(apiResult?.payload || "Something went wrong!");
+        }
         setCompany({
-            id: response.data.data[0]._id,
-            companyName: response.data.data[0].companyName,
-            companyEmail: response.data.data[0].companyEmail,
-            phoneNumber: response.data.data[0].phoneNumber,
-            website: response.data.data[0].website,
+            id: apiResult.payload.data[0]._id,
+            companyName: apiResult.payload?.data[0].companyName,
+            companyEmail: apiResult.payload?.data[0].companyEmail,
+            phoneNumber: apiResult.payload?.data[0].phoneNumber,
+            website: apiResult.payload?.data[0].website,
         });
     };
 
     const handleSave = async () => {
-        await axios.post("/api/v1/setting/update_company_setting", company);
+        await axios.put("/api/v1/setting/update_company_setting", company);
     };
 
     useEffect(() => {
