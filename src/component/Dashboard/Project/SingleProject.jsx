@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TabMenu } from "primereact/tabmenu";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
+import Overview from "./Overview";
+import TaskBoard from "./TaskBoard";
 
 const SingleProject = () => {
     const { id } = useParams();
@@ -35,12 +37,7 @@ const SingleProject = () => {
     const renderContent = () => {
         switch (currentTab) {
             case "overview":
-                return (
-                    <div>
-                        <h2>Project Overview</h2>
-                        <p>Summary and goals.</p>
-                    </div>
-                );
+                return <Overview />;
             case "members":
                 return (
                     <div>
@@ -70,12 +67,7 @@ const SingleProject = () => {
                     </div>
                 );
             case "task-board":
-                return (
-                    <div>
-                        <h2>Task Board</h2>
-                        <p>Kanban-style board.</p>
-                    </div>
-                );
+                return <TaskBoard />;
             default:
                 return (
                     <div>
