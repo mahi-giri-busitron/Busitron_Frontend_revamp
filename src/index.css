@@ -157,6 +157,11 @@ body {
     width: 33px;
 }
 
+.labelTag {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
 .profile_parent_wrapper {
     background-color: #f2f4f7;
 }
@@ -212,15 +217,131 @@ body {
     max-width: 50px;
 }
 
-.labelTag {
-    font-size: 1rem;
-}
-
 .headerTag {
     font-size: 30px;
     font-weight: 600;
     padding: 5px;
     margin: 5px;
+}
+
+.p-editor-toolbar .ql-toolbar {
+    font-size: 12px !important; /* Decrease icon size */
+}
+
+.p-editor-toolbar .ql-formats {
+    margin-right: 4px; /* Reduce spacing between icons */
+}
+
+.p-editor-content {
+    font-size: 14px !important; /* Adjust text size inside the editor */
+}
+
+.Task_button .p-button.p-fileupload-choose {
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+.Task_button .p-button.p-button-secondary {
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+.p-button.p-fileupload-choose {
+    background: transparent;
+    border: 2px solid #8c8c8c;
+    color: #8c8c8c;
+    border: 2px solid #6b7280;
+    color: #6b7280;
+    font-weight: 100;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.p-button.p-fileupload-choose:hover {
+    border: 2px solid #8c8c8c;
+    color: #8c8c8c;
+}
+
+.sendIcon .p-button.p-button-icon-only {
+    background: #e7e7e7;
+    border: none;
+    color: rgb(91, 90, 90);
+    box-shadow: none;
+    height: 1rem;
+    margin: 0.1rem;
+}
+
+.p-button.p-button-secondary.p-button-text {
+    margin: 0.5rem;
+    padding: 0;
+}
+
+.More_button .p-button.p-button-secondary {
+    background: transparent;
+    border: 2px solid #6c6a6a;
+    color: #6c6a6a;
+    font-weight: 100;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.More_button .p-button.p-button-secondary:hover {
+    background: #d5d5d5;
+    border: 2px solid #b6b6b6;
+    color: #f5f3f3;
+}
+
+.p-card .p-card-body {
+    padding: 0.25rem;
+    background-color: transparent;
+    border: none;
+}
+
+.p-card .p-card-content {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+}
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.15rem;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.15rem;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.15rem;
+}
+
+.Reply_input .p-inputtext {
+    height: 2rem;
+    padding: 1rem;
+}
+
+.shadow-md {
+    box-shadow: none;
+}
+
+.p-component,
+.p-component * {
+    box-shadow: none;
+    font-size: medium;
+}
+
+.descrip .p-card .p-card-body {
+    background-color: #f4f4f4;
+    margin: 2px;
 }
 
 .p-password-input {
