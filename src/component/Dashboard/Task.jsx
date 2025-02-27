@@ -8,10 +8,11 @@ import { Paginator } from "primereact/paginator";
 import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
 import { useForm } from "react-hook-form";
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import DeleteModal from "../../shared/DeleteModal";
+import { useNavigate } from "react-router-dom";
 
 const Task = () => {
-
     const headers = [
         { label: "S.No", key: "sno" },
         { label: "Task No", key: "taskNo" },
@@ -22,7 +23,7 @@ const Task = () => {
 
     const initialData = [
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build Api",
             taskNo: "T001",
             sno: 1,
             status: "Completed",
@@ -31,10 +32,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build home",
             taskNo: "T002",
             sno: 2,
             status: "In Progress",
@@ -43,10 +44,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build city",
             taskNo: "T003",
             sno: 3,
             status: "Completed",
@@ -55,10 +56,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build state",
             taskNo: "T004",
             sno: 4,
             status: "In Progress",
@@ -67,10 +68,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build riveer",
             taskNo: "T005",
             sno: 5,
             status: "Completed",
@@ -79,10 +80,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build bridge",
             taskNo: "T006",
             sno: 6,
             status: "In Progress",
@@ -91,10 +92,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build lane",
             taskNo: "T007",
             sno: 7,
             status: "Completed",
@@ -103,10 +104,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build pond",
             taskNo: "T008",
             sno: 8,
             status: "Pending",
@@ -115,10 +116,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build dam",
             taskNo: "T009",
             sno: 9,
             status: "Completed",
@@ -127,10 +128,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build skywalk",
             taskNo: "T0010",
             sno: 10,
             status: "Pending",
@@ -139,10 +140,10 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build car",
             taskNo: "T0011",
             sno: 11,
             status: "In Progress",
@@ -151,7 +152,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "API Integration",
@@ -213,41 +214,35 @@ const Task = () => {
             hoursLogged: "4h",
             assignedBy: "Alice",
         },
-        {
-            task: "Build UI",
-            taskNo: "T0017",
-            sno: 17,
-            status: "Pending",
-            completedOn: "2024-02-18",
-            startDate: "10-02-2012",
-            dueDate: "2024-02-20",
-            estimatedTime: "5h",
-            hoursLogged: "4h",
-            assignedBy: "Alice",
-        },
     ];
 
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
-    const [show, setShow] = useState(false);
-    
+    const [show, setShow] = useState(false); // for add task modal
+    const [visible, setVisible] = useState(false); // for delete modal
+    const [deleteId, setDeleteId] = useState(null);
+
+    let navigate = useNavigate();
+
     const { register, watch } = useForm({
         defaultValues: { taskName: "" },
     });
+
+    const taskName = watch("taskName");
+
     const onPageChange = (event) => {
         setFirst(event.first);
         setRows(event.rows);
     };
 
-    const taskName = watch("taskName");   
+    const [tableData, setTableData] = useState(initialData);
 
-    const [tableData ,setTableData] = useState(initialData);
-
-
-    useEffect(()=>{
-        let filteredData = initialData.filter(val => val.task.toLowerCase().includes(taskName.toLowerCase()));
+    useEffect(() => {
+        let filteredData = initialData.filter((val) =>
+            val.task.toLowerCase().includes(taskName.toLowerCase())
+        );
         setTableData(filteredData);
-    },[taskName])
+    }, [taskName]);
 
     const statusTemplate = (rowData) => {
         let statusColor;
@@ -272,27 +267,17 @@ const Task = () => {
         );
     };
 
-    function handleDelete(id)
-    {
-        let modifyData = initialData.filter(taskId => taskId.taskNo !== id);
+    function handleDelete() {
+        let modifyData = initialData.filter(
+            (taskId) => taskId.taskNo !== deleteId
+        );
         setTableData(modifyData);
+        setVisible(false);
     }
-
-    const deleteConfirmation = (id) => {
-        confirmDialog({
-            message: "Are you sure you want to delete this record?",
-            header: "Delete Confirmation",
-            icon: "pi pi-info-circle",
-            defaultFocus: "reject",
-            acceptClassName: "p-button-danger",
-            accept: () => handleDelete(id),
-            reject: () => console.log("Delete Cancelled"),
-        });
-    };
 
     return (
         <>
-        <ConfirmDialog />
+            <ConfirmDialog />
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
                     <Button
@@ -318,7 +303,10 @@ const Task = () => {
                         <span className="p-inputgroup-addon cursor-pointer">
                             <i className="pi pi-search"></i>
                         </span>
-                        <InputText placeholder="Start Searching...."  {...register("taskName")}/>
+                        <InputText
+                            placeholder="Start Searching...."
+                            {...register("taskName")}
+                        />
                     </div>
                 </div>
             </div>
@@ -333,7 +321,11 @@ const Task = () => {
                     tableStyle={{ minWidth: "60rem" }}
                     tableClassName="custom-table"
                     paginatorClassName="custom-pagination"
-                    emptyMessage={<p className="text-red-500 text-md text-center">No tasks found. Add a new task!</p>}
+                    emptyMessage={
+                        <p className="text-red-500 text-md text-center">
+                            No tasks found. Add a new task!
+                        </p>
+                    }
                 >
                     {headers.map((val) => (
                         <Column
@@ -356,21 +348,26 @@ const Task = () => {
                                 <button
                                     title="View"
                                     className="text-blue-500 hover:text-blue-700 hover:animate-ping"
-                                    onClick={() => handleView(rowData)}
+                                    onClick={() => {
+                                        navigate("/task");
+                                    }}
                                 >
                                     <i className="pi pi-eye mx-2 cursor-pointer"></i>
                                 </button>
-                                <button 
+                                <button
                                     title="Delete"
                                     className="text-red-500 hover:text-red-700 hover:animate-bounce"
-                                    onClick={()=>deleteConfirmation(rowData.taskNo)}
+                                    onClick={() => {
+                                        setVisible(true),
+                                            setDeleteId(rowData.taskNo);
+                                    }}
                                 >
                                     <i className="pi pi-trash cursor-pointer"></i>
                                 </button>
                             </div>
                         )}
                         headerClassName="custom-table-header"
-                    />                  
+                    />
                 </DataTable>
             </div>
 
@@ -384,6 +381,12 @@ const Task = () => {
             >
                 <AddTask setShow={setShow} />
             </Dialog>
+
+            <DeleteModal
+                visible={visible}
+                setVisible={setVisible}
+                handleDelete={handleDelete}
+            />
         </>
     );
 };
