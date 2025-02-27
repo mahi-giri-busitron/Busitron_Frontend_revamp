@@ -37,11 +37,13 @@ export const createCompanyLocation = createAsyncThunk(
 export const editCompanyLocation = createAsyncThunk(
     "company/edit_location",
     async ({ companyID, id, editAddress }, { rejectWithValue }) => {
+        console.log("update req :", companyID, id, editAddress);
         try {
             const response = await axios.put(
                 `/api/v1/setting/update_business_address/${companyID}/${id}`,
                 { editAddress }
             );
+            console.log("edit response :", response);
             return response.data;
         } catch (error) {
             return rejectWithValue(
@@ -55,11 +57,13 @@ export const editCompanyLocation = createAsyncThunk(
 export const deleteCompanyLocation = createAsyncThunk(
     "company/deleteLocation",
     async ({ companyID, id }, { rejectWithValue }) => {
+        console.log("before delete :", companyID, id);
         try {
             const response = await axios.delete(
                 `/api/v1/setting/delete_business_address/${companyID}/${id}`
             );
-            return response.data;
+            console.log("delete response :", response);
+            return { locationId, data: response.data };
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message ||
@@ -75,8 +79,17 @@ const companySlice = createSlice({
         company: [],
         error: null,
         loading: false,
+        isRequestFulfilled: false,
+        isDeleted: false,
     },
-    reducers: {},
+    reducers: {
+        isRequestFulfilledToPrevState: (state) => {
+            state.isRequestFulfilled = false;
+        },
+        isDeletedToPrevState: (state) => {
+            state.isDeleted = false;
+        },
+    },
     extraReducers: (builder) => {
         builder
             // Get company setting
@@ -87,10 +100,12 @@ const companySlice = createSlice({
             .addCase(getCompanySetting.fulfilled, (state, action) => {
                 state.loading = false;
                 state.company = action.payload;
+                state.isRequestFulfilled = true;
             })
             .addCase(getCompanySetting.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.isRequestFulfilled = false;
             })
 
             // Create company location
@@ -101,10 +116,12 @@ const companySlice = createSlice({
             .addCase(createCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
                 state.company = action.payload;
+                state.isRequestFulfilled = true;
             })
             .addCase(createCompanyLocation.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.isRequestFulfilled = false;
             })
 
             // Edit company location
@@ -114,7 +131,10 @@ const companySlice = createSlice({
             })
             .addCase(editCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
-                state.company = action.payload;
+                if (state.company && state.company.location) {
+                    const updatedLocation = action.payload.location;
+                    state.company.location = updatedLocation;
+                }
             })
             .addCase(editCompanyLocation.rejected, (state, action) => {
                 state.loading = false;
@@ -128,13 +148,22 @@ const companySlice = createSlice({
             })
             .addCase(deleteCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
-                state.company = action.payload
+                state.isRequestFulfilled = true;
+                if (state.company?.location) {
+                    state.company.location = state.company.location.filter(
+                        (location) =>
+                            location.id !== Number(action.payload.locationId)
+                    );
+                }
             })
             .addCase(deleteCompanyLocation.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.isRequestFulfilled = false;
             });
     },
 });
+
+export const { isRequestFulfilledToPrevState } = companySlice.actions;
 
 export default companySlice.reducer;

@@ -13,6 +13,8 @@ import {
     createCompanyLocation,
     deleteCompanyLocation,
     editCompanyLocation,
+    getCompanySetting,
+    isRequestFulfilledToPrevState,
 } from "../../redux/companySlice";
 import toast from "react-hot-toast";
 
@@ -24,13 +26,20 @@ const BusinessAddress = () => {
         reset,
         setValue,
     } = useForm();
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.name === "India")
     );
-    const { company } = useSelector((state) => state.company);
-    const [addresses, setAddresses] = useState();
+
+    const { company, isRequestFulfilled } = useSelector(
+        (state) => state.company
+    );
+    const dispatch = useDispatch();
+
+    
+    const [addresses, setAddresses] = useState([]);
     const [addressID, setAddressID] = useState(null);
     const [showDialog, setShowDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -43,10 +52,17 @@ const BusinessAddress = () => {
     });
 
     useEffect(() => {
-        setAddresses(company?.data[0]?.location || []);
-    }, [company]);
+        if (isRequestFulfilled) {
+            dispatch(getCompanySetting());
+            dispatch(isRequestFulfilledToPrevState());
+        }
+    }, [isRequestFulfilled, dispatch]);
 
-    const dispatch = useDispatch();
+    useEffect(() => {
+        if (company?.data?.length > 0) {
+            setAddresses(company.data[0].location || []);
+        }
+    }, [company]);
 
     const confirmDeleteAddress = (id) => {
         setAddressID(id);
@@ -94,52 +110,43 @@ const BusinessAddress = () => {
         };
 
         if (editMode && currentAddress) {
-            setAddresses((prevAddresses) =>
-                prevAddresses.map((addr) =>
-                    addr.id === currentAddress.id ? updatedAddress : addr
-                )
-            );
+            // const apiResult = await dispatch(
+            //     editCompanyLocation({
+            //         companyID: company?.data[0]._id,
+            //         id: currentAddress.id,
+            //         editAddress,
+            //     })
+            // );
+            // await dispatch(isRequestFulfilledToPrevState());
+            // if (editCompanyLocation.fulfilled.match(apiResult)) {
+            //     toast.success("Address updated successfully!");
+            //     dispatch(getCompanySetting());
+            // } else {
+            //     toast.error(apiResult?.payload || "Something went wrong!");
+            // }
         } else {
-            setAddresses((prevAddresses) => [...prevAddresses, updatedAddress]);
+            await dispatch(
+                createCompanyLocation({
+                    companyID: company?.data[0]._id,
+                    newAddr: JSON.stringify(updatedAddress),
+                })
+            );
+            await dispatch(isRequestFulfilledToPrevState())
+            // if (createCompanyLocation.fulfilled.match(apiResult)) {
+            //     toast.success("Address added successfully!");
+            //     dispatch(getCompanySetting());
+            // } else {
+            //     toast.error(apiResult?.payload || "Something went wrong!");
+            // }
         }
 
         setShowDialog(false);
         reset();
         setEditMode(false);
         setCurrentAddress(null);
-
-        const newAddr = JSON.stringify(updatedAddress);
-
-        if (!editMode) {
-            const apiResult = await dispatch(
-                createCompanyLocation({
-                    companyID: company?.data[0]._id,
-                    newAddr,
-                })
-            );
-            if (createCompanyLocation.fulfilled.match(apiResult)) {
-                toast.success("Address added successfully!");
-            } else {
-                toast.error(apiResult?.payload || "Something went wrong!");
-            }
-        }
-        if (editMode) {
-            const apiResult = await dispatch(
-                editCompanyLocation({
-                    companyID: company?.data[0]._id,
-                    id: currentAddress.id,
-                    editAddress,
-                })
-            );
-            if (editCompanyLocation.fulfilled.match(apiResult)) {
-                toast.success("Address edited successfully!");
-            } else {
-                toast.error(apiResult?.payload || "Something went wrong!");
-            }
-        }
     };
 
-    const handleClick = async () => {
+    const handleClick = () => {
         reset();
         setEditMode(false);
         setShowDialog(true);
@@ -239,12 +246,12 @@ const BusinessAddress = () => {
                                 option ? (
                                     <div className="flex items-center gap-1">
                                         <img
-                                            src={option.flag}
-                                            alt={option.name}
+                                            src={option?.flag}
+                                            alt={option?.name}
                                             className="w-6 h-5 hidden sm:block"
                                         />
                                         <span className="text-xs sm:text-sm">
-                                            {option.name}
+                                            {option?.name}
                                         </span>
                                     </div>
                                 ) : (
@@ -258,7 +265,6 @@ const BusinessAddress = () => {
                                         alt={option.name}
                                         className="w-6 h-5"
                                     />
-
                                     <span className="text-xs sm:text-sm">
                                         {option.name}
                                     </span>
@@ -324,7 +330,6 @@ const BusinessAddress = () => {
                     )}
                 </div>
             </Dialog>
-
             <Dialog
                 visible={showDeleteDialog}
                 onHide={() => setShowDeleteDialog(false)}
