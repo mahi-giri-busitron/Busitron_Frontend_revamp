@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { scroller } from "react-scroll";
 import "primeicons/primeicons.css";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ sectionRefs }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -10,6 +11,7 @@ const Navbar = ({ sectionRefs }) => {
     const [scrolling, setScrolling] = useState(false);
     const [activeTab, setActiveTab] = useState("home");
     const navbarRef = useRef(null);
+    const { currentUser } = useSelector((store) => store.user);
 
     const navLinks = [
         { id: "home", title: "Home" },
@@ -105,14 +107,22 @@ const Navbar = ({ sectionRefs }) => {
                 </ul>
 
                 <div className="flex items-center space-x-4 sm:space-x-6">
-                    {!hideLoginPaths.includes(location.pathname) && (
-                        <button
-                            onClick={handleLoginClick}
-                            className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-                        >
-                            Login
-                        </button>
-                    )}
+                    {!hideLoginPaths.includes(location.pathname) &&
+                        (currentUser ? (
+                            <Link
+                                to="/dashboard"
+                                className="hidden md:block px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-700"
+                            >
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={handleLoginClick}
+                                className="hidden md:block px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                                Login
+                            </button>
+                        ))}
                     <button
                         onClick={() => setMenuOpen(true)}
                         className="md:hidden text-2xl text-blue-600"
@@ -152,14 +162,22 @@ const Navbar = ({ sectionRefs }) => {
                 </ul>
 
                 <div className="mt-6">
-                    {!hideLoginPaths.includes(location.pathname) && (
-                        <button
-                            onClick={handleLoginClick}
-                            className="w-1/2 py-1 mx-auto text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
-                        >
-                            Login
-                        </button>
-                    )}
+                    {!hideLoginPaths.includes(location.pathname) &&
+                        (currentUser ? (
+                            <Link
+                                to="/dashboard"
+                                className="w-1/2 px-2 py-1 mx-auto text-center rounded-md bg-green-500 text-white hover:bg-green-700"
+                            >
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={handleLoginClick}
+                                className="w-1/2 py-1  mx-auto text-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                                Login
+                            </button>
+                        ))}
                 </div>
             </div>
         </nav>

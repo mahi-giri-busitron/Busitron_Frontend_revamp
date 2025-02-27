@@ -2,8 +2,6 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import SideNavigation from "./Navigation/SideNavigation.jsx";
 import TopNavBar from "./Navigation/TopNavBar.jsx";
-import { Sidebar } from "primereact/sidebar";
-import { Button } from "primereact/button";
 import { motion } from "framer-motion";
 
 const Dashboard = () => {

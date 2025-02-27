@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "primeicons/primeicons.css";
 import CreateProject from "./CreateProject.jsx";
 
@@ -146,6 +147,7 @@ const projects = [
 ];
 
 const ProjectList = () => {
+    const navigate = useNavigate();
     const [searchProject, setSearchProject] = useState("");
     const [isOpen, setIsOpen] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -163,10 +165,6 @@ const ProjectList = () => {
         indexOfLastProject
     );
     const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
-
-    if (showAddProject) {
-        return <CreateProject onCancel={() => setShowAddProject(false)} />;
-    }
 
     return (
         <div className="p-6 sm:p-4 sm:text-sm text-xs overflow-x-auto">
@@ -189,6 +187,11 @@ const ProjectList = () => {
                 </div>
             </div>
 
+            <CreateProject
+                visible={showAddProject}
+                onHide={() => setShowAddProject(false)}
+            />
+
             <div className="min-w-[600px] grid grid-cols-[0.5fr_2fr_1fr_1fr_1fr_0.5fr] gap-4 bg-gray-100 p-3 font-semibold border-b border-gray-300 sm:grid-cols-[0.3fr_1.4fr_0.8fr_0.6fr_0.6fr_0.3fr]">
                 <div>S.No</div>
                 <div>Project Name</div>
@@ -204,11 +207,12 @@ const ProjectList = () => {
                     className="min-w-[600px] grid grid-cols-[0.5fr_2fr_1fr_1fr_1fr_0.5fr] gap-2 p-3 border-b border-gray-300 items-center sm:grid-cols-[0.3fr_1.4fr_0.8fr_0.6fr_0.6fr_0.3fr]"
                 >
                     <div>{indexOfFirstProject + index + 1}</div>
-                    <input
-                        className="border border-gray-300 p-1 w-[85%] rounded-md"
-                        type="text"
-                        defaultValue={project.name}
-                    />
+                    <div
+                        className="text-gray-600 cursor-pointer hover:underline w-[85%] text-ellipsis overflow-hidden whitespace-nowrap"
+                        onClick={() => navigate(`/dashboard/project/${project.id}`)}
+                    >
+                        {project.name}
+                    </div>
                     <div className="flex items-center relative">
                         <i className="pi pi-user text-gray-500 bg-gray-200 rounded-full text-xs p-1 absolute left-0"></i>
                         <i className="pi pi-user text-gray-500 bg-gray-200 rounded-full text-xs p-1 absolute left-4"></i>
