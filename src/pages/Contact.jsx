@@ -58,6 +58,12 @@ const Contact = () => {
         trigger("phone");
     };
 
+    const handleMessageKeyDown = (e) => {
+        if (message.length >= 300) {
+            e.preventDefault(); 
+        }
+    };
+
     const renderError = (field) =>
         errors[field] && (
             <p className="text-red-500 text-xs mt-1">{errors[field].message}</p>
@@ -136,13 +142,9 @@ const Contact = () => {
                         <textarea
                             className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                             placeholder="Your message..."
+                            maxLength={300} 
                             {...register("message", {
                                 required: "Message is required",
-                                maxLength: {
-                                    value: 300,
-                                    message:
-                                        "Message must be less than 300 characters",
-                                },
                             })}
                         />
                         <div className="text-xs flex justify-between items-center">
@@ -157,7 +159,7 @@ const Contact = () => {
                                 }
                             >
                                 {remainingChars > 0
-                                    ? remainingChars
+                                    ? `${remainingChars} characters remaining`
                                     : "You have reached your limit"}
                             </span>
                         </div>

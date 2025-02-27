@@ -13,13 +13,11 @@ import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
 import Task from "./component/Dashboard/Task.jsx";
 import Ticket from "./component/Dashboard/Ticket.jsx";
-import Email from "./component/dashboard/Messages.jsx";
 import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
-import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
-import Performance_Tracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
+import PerformanceTracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
 import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
@@ -28,12 +26,14 @@ import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
-import Messages from "./component/dashboard/Messages.jsx";
+import Messages from "./component/Dashboard/Messages.jsx";
 import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
 import Project from "./component/Dashboard/Project/Project.jsx";
 import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
 import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
 import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
+import ViewEstimate from "./component/Dashboard/Financical/ViewEstimate.jsx";
+import Financial_Management from "./component/Dashboard/Financical/Financial_Management.jsx";
 import UsrerPerformanceDetals from "./component/Dashboard/performance/UserperformanceDetails.jsx";
 function App() {
     const location = useLocation();
@@ -76,6 +76,7 @@ function App() {
         <>
             {!isPrivateRoute && <Navbar />}
             <Routes>
+                <Route path="/viewestimate" element={<ViewEstimate />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/signin" element={<Signin />} />
                 <Route
@@ -101,8 +102,13 @@ function App() {
                             element={<SingleEstimate />}
                         />
                         <Route
+                            path="view-estimate/:id"
+                            element={<ViewEstimate />}
+                        />
+
+                        <Route
                             path="performance-tracking"
-                            element={<Performance_Tracking />}
+                            element={<PerformanceTracking />}
                         />
                         <Route
                             path="user-management"
@@ -115,7 +121,6 @@ function App() {
                         <Route path="ticket" element={<Ticket />} />
                         <Route path="message" element={< Messages/>} />
                         <Route path="ticket/:id" element={<SingleTicket />} />
-                        <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
