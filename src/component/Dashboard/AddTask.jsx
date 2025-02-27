@@ -125,6 +125,7 @@ const AddTask = ({ setShow }) => {
                                         <Calendar
                                             id="buttondisplay"
                                             value={field.value}
+                                            dateFormat="dd/mm/yy"
                                             className="h-10"
                                             minDate={disabledPastDate}
                                             onChange={(e) => {
@@ -151,6 +152,7 @@ const AddTask = ({ setShow }) => {
                                     render={({ field }) => (
                                         <Calendar
                                             id="buttondisplay"
+                                            dateFormat="dd/mm/yy"
                                             className="h-10"
                                             value={field.value}
                                             minDate={disabledPastDate}
@@ -303,42 +305,33 @@ const AddTask = ({ setShow }) => {
                     <div className="mb-3">
                         <i className="pi pi-paperclip text-gray-600 mr-2"></i>
                         Upload File
-                        {selectedFile ? (
-                            <div className="flex items-center my-2">
-                                <span className="text-gray-700 ">
-                                    {selectedFile.name}
-                                </span>
-                                <i
-                                    title="Remove File"
-                                    className="pi pi-times text-red-700 font-bold mx-2 cursor-pointer"
-                                    onClick={() => {
-                                        setSelectedFile(null);
-                                        setValue("file", null, {
-                                            shouldValidate: true,
-                                        });
-                                    }}
-                                ></i>
-                            </div>
-                        ) : (
-                            <div className="my-3 text-center p-0">
-                                <FileUpload
-                                    mode="basic"
-                                    name="file"
-                                    accept="image/*"
-                                    maxFileSize={1000000}
-                                    auto
-                                    customUpload
-                                    chooseLabel="Browse"
-                                    className="text-sm"
-                                    uploadHandler={(e) => {
-                                        setSelectedFile(e.files[0]);
-                                        setValue("file", e.files[0], {
-                                            shouldValidate: true,
-                                        });
-                                    }}
-                                />
-                            </div>
-                        )}
+                        {selectedFile ? 
+                        <div className="flex items-center my-2">
+                            <span className="text-gray-700 ">{selectedFile.name}</span>
+                            <i 
+                                title="Remove File"
+                                className="pi pi-times text-red-700 font-bold mx-2 cursor-pointer" 
+                                onClick={() => {
+                                    setSelectedFile(null);
+                                    setValue("file", null, { shouldValidate: true });
+                            }}></i>
+                        </div> : 
+                        <div className="my-3 text-center p-0">
+                            <FileUpload
+                                mode="basic"
+                                name="file"
+                                accept="image/*"
+                                maxFileSize={1000000}
+                                auto
+                                customUpload
+                                chooseLabel="Browse"
+                                className="text-sm leading-none"
+                                uploadHandler={(e) => {
+                                    setSelectedFile(e.files[0])
+                                    setValue("file", e.files[0], { shouldValidate: true });
+                                }}
+                            />
+                        </div>}
                     </div>
 
                     <div className="md:w-55 flex gap-3 w-full">

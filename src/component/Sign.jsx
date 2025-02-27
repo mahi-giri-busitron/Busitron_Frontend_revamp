@@ -9,6 +9,7 @@ import svg from "../assets/sign.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../redux/userSlice.js";
 import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
 
 const Signin = () => {
     const {
@@ -23,15 +24,17 @@ const Signin = () => {
 
     const onSubmit = async (data) => {
         const apiResult = await dispatch(signinUser({ ...data }));
-        if (signinUser.fulfilled.match(apiResult))
+        if (signinUser.fulfilled.match(apiResult)) {
+            toast.success(apiResult.payload.message || "Login successful!");
             navigate("/signin/otp-verification");
+        } else {
+            toast.error(apiResult?.payload || "Something went wrong!");
+        }
     };
 
     return (
         <>
             <div className="flex items-center justify-center min-h-screen bg-gray-50 md:pt-8 ">
-                <Toaster position="top-right" />
-
                 <div className="relative flex flex-col md:flex-row w-full md:w-[1050px] h-auto md:h-[500px] rounded-xl shadow-lg overflow-hidden border border-gray-200 mt-[-75px] mx-4 md:mx-0">
                     <div className="w-full md:w-1/2 hidden md:flex items-center justify-center relative">
                         <img

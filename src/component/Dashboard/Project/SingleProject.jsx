@@ -3,10 +3,13 @@ import { TabMenu } from "primereact/tabmenu";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import Overview from "./Overview";
 import TaskBoard from "./TaskBoard";
+import Milestone from "./MileStone";
+import FileUploadModal from "./Files";
 
 const SingleProject = () => {
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [isOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const currentTab = searchParams.get("tab") || "overview";
@@ -48,15 +51,17 @@ const SingleProject = () => {
             case "files":
                 return (
                     <div>
-                        <h2>Files</h2>
-                        <p>Uploaded documents.</p>
+                        <div>
+                            <FileUploadModal />
+                        </div>
                     </div>
                 );
             case "milestones":
                 return (
                     <div>
-                        <h2>Milestones</h2>
-                        <p>Key project milestones.</p>
+                       <div>
+                        <Milestone/>
+                       </div>
                     </div>
                 );
             case "tasks":

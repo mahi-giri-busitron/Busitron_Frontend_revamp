@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "../redux/userSlice.js";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Create_User = () => {
     const {
@@ -36,7 +37,12 @@ const Create_User = () => {
     const onSubmit = async (formData) => {
         const apiResult = await dispatch(updateUser(formData));
 
-        if (updateUser.fulfilled.match(apiResult)) navigate("/dashboard");
+        if (updateUser.fulfilled.match(apiResult)) {
+            toast.success("User details updated successfully!");
+            navigate("/dashboard");
+        } else {
+            toast.error(apiResult.message || "Something went wrong!");
+        }
 
         reset();
         setChecked(false);

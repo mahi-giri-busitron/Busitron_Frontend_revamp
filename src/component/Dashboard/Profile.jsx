@@ -8,6 +8,7 @@ import { Button } from "primereact/button";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/userSlice";
 import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
 
 const genderOptions = [
     { label: "male", value: "male" },
@@ -31,21 +32,18 @@ const Profile = () => {
         name: currentUser?.data?.name || "",
         email: currentUser?.data?.email || "",
         phoneNumber: currentUser?.data?.phoneNumber || "",
-        gender: currentUser?.data?.gender || "male",
+        gender: currentUser?.data?.gender || "",
         dateOfBirth: currentUser?.data?.dateOfBirth
             ? new Date(currentUser?.data?.dateOfBirth)
             : null,
-        maritalStatus: currentUser?.data?.maritalStatus || "single",
+        maritalStatus: currentUser?.data?.maritalStatus || "",
         designation: currentUser?.data?.designation || "",
         employeeId: currentUser?.data?.employeeId || "",
         avatar: currentUser?.data?.avatar || "",
+        address: currentUser?.data?.address || "",
     });
 
     const dispatch = useDispatch();
-
-    const handleOnTabChange = (e) => {
-        setActiveIndex(e.index);
-    };
 
     const handleClick = () => {
         fileInputRef.current.click();
@@ -81,18 +79,25 @@ const Profile = () => {
         formData.append("dob", userData.dateOfBirth);
         formData.append("gender", userData.gender);
         formData.append("maritalStatus", userData.maritalStatus);
-        if (userData.avatar) {
-            formData.append("profilePic", userData.avatar);
-        }
+        if (userData.avatar) formData.append("profilePic", userData.avatar);
+        formData.append("address", userData.address);
 
-        await dispatch(updateUser(formData));
+        const apiResponse = await dispatch(updateUser(formData));
+
+        if (updateUser.fulfilled.match(apiResponse)) {
+            toast.success(
+                apiResponse.payload.message || "Profile updated successfully"
+            );
+        } else {
+            toast.error(apiResponse?.payload || "Something went wrong!");
+        }
     }
 
     return (
         <div className="profile_parent_wrapper">
             <div className="Profile_wrapper">
                 <div className="card">
-                    <TabView onTabChange={handleOnTabChange}>
+                    <TabView>
                         <TabPanel header="Profile">
                             <div className="profile_input_picker relative w-full max-w-[150px]">
                                 <label
@@ -188,8 +193,6 @@ const Profile = () => {
                                             optionLabel="label"
                                         />
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-4 my-5">
                                     <div>
                                         <p>Date of Birth</p>
                                         <Calendar

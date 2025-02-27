@@ -60,7 +60,7 @@ export const updateUser = createAsyncThunk(
             return response.data;
         } catch (error) {
             return rejectWithValue(
-                error.response?.data?.message || "user profile updation failed"
+                error.response?.data?.message || "Something went wrong"
             );
         }
     }
