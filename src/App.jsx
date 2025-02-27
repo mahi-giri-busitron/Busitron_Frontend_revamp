@@ -19,7 +19,7 @@ import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
 import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
-import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
+import Performance_Tracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
 import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
@@ -34,6 +34,7 @@ import Project from "./component/Dashboard/Project/Project.jsx";
 import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
 import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
 import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
+import UsrerPerformanceDetals from "./component/Dashboard/performance/UserperformanceDetails.jsx";
 function App() {
     const location = useLocation();
 
@@ -146,6 +147,10 @@ function App() {
                         <Route
                             path="/dashboard/user-management/emp/:empid"
                             element={<UserDetails />}
+                        />
+                        <Route
+                            path="/dashboard/performance-tracking/:empid"
+                            element={<UsrerPerformanceDetals />}
                         />
                     </Route>
                 </Route>
