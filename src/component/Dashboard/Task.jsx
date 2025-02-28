@@ -9,6 +9,8 @@ import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
 import { useForm } from "react-hook-form";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import DeleteModal from "../../shared/DeleteModal";
+import { useNavigate } from "react-router-dom";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 const Task = () => {
@@ -22,7 +24,7 @@ const Task = () => {
 
     const initialData = [
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build Api",
             taskNo: "T001",
             sno: 1,
             status: "Completed",
@@ -34,7 +36,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build home",
             taskNo: "T002",
             sno: 2,
             status: "In Progress",
@@ -46,7 +48,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build city",
             taskNo: "T003",
             sno: 3,
             status: "Completed",
@@ -58,7 +60,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build state",
             taskNo: "T004",
             sno: 4,
             status: "In Progress",
@@ -70,7 +72,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build riveer",
             taskNo: "T005",
             sno: 5,
             status: "Completed",
@@ -82,7 +84,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build bridge",
             taskNo: "T006",
             sno: 6,
             status: "In Progress",
@@ -94,7 +96,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build lane",
             taskNo: "T007",
             sno: 7,
             status: "Completed",
@@ -106,7 +108,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build pond",
             taskNo: "T008",
             sno: 8,
             status: "Pending",
@@ -118,7 +120,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build dam",
             taskNo: "T009",
             sno: 9,
             status: "Completed",
@@ -130,7 +132,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build skywalk",
             taskNo: "T0010",
             sno: 10,
             status: "Pending",
@@ -142,7 +144,7 @@ const Task = () => {
             assignedBy: "Alice",
         },
         {
-            task: "Build UiasdfadsfdfDFwdfdsf",
+            task: "Build car",
             taskNo: "T0011",
             sno: 11,
             status: "In Progress",
@@ -213,33 +215,26 @@ const Task = () => {
             hoursLogged: "4h",
             assignedBy: "Alice",
         },
-        {
-            task: "Build UI",
-            taskNo: "T0017",
-            sno: 17,
-            status: "Pending",
-            completedOn: "2024-02-18",
-            startDate: "10-02-2012",
-            dueDate: "2024-02-20",
-            estimatedTime: "5h",
-            hoursLogged: "4h",
-            assignedBy: "Alice",
-        },
     ];
 
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false); // for add task modal
+    const [visible, setVisible] = useState(false); // for delete modal
+    const [deleteId, setDeleteId] = useState(null);
+
+    let navigate = useNavigate();
 
     const { register, watch } = useForm({
         defaultValues: { taskName: "" },
     });
+
+    const taskName = watch("taskName");
+
     const onPageChange = (event) => {
         setFirst(event.first);
         setRows(event.rows);
     };
-
-    const taskName = watch("taskName");
 
     const [tableData, setTableData] = useState(initialData);
 
@@ -273,22 +268,13 @@ const Task = () => {
         );
     };
 
-    function handleDelete(id) {
-        let modifyData = initialData.filter((taskId) => taskId.taskNo !== id);
+    function handleDelete() {
+        let modifyData = initialData.filter(
+            (taskId) => taskId.taskNo !== deleteId
+        );
         setTableData(modifyData);
+        setVisible(false);
     }
-
-    const deleteConfirmation = (id) => {
-        confirmDialog({
-            message: "Are you sure you want to delete this record?",
-            header: "Delete Confirmation",
-            icon: "pi pi-info-circle",
-            defaultFocus: "reject",
-            acceptClassName: "p-button-danger",
-            accept: () => handleDelete(id),
-            reject: () => console.log("Delete Cancelled"),
-        });
-    };
 
     return (
         <>
@@ -298,30 +284,31 @@ const Task = () => {
                     <Button
                         label="Add Task"
                         onClick={() => setShow(!show)}
-                        className="h-10"
+                        className="h-9"
                         size="small"
                         icon="pi pi-plus"
                         severity="primary"
                     />
                     <Button
                         label="My Task"
-                        className="h-10 hover:bg-black text-white"
+                        className="h-9 hover:bg-black text-white"
                         size="small"
                         icon="pi pi-user"
                         severity="secondary"
                         outlined
                     />
                 </div>
+
                 <div className="w-full md:w-100">
-                    <IconField iconPosition="left" className="h-10 w-full">
-                        <InputIcon className="pi pi-search h-10" />
-                        <InputText
-                            placeholder="Start Searching...."
-                            {...register("taskName")}
-                            className="h-10 w-full"
-                        />
-                    </IconField>
-                </div>
+                                    <IconField iconPosition="left" className="h-10 w-full">
+                                        <InputIcon className="pi pi-search h-10" />
+                                        <InputText
+                                            placeholder="Start Searching...."
+                                            {...register("taskName")}
+                                            className="h-10 w-full"
+                                        />
+                                    </IconField>
+                                </div>
             </div>
 
             <div className="mx-5">
@@ -363,16 +350,19 @@ const Task = () => {
                                 <button
                                     title="View"
                                     className="text-blue-500 hover:text-blue-700 hover:animate-ping"
-                                    onClick={() => handleView(rowData)}
+                                    onClick={() => {
+                                        navigate("/task");
+                                    }}
                                 >
                                     <i className="pi pi-eye mx-2 cursor-pointer"></i>
                                 </button>
                                 <button
                                     title="Delete"
                                     className="text-red-500 hover:text-red-700 hover:animate-bounce"
-                                    onClick={() =>
-                                        deleteConfirmation(rowData.taskNo)
-                                    }
+                                    onClick={() => {
+                                        setVisible(true),
+                                            setDeleteId(rowData.taskNo);
+                                    }}
                                 >
                                     <i className="pi pi-trash cursor-pointer"></i>
                                 </button>
@@ -393,6 +383,12 @@ const Task = () => {
             >
                 <AddTask setShow={setShow} />
             </Dialog>
+
+            <DeleteModal
+                visible={visible}
+                setVisible={setVisible}
+                handleDelete={handleDelete}
+            />
         </>
     );
 };
