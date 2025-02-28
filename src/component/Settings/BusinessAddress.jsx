@@ -14,6 +14,9 @@ import {
     deleteCompanyLocation,
     editCompanyLocation,
     getCompanySetting,
+    isDeletedToPrevState,
+    isEditedToPrevState,
+    isNewLocationAddedToPrevState,
     isRequestFulfilledToPrevState,
 } from "../../redux/companySlice";
 import toast from "react-hot-toast";
@@ -33,12 +36,11 @@ const BusinessAddress = () => {
         countryCodes.find((c) => c.name === "India")
     );
 
-    const { company, isRequestFulfilled } = useSelector(
+    const { company, isNewLocationAdded, isDeleted, isEdited } = useSelector(
         (state) => state.company
     );
     const dispatch = useDispatch();
 
-    
     const [addresses, setAddresses] = useState([]);
     const [addressID, setAddressID] = useState(null);
     const [showDialog, setShowDialog] = useState(false);
@@ -51,18 +53,39 @@ const BusinessAddress = () => {
         pinCode: "",
     });
 
-    useEffect(() => {
-        if (isRequestFulfilled) {
-            dispatch(getCompanySetting());
-            dispatch(isRequestFulfilledToPrevState());
-        }
-    }, [isRequestFulfilled, dispatch]);
+    // useEffect(() => {
+    //     dispatch(getCompanySetting());
+    // }, [dispatch]);
 
     useEffect(() => {
-        if (company?.data?.length > 0) {
-            setAddresses(company.data[0].location || []);
+        if (company?.data) {
+            setAddresses(company.data[0]?.location || []);
         }
     }, [company]);
+    useEffect(() => {
+        if (isNewLocationAdded) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isNewLocationAddedToPrevState());
+                toast.success("New location added");
+            });
+        }
+    }, [isNewLocationAdded, dispatch]);
+
+    useEffect(() => {
+        if (isDeleted) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isDeletedToPrevState());
+            });
+        }
+    }, [isDeleted, dispatch]);
+
+    useEffect(() => {
+        if (isEdited) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isEditedToPrevState());
+            });
+        }
+    }, [isEdited, dispatch]);
 
     const confirmDeleteAddress = (id) => {
         setAddressID(id);
@@ -76,11 +99,17 @@ const BusinessAddress = () => {
                 id: addressID,
             })
         );
+
         if (deleteCompanyLocation.fulfilled.match(apiResult)) {
-            toast.success("Address delete successfully!");
+            setAddresses((prevAddresses) =>
+                prevAddresses.filter((address) => address.id !== addressID)
+            );
+
+            toast.success("Address deleted successfully!");
         } else {
             toast.error(apiResult?.payload || "Something went wrong!");
         }
+
         setShowDeleteDialog(false);
     };
 
@@ -110,20 +139,15 @@ const BusinessAddress = () => {
         };
 
         if (editMode && currentAddress) {
-            // const apiResult = await dispatch(
-            //     editCompanyLocation({
-            //         companyID: company?.data[0]._id,
-            //         id: currentAddress.id,
-            //         editAddress,
-            //     })
-            // );
-            // await dispatch(isRequestFulfilledToPrevState());
-            // if (editCompanyLocation.fulfilled.match(apiResult)) {
-            //     toast.success("Address updated successfully!");
-            //     dispatch(getCompanySetting());
-            // } else {
-            //     toast.error(apiResult?.payload || "Something went wrong!");
-            // }
+            await dispatch(
+                editCompanyLocation({
+                    companyID: company?.data[0]._id,
+                    id: currentAddress.id,
+                    editAddress,
+                })
+            );
+            await dispatch(isRequestFulfilledToPrevState());
+            toast.success("Location update successfully!");
         } else {
             await dispatch(
                 createCompanyLocation({
@@ -131,13 +155,8 @@ const BusinessAddress = () => {
                     newAddr: JSON.stringify(updatedAddress),
                 })
             );
-            await dispatch(isRequestFulfilledToPrevState())
-            // if (createCompanyLocation.fulfilled.match(apiResult)) {
-            //     toast.success("Address added successfully!");
-            //     dispatch(getCompanySetting());
-            // } else {
-            //     toast.error(apiResult?.payload || "Something went wrong!");
-            // }
+            await dispatch(isRequestFulfilledToPrevState());
+            await dispatch(isNewLocationAddedToPrevState());
         }
 
         setShowDialog(false);

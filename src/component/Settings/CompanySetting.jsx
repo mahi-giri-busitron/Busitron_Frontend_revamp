@@ -17,7 +17,6 @@ const CompanySettings = () => {
         (state) => state.company
     );
 
-    // Initialize editCompany state
     const [editCompany, setEditCompany] = useState({
         id: "",
         companyName: "",
@@ -26,10 +25,8 @@ const CompanySettings = () => {
         website: "",
     });
 
-    // Memoize company settings to prevent unnecessary re-renders
     const companyData = useMemo(() => company?.data?.[0] || {}, [company]);
 
-    // Update local state when Redux state changes
     useEffect(() => {
         if (isRequestFulfilled && companyData) {
             setEditCompany({
@@ -43,12 +40,11 @@ const CompanySettings = () => {
         }
     }, [isRequestFulfilled, companyData, dispatch]);
 
-    // Fetch company settings on mount
     useEffect(() => {
         dispatch(getCompanySetting());
+        toast.success("Company setting fetched successfully")
     }, [dispatch]);
 
-    // Handle input changes properly
     const handleInputChange = (e, field) => {
         setEditCompany((prevState) => ({
             ...prevState,
@@ -56,7 +52,6 @@ const CompanySettings = () => {
         }));
     };
 
-    // Handle save action
     const handleSave = async () => {
         try {
             const { id, companyName, companyEmail, phoneNumber, website } =
@@ -70,7 +65,7 @@ const CompanySettings = () => {
                 editCompany
             );
             toast.success("Company settings saved successfully!");
-            dispatch(getCompanySetting()); // Refresh settings after saving
+            dispatch(getCompanySetting());
         } catch (error) {
             toast.error(
                 error.response?.data?.message || "Something went wrong!"
@@ -82,14 +77,12 @@ const CompanySettings = () => {
 
     return (
         <div>
-            {/* Tab Menu */}
             <TabMenu
                 model={items}
                 activeIndex={activeIndex}
                 onTabChange={(e) => setActiveIndex(e.index)}
             />
 
-            {/* Company Settings Form */}
             <div className="p-5 bg-white shadow-md rounded-lg mb-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[
@@ -130,7 +123,6 @@ const CompanySettings = () => {
                     ))}
                 </div>
 
-                {/* Save Button */}
                 <div className="mt-4">
                     <Button
                         label="Save"

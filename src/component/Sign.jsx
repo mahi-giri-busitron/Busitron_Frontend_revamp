@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Toaster } from "react-hot-toast";
 import LOGOFOO from "../assets/svgs/logoFooter.jsx";
 import svg from "../assets/sign.jpg";
 import { useDispatch, useSelector } from "react-redux";
