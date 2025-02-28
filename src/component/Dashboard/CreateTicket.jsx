@@ -13,7 +13,7 @@ const CreateTicket = ({ onHide }) => {
         formState: { errors },
         reset,
     } = useForm();
-    
+
     const [description, setDescription] = useState("");
     const [files, setFiles] = useState([]);
 
@@ -49,10 +49,15 @@ const CreateTicket = ({ onHide }) => {
     ];
 
     const onSubmit = (data) => {
+        console.log("Form Submitted:", {
+            ...data,
+            description,
+            files,
+        });
         reset();
         setDescription("");
         setFiles([]);
-        onHide(); 
+        onHide();
     };
 
     const handleFileChange = (e) => {
@@ -66,8 +71,8 @@ const CreateTicket = ({ onHide }) => {
     };
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
-            <div className="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <div className="p-4 md:p-6 bg-gray-100 min-h-screen">
+            <div className="max-w-7xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-6">
                         <h2 className="text-lg font-semibold">
@@ -76,7 +81,7 @@ const CreateTicket = ({ onHide }) => {
                         <Divider />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-6">
                         <div>
                             <label className="font-medium">
                                 Requester Name *
@@ -88,16 +93,18 @@ const CreateTicket = ({ onHide }) => {
                                 options={requesters}
                                 optionLabel="label"
                                 placeholder="Select Requester"
-                                className={`w-full items-center h-10 mt-1 ${errors.requesterName ? "p-invalid" : ""}`}
+                                className={`w-full items-center h-10 mt-1 ${
+                                    errors.requesterName ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.requesterName && (
-                                <small className="p-error">{errors.requesterName.message}</small>
+                                <small className="p-error">
+                                    {errors.requesterName.message}
+                                </small>
                             )}
                         </div>
                         <div>
-                            <label className="font-medium">
-                                Assign Group *
-                            </label>
+                            <label className="font-medium">Assign Team *</label>
                             <Dropdown
                                 {...register("assignGroup", {
                                     required: "Assign Group is required",
@@ -105,10 +112,14 @@ const CreateTicket = ({ onHide }) => {
                                 options={assignGroups}
                                 optionLabel="label"
                                 placeholder="Select Group"
-                                className={`w-full items-center h-10 mt-1 ${errors.assignGroup ? "p-invalid" : ""}`}
+                                className={`w-full items-center h-10 mt-1 ${
+                                    errors.assignGroup ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.assignGroup && (
-                                <small className="p-error">{errors.assignGroup.message}</small>
+                                <small className="p-error">
+                                    {errors.assignGroup.message}
+                                </small>
                             )}
                         </div>
                         <div>
@@ -120,15 +131,19 @@ const CreateTicket = ({ onHide }) => {
                                 options={agents}
                                 optionLabel="label"
                                 placeholder="Select Agent"
-                                className={`w-full items-center h-10 mt-1 ${errors.agent ? "p-invalid" : ""}`}
+                                className={`w-full items-center h-10 mt-1 ${
+                                    errors.agent ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.agent && (
-                                <small className="p-error">{errors.agent.message}</small>
+                                <small className="p-error">
+                                    {errors.agent.message}
+                                </small>
                             )}
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 md:mt-6">
                         <div>
                             <label className="font-medium">Project</label>
                             <Dropdown
@@ -138,10 +153,14 @@ const CreateTicket = ({ onHide }) => {
                                 options={projects}
                                 optionLabel="label"
                                 placeholder="Select Project"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${errors.project ? "p-invalid" : ""}`}
+                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                    errors.project ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.project && (
-                                <small className="p-error">{errors.project.message}</small>
+                                <small className="p-error">
+                                    {errors.project.message}
+                                </small>
                             )}
                         </div>
                         <div>
@@ -153,29 +172,37 @@ const CreateTicket = ({ onHide }) => {
                                 options={ticketTypes}
                                 optionLabel="label"
                                 placeholder="Select Type"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${errors.ticketType ? "p-invalid" : ""}`}
+                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                    errors.ticketType ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.ticketType && (
-                                <small className="p-error">{errors.ticketType.message}</small>
+                                <small className="p-error">
+                                    {errors.ticketType.message}
+                                </small>
                             )}
                         </div>
                     </div>
 
-                    <div className="mt-6">
+                    <div className="mt-4 md:mt-6">
                         <label className="font-medium">Ticket Subject *</label>
                         <InputText
                             {...register("ticketSubject", {
                                 required: "Ticket Subject is required",
                             })}
-                            className={`w-full h-10 items-center mt-2 ${errors.ticketSubject ? "p-invalid" : ""}`}
+                            className={`w-full h-10 items-center mt-2 ${
+                                errors.ticketSubject ? "p-invalid" : ""
+                            }`}
                             placeholder="Enter ticket subject"
                         />
                         {errors.ticketSubject && (
-                            <small className="p-error">{errors.ticketSubject.message}</small>
+                            <small className="p-error">
+                                {errors.ticketSubject.message}
+                            </small>
                         )}
                     </div>
 
-                    <div className="mt-14 cursor-pointer flex items-center">
+                    <div className="mt-8 md:mt-14 cursor-pointer flex items-center">
                         <span className="font-semibold text-lg text-gray-700">
                             Other Details
                         </span>
@@ -191,10 +218,14 @@ const CreateTicket = ({ onHide }) => {
                                 options={priorities}
                                 optionLabel="label"
                                 placeholder="Select Priority"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${errors.priority ? "p-invalid" : ""}`}
+                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                    errors.priority ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.priority && (
-                                <small className="p-error">{errors.priority.message}</small>
+                                <small className="p-error">
+                                    {errors.priority.message}
+                                </small>
                             )}
                         </div>
                         <div>
@@ -206,28 +237,36 @@ const CreateTicket = ({ onHide }) => {
                                 options={ticketTypes}
                                 optionLabel="label"
                                 placeholder="Select Channel"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${errors.channelName ? "p-invalid" : ""}`}
+                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                    errors.channelName ? "p-invalid" : ""
+                                }`}
                             />
                             {errors.channelName && (
-                                <small className="p-error">{errors.channelName.message}</small>
+                                <small className="p-error">
+                                    {errors.channelName.message}
+                                </small>
                             )}
                         </div>
                     </div>
 
-                    <div className="mt-6">
+                    <div className="mt-4 md:mt-6">
                         <label className="font-medium">Description *</label>
                         <Editor
                             value={description}
                             onTextChange={(e) => setDescription(e.htmlValue)}
-                            className={`w-full h-20 mt-1 ${errors.description ? "p-invalid" : ""}`}
+                            className={`w-full h-20 mt-1 ${
+                                errors.description ? "p-invalid" : ""
+                            }`}
                         />
                         {errors.description && (
-                            <small className="p-error">Description is required</small>
+                            <small className="p-error">
+                                Description is required
+                            </small>
                         )}
                     </div>
 
-                    <div className="mt-6">
-                        <div className="flex items-center mt-24">
+                    <div className="mt-4 md:mt-6">
+                        <div className="flex items-center mt-46 md:mt-24">
                             <label
                                 htmlFor="file-upload"
                                 className="cursor-pointer flex items-center"
@@ -255,7 +294,7 @@ const CreateTicket = ({ onHide }) => {
                                         return (
                                             <div
                                                 key={index}
-                                                className="relative flex items-center bg-gray-100 p-2 rounded-lg w-64"
+                                                className="relative flex items-center bg-gray-100 p-2 rounded-lg w-full md:w-64"
                                             >
                                                 {isImage ? (
                                                     <img
@@ -289,21 +328,21 @@ const CreateTicket = ({ onHide }) => {
                         )}
                     </div>
 
-                    <div className="mt-6 flex gap-4 space-x-4 w-55">
+                    <div className="mt-6 flex flex-col md:flex-row gap-4 w-full md:w-55">
                         <Button
                             type="submit"
                             label="Save"
                             size="small"
                             icon="pi pi-check"
-                            className="p-2 px-4 text-white bg-blue-600 text-sm"
+                            className="p-2 px-4 text-white bg-blue-600 text-sm w-full md:w-auto"
                         />
                         <Button
                             label="Cancel"
                             severity="secondary"
                             outlined
                             size="small"
-                            className="p-2 px-4 text-gray-600 text-sm"
-                            onClick={onHide} 
+                            className="p-2 px-4 text-gray-600 text-sm w-full md:w-auto"
+                            onClick={onHide}
                         />
                     </div>
                 </form>
