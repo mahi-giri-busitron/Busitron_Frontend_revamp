@@ -49,7 +49,8 @@ const DashboardHome = () => {
                     <Button
                         label="Clock In"
                         icon="pi pi-sign-in"
-                        className="text-[1rem]"
+                        className="text-[1rem] h-10"
+                        size="small"
                     />
                     <div
                         className="inline-block"

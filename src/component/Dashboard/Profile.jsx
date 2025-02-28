@@ -250,6 +250,9 @@ const Profile = () => {
                                 <div className="profile_button">
                                     <Button
                                         label="Submit"
+                                        size="small"
+                                        className="h-10"
+                                        severity="success"
                                         onClick={handleProfileUpdate}
                                     />
                                 </div>

@@ -339,7 +339,7 @@ const Ticket = () => {
                 <Button
                     icon="pi pi-plus"
                     label="Create Ticket"
-                    severity="help"
+                    severity="primary"
                     className="p-button-primary w-38 h-10"
                     size="small"
                     onClick={() => setShowCreateTicketModal(true)}

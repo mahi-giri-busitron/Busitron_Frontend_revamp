@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "primeicons/primeicons.css";
 import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
 
 const CreateProject = ({ visible, onHide }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -105,9 +106,7 @@ const CreateProject = ({ visible, onHide }) => {
                     </div>
 
                     <div className="mt-4 flex justify-end gap-4">
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded">
-                            Save Project
-                        </button>
+                        <Button label="Save Project" size="samll" className="h-10" />
                     </div>
                 </form>
             </div>

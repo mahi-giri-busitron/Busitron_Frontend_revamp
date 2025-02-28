@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import DeleteModal from "../../shared/DeleteModal";
 import { useNavigate } from "react-router-dom";
-
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 const Task = () => {
     const headers = [
         { label: "S.No", key: "sno" },
@@ -298,17 +299,16 @@ const Task = () => {
                     />
                 </div>
 
-                <div className="w-full md:w-72">
-                    <div className="p-inputgroup flex-1 h-9">
-                        <span className="p-inputgroup-addon cursor-pointer">
-                            <i className="pi pi-search"></i>
-                        </span>
-                        <InputText
-                            placeholder="Start Searching...."
-                            {...register("taskName")}
-                        />
-                    </div>
-                </div>
+                <div className="w-full md:w-100">
+                                    <IconField iconPosition="left" className="h-10 w-full">
+                                        <InputIcon className="pi pi-search h-10" />
+                                        <InputText
+                                            placeholder="Start Searching...."
+                                            {...register("taskName")}
+                                            className="h-10 w-full"
+                                        />
+                                    </IconField>
+                                </div>
             </div>
 
             <div className="mx-5">
@@ -326,6 +326,8 @@ const Task = () => {
                             No tasks found. Add a new task!
                         </p>
                     }
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
                 >
                     {headers.map((val) => (
                         <Column

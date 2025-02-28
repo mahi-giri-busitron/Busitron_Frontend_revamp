@@ -116,7 +116,8 @@ const AppSettings = () => {
                     type="submit"
                     label="Save"
                     icon="pi pi-check"
-                    className="mt-4"
+                    className="mt-4 h-10"
+                    size="small"
                 />
             </form>
         </div>

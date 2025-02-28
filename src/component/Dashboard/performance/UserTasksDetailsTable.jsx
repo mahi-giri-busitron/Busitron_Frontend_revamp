@@ -59,7 +59,7 @@ const UserTasksDetailsTable = () => {
             <Tag
                 value={rowData.status}
                 severity={severity}
-                style={{ minWidth: "100px" }}
+                style={{ minWidth: "100px" , fontSize:"10px"}}
             />
         );
     };

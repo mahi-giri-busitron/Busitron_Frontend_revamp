@@ -177,7 +177,8 @@ const BusinessAddress = () => {
             <div className="p-5">
                 <Button
                     label="Add New Address"
-                    className="m-200"
+                    className="m-200 h-10"
+                    size="small"
                     icon="pi pi-plus"
                     onClick={handleClick}
                 />

@@ -8,7 +8,6 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
 
-
 const RolesPermissions = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [manageRoleVisible, setManageRoleVisible] = useState(false);
@@ -80,9 +79,10 @@ const RolesPermissions = () => {
             <div className="mt-4">
                 <Button
                     label="Manage Role"
+                    size="small"
                     icon="pi pi-cog"
                     onClick={() => setManageRoleVisible(true)}
-                    className="p-button-primary"
+                    className="p-button-primary h-10"
                 />
             </div>
 

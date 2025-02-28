@@ -58,7 +58,8 @@ const Milestone = () => {
                 <Button
                     label="Create Milestone"
                     icon="pi pi-plus"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 transition"
+                    size="small"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 transition h-10"
                     onClick={() => setVisible(true)}
                 />
             </div>
