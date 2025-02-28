@@ -17,7 +17,7 @@ import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
-import PerformanceTracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
+import Performance_Tracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
 import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
@@ -26,8 +26,8 @@ import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
 import SingleTask from "./component/Dashboard/SingleTask.jsx";
-import Messages from "./component/Dashboard/Messages.jsx";
 import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
+import Messages from "./component/Dashboard/Messages.jsx";
 import Project from "./component/Dashboard/Project/Project.jsx";
 import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
 import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
@@ -112,7 +112,7 @@ function App() {
 
                         <Route
                             path="performance-tracking"
-                            element={<PerformanceTracking />}
+                            element={<Performance_Tracking  />}
                         />
                         <Route
                             path="user-management"
