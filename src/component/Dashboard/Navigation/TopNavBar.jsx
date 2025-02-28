@@ -15,6 +15,7 @@ const TopNavBar = (props) => {
 
     const { setActiveTab, maximizeSideBar, setMaximizeSideBar } = props;
     const [visible, setVisible] = useState(false);
+    const [showOptions, setShowOptions] = useState(false);
 
     const HeadingType1 = ({ headText = "DashBoard" }) => {
         return <h2 className="text-2xl font-semibold">{headText}</h2>;
@@ -130,8 +131,27 @@ const TopNavBar = (props) => {
                     <img
                         src={currentUser?.data?.avatar}
                         className="cursor-pointer rounded-full w-[50px] h-[40px]"
-                        onClick={() => navigate("/dashboard/profile")}
+                        onClick={() => setShowOptions(!showOptions)}
                     />
+                    {/* Dropdown Menu */}
+                    {showOptions && (
+                        <div className="absolute right-10 mt-[8rem] border rounded-sm shadow-lg bg-white text-black">
+                            <button
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-600 hover:text-white"
+                                onClick={() => navigate("/dashboard/profile")}
+                            >
+                                Profile
+                            </button>
+                            <button
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-600 hover:text-white"
+                                onClick={() =>
+                                    navigate("/dashboard/changePassword")
+                                }
+                            >
+                                Change Password
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             <Sidebar

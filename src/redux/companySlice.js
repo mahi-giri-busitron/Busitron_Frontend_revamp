@@ -37,13 +37,11 @@ export const createCompanyLocation = createAsyncThunk(
 export const editCompanyLocation = createAsyncThunk(
     "company/edit_location",
     async ({ companyID, id, editAddress }, { rejectWithValue }) => {
-        console.log("update req :", companyID, id, editAddress);
         try {
             const response = await axios.put(
                 `/api/v1/setting/update_business_address/${companyID}/${id}`,
                 { editAddress }
             );
-            console.log("edit response :", response);
             return response.data;
         } catch (error) {
             return rejectWithValue(
@@ -57,13 +55,11 @@ export const editCompanyLocation = createAsyncThunk(
 export const deleteCompanyLocation = createAsyncThunk(
     "company/deleteLocation",
     async ({ companyID, id }, { rejectWithValue }) => {
-        console.log("before delete :", companyID, id);
         try {
             const response = await axios.delete(
                 `/api/v1/setting/delete_business_address/${companyID}/${id}`
             );
-            console.log("delete response :", response);
-            return { locationId, data: response.data };
+            return { companyID, id };
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message ||
@@ -79,8 +75,10 @@ const companySlice = createSlice({
         company: [],
         error: null,
         loading: false,
+        isNewLocationAdded: false,
         isRequestFulfilled: false,
         isDeleted: false,
+        isEdited: false,
     },
     reducers: {
         isRequestFulfilledToPrevState: (state) => {
@@ -88,6 +86,12 @@ const companySlice = createSlice({
         },
         isDeletedToPrevState: (state) => {
             state.isDeleted = false;
+        },
+        isNewLocationAddedToPrevState: (state) => {
+            state.isNewLocationAdded = false;
+        },
+        isEditedToPrevState: (state) => {
+            state.isEdited = false;
         },
     },
     extraReducers: (builder) => {
@@ -117,6 +121,7 @@ const companySlice = createSlice({
                 state.loading = false;
                 state.company = action.payload;
                 state.isRequestFulfilled = true;
+                state.isNewLocationAdded = true;
             })
             .addCase(createCompanyLocation.rejected, (state, action) => {
                 state.loading = false;
@@ -131,9 +136,10 @@ const companySlice = createSlice({
             })
             .addCase(editCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
+                state.isEdited = true;
+                state.isRequestFulfilled = true;
                 if (state.company && state.company.location) {
-                    const updatedLocation = action.payload.location;
-                    state.company.location = updatedLocation;
+                    state.company = action.payload;
                 }
             })
             .addCase(editCompanyLocation.rejected, (state, action) => {
@@ -149,10 +155,10 @@ const companySlice = createSlice({
             .addCase(deleteCompanyLocation.fulfilled, (state, action) => {
                 state.loading = false;
                 state.isRequestFulfilled = true;
-                if (state.company?.location) {
+                state.isDeleted = true;
+                if (state.company && state.company.location) {
                     state.company.location = state.company.location.filter(
-                        (location) =>
-                            location.id !== Number(action.payload.locationId)
+                        (loc) => loc.id !== action.meta.arg.id
                     );
                 }
             })
@@ -164,6 +170,11 @@ const companySlice = createSlice({
     },
 });
 
-export const { isRequestFulfilledToPrevState } = companySlice.actions;
+export const {
+    isRequestFulfilledToPrevState,
+    isNewLocationAddedToPrevState,
+    isDeletedToPrevState,
+    isEditedToPrevState,
+} = companySlice.actions;
 
 export default companySlice.reducer;

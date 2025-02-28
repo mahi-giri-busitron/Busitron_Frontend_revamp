@@ -35,6 +35,7 @@ import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
 import ViewEstimate from "./component/Dashboard/Financical/ViewEstimate.jsx";
 import Financial_Management from "./component/Dashboard/Financical/Financial_Management.jsx";
 import UsrerPerformanceDetals from "./component/Dashboard/performance/UserperformanceDetails.jsx";
+import ChangePassword from "./component/Dashboard/ChangePassword.jsx";
 function App() {
     const location = useLocation();
 
@@ -85,7 +86,10 @@ function App() {
                 />
                 <Route path="/signin/create-user" element={<Create_User />} />
 
-                <Route path="/:email/enter-new-password" element={<ResetPassword />} />
+                <Route
+                    path="/:email/enter-new-password"
+                    element={<ResetPassword />}
+                />
                 <Route
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
@@ -114,12 +118,16 @@ function App() {
                             path="user-management"
                             element={<UserManagement />}
                         />
+                        <Route
+                            path="changePassword"
+                            element={<ChangePassword />}
+                        />
                         <Route path="project" element={<Project />} />
                         <Route path="project/:id" element={<SingleProject />} />
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
-                        <Route path="message" element={< Messages/>} />
+                        <Route path="message" element={<Messages />} />
                         <Route path="ticket/:id" element={<SingleTicket />} />
                         <Route path="profile" element={<Profile />} />
 
