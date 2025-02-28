@@ -53,10 +53,6 @@ const BusinessAddress = () => {
         pinCode: "",
     });
 
-    // useEffect(() => {
-    //     dispatch(getCompanySetting());
-    // }, [dispatch]);
-
     useEffect(() => {
         if (company?.data) {
             setAddresses(company.data[0]?.location || []);
@@ -257,7 +253,10 @@ const BusinessAddress = () => {
                         <Dropdown
                             value={selectedCode}
                             options={countryCodes}
-                            onChange={handleAddressChange}
+                            onChange={(e) => {
+                                handleAddAddress();
+                                setSelectedCode(e.value);
+                            }}
                             placeholder="Select"
                             className="w-full"
                             optionLabel="code"
