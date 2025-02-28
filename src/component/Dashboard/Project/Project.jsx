@@ -203,7 +203,7 @@ const ProjectList = () => {
                 responsiveLayout="scroll"
                 paginatorClassName="custom-pagination"
                 currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                emptyMessage="No data available in table"
+                emptyMessage="No Projects available in the table"
                 paginator
                 rows={10}
                 rowsPerPageOptions={[5, 10, 25, 50]}
