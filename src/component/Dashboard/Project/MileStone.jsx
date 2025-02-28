@@ -69,7 +69,23 @@ const Milestone = () => {
             <DataTable value={milestones} className="shadow-lg rounded border-none p-5">
                 <Column field="title" header="Milestone Title" />
                 <Column field="cost" header="Milestone Cost" />
-                <Column field="status" header="Status" />
+                
+                {/* Status Column with Colored Dot */}
+                <Column
+                    field="status"
+                    header="Status"
+                    body={(rowData) => (
+                        <div className="flex items-center gap-2">
+                            <span
+                                className={`w-3 h-3 rounded-full ${
+                                    rowData.status === "Complete" ? "bg-green-500" : "bg-red-500"
+                                }`}
+                            ></span>
+                            {rowData.status}
+                        </div>
+                    )}
+                />
+                
                 <Column field="taskCount" header="Task Count" />
                 <Column
                     header="Action"
