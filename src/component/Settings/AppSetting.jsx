@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TabMenu } from "primereact/tabmenu";
 import { Dropdown } from "primereact/dropdown";
@@ -11,13 +11,19 @@ import {
     currencies,
     languages,
 } from "../../utils/dropdowndata";
+import { useDispatch } from "react-redux";
+import { getAppSetting, updateAppSetting } from "../../redux/appSettingSlice";
+import toast from "react-hot-toast";
 
 const AppSettings = () => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [appSettingId, setAppSettingId] = useState(null);
+    const dispatch = useDispatch();
 
     const {
         control,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -26,18 +32,21 @@ const AppSettings = () => {
             timezone: "",
             currency: "",
             language: "",
-            sessionDriver: "",
-            rowLimit: "",
-            appDebug: false,
-            appUpdate: false,
-            enableCache: false,
-            employeeExport: false,
         },
     });
 
     const items = [{ label: "App Settings", icon: "pi pi-cog" }];
 
-    const onSubmit = (data) => {};
+    const onSubmit = async (data) => {
+        const apiResult = await dispatch(
+            updateAppSetting({ appSettingId, data })
+        );
+        if (updateAppSetting.fulfilled.match(apiResult)) {
+            toast.success(apiResult.payload.message || "App setting updated!");
+        } else {
+            toast.error(apiResult?.payload || "Something went wrong!");
+        }
+    };
 
     const renderDropdown = (name, label, options) => (
         <div className="gap-2">
@@ -51,7 +60,8 @@ const AppSettings = () => {
                 render={({ field }) => (
                     <Dropdown
                         id={name}
-                        {...field}
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
                         options={options.map((opt) =>
                             typeof opt === "object"
                                 ? { label: opt.label, value: opt.value }
@@ -69,6 +79,31 @@ const AppSettings = () => {
             )}
         </div>
     );
+
+    const getAppSettingData = async () => {
+        const apiResult = await dispatch(getAppSetting());
+        // console.log(apiResult.payload.data[0]._id);
+        setAppSettingId(apiResult?.payload?.data[0]?._id);
+
+        if (getAppSetting.fulfilled.match(apiResult)) {
+            const data = apiResult.payload.data[0];
+            setValue("dateFormat", data.dateFormat || "");
+            setValue("timeFormat", data.timeFormat || "");
+            setValue("timezone", data.timeZone || "");
+            setValue("currency", data.currency || "");
+            setValue("language", data.language || "");
+
+            toast.success(
+                apiResult.payload.message || "App settings fetched successfully"
+            );
+        } else {
+            toast.error(apiResult?.payload || "Something went wrong!");
+        }
+    };
+
+    useEffect(() => {
+        getAppSettingData();
+    }, []); // Run only once on component mount
 
     const renderContent = () => {
         switch (activeIndex) {
@@ -96,7 +131,7 @@ const AppSettings = () => {
                                 "Default Currency",
                                 currencies
                             )}
-                            {renderDropdown("language", "Language", languages)}{" "}
+                            {renderDropdown("language", "Language", languages)}
                         </div>
                     </div>
                 );

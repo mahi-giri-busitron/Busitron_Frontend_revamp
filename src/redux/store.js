@@ -4,11 +4,13 @@ import storage from "redux-persist/lib/storage";
 import userSlice from "./userSlice.js";
 import themeSlice from "./themeSlice.js";
 import companySlice from "./companySlice.js";
+import appSettingSlice from "./appSettingSlice.js";
 
 const rootReducer = combineReducers({
     user: userSlice,
     company: companySlice,
     theme: themeSlice,
+    appSetting: appSettingSlice,
 });
 
 const persistConfig = {
