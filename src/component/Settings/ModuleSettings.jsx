@@ -35,7 +35,7 @@ const ModuleSettings = () => {
 
   return (
     <div className="p-4">
-      <Button label="Save" icon="pi pi-save" onClick={handleSave} className="mb-4" />
+      <Button label="Save" icon="pi pi-save" onClick={handleSave} className="mb-4 h-10" size="small" />
       <TabMenu
         model={roles.map((role, index) => ({
           label: role,

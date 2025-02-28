@@ -9,7 +9,8 @@ import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
 import { useForm } from "react-hook-form";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 const Task = () => {
 
     const headers = [
@@ -298,14 +299,14 @@ const Task = () => {
                     <Button
                         label="Add Task"
                         onClick={() => setShow(!show)}
-                        className="h-9"
+                        className="h-10"
                         size="small"
                         icon="pi pi-plus"
                         severity="primary"
                     />
                     <Button
                         label="My Task"
-                        className="h-9 hover:bg-black text-white"
+                        className="h-10 hover:bg-black text-white"
                         size="small"
                         icon="pi pi-user"
                         severity="secondary"
@@ -313,14 +314,20 @@ const Task = () => {
                     />
                 </div>
 
-                <div className="w-full md:w-72">
-                    <div className="p-inputgroup flex-1 h-9">
+                {/* <div className="w-full md:w-72"> */}
+                            <div className="w-full md:w-100">
+                                        <IconField iconPosition="left" className="h-10 w-full"  >
+                                            <InputIcon className="pi pi-search h-10" />
+                                            <InputText placeholder="Start Searching...."  {...register("taskName")} className="h-10 w-full" />
+                                        </IconField>
+                                    </div>
+                    {/* <div className="p-inputgroup flex-1 h-10">
                         <span className="p-inputgroup-addon cursor-pointer">
                             <i className="pi pi-search"></i>
                         </span>
                         <InputText placeholder="Start Searching...."  {...register("taskName")}/>
-                    </div>
-                </div>
+                    </div> */}
+                {/* </div> */}
             </div>
 
             <div className="mx-5">
@@ -334,6 +341,8 @@ const Task = () => {
                     tableClassName="custom-table"
                     paginatorClassName="custom-pagination"
                     emptyMessage={<p className="text-red-500 text-md text-center">No tasks found. Add a new task!</p>}
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
                 >
                     {headers.map((val) => (
                         <Column

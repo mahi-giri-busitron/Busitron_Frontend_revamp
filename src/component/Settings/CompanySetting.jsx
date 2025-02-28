@@ -126,7 +126,8 @@ const CompanySettings = () => {
                 <div className="mt-4">
                     <Button
                         label="Save"
-                        className="mt-9"
+                        className="mt-9 h-10"
+                        size="small"
                         icon="pi pi-check"
                         onClick={handleSave}
                     />

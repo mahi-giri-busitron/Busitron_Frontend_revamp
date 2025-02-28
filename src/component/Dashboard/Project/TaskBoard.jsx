@@ -121,12 +121,15 @@ const TaskBoard = () => {
                         size="small"
                         icon="pi pi-plus"
                         severity="primary"
+                        className="h-10"
                         onClick={() => setAddTask(true)}
                     />
                     <Button
                         label="Export"
                         icon="pi pi-upload"
-                        className="p-button-secondary"
+                        className="p-button-secondary h-10"
+                        size="small"
+                        
                     />
                 </div>
 

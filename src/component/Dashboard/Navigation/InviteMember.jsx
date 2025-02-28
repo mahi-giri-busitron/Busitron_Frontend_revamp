@@ -138,8 +138,9 @@ const InviteMemberModal = (props) => {
                             <Button
                                 label="Send Invite"
                                 icon="pi pi-send"
-                                iconPos="left"
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2"
+                                iconPos="left "
+                                size="small"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2 h-10"
                                 onClick={handleSubmit}
                             />
                         )}

@@ -70,92 +70,93 @@ const TaskSettings = () => {
 
                 <div className="p-2  rounded-lg shadow-md bg-white">
                     <div className="p-2">
-                    <h3 className="text-lg font-medium">Send Reminder</h3>
-                    <div className="flex justify-between">
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">
-                                Send task reminder before X days of due date
-                            </label>
-                            <InputNumber
-                                value={beforeDays}
-                                onValueChange={(e) => setBeforeDays(e.value)}
-                                className="w-full"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">
-                                Send task reminder on the day of due date
-                            </label>
-                            <div className="flex gap-4">
-                                <div className="flex items-center">
-                                    <RadioButton
-                                        inputId="yes"
-                                        name="reminder"
-                                        value={true}
-                                        onChange={() =>
-                                            setReminderOnDueDate(true)
-                                        }
-                                        checked={reminderOnDueDate}
-                                    />
-                                    <label htmlFor="yes" className="ml-2">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div className="flex items-center">
-                                    <RadioButton
-                                        inputId="no"
-                                        name="reminder"
-                                        value={false}
-                                        onChange={() =>
-                                            setReminderOnDueDate(false)
-                                        }
-                                        checked={!reminderOnDueDate}
-                                    />
-                                    <label htmlFor="no" className="ml-2">
-                                        No
-                                    </label>
+                        <h3 className="text-lg font-medium">Send Reminder</h3>
+                        <div className="flex justify-between">
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">
+                                    Send task reminder before X days of due date
+                                </label>
+                                <InputNumber
+                                    value={beforeDays}
+                                    onValueChange={(e) =>
+                                        setBeforeDays(e.value)
+                                    }
+                                    className="w-full"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">
+                                    Send task reminder on the day of due date
+                                </label>
+                                <div className="flex gap-4">
+                                    <div className="flex items-center">
+                                        <RadioButton
+                                            inputId="yes"
+                                            name="reminder"
+                                            value={true}
+                                            onChange={() =>
+                                                setReminderOnDueDate(true)
+                                            }
+                                            checked={reminderOnDueDate}
+                                        />
+                                        <label htmlFor="yes" className="ml-2">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <RadioButton
+                                            inputId="no"
+                                            name="reminder"
+                                            value={false}
+                                            onChange={() =>
+                                                setReminderOnDueDate(false)
+                                            }
+                                            checked={!reminderOnDueDate}
+                                        />
+                                        <label htmlFor="no" className="ml-2">
+                                            No
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex justify-between">
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">
-                                Send task reminder after X days of due date
-                            </label>
-                            <InputNumber
-                                value={afterDays}
-                                onValueChange={(e) => setAfterDays(e.value)}
-                                className="w-full"
-                            />
+                        <div className="flex justify-between">
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">
+                                    Send task reminder after X days of due date
+                                </label>
+                                <InputNumber
+                                    value={afterDays}
+                                    onValueChange={(e) => setAfterDays(e.value)}
+                                    className="w-full"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">
+                                    Status
+                                </label>
+                                <Dropdown
+                                    value={status}
+                                    options={statusOptions}
+                                    onChange={(e) => setStatus(e.value)}
+                                    placeholder="Select Status"
+                                    className="w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 mb-1">
+                                    Taskboard Default Length
+                                </label>
+                                <InputNumber
+                                    value={taskboardLength}
+                                    onValueChange={(e) =>
+                                        setTaskboardLength(e.value)
+                                    }
+                                    className="w-full"
+                                />
+                            </div>
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">
-                                Status
-                            </label>
-                            <Dropdown
-                                value={status}
-                                options={statusOptions}
-                                onChange={(e) => setStatus(e.value)}
-                                placeholder="Select Status"
-                                className="w-full"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-gray-700 mb-1">
-                                Taskboard Default Length
-                            </label>
-                            <InputNumber
-                                value={taskboardLength}
-                                onValueChange={(e) =>
-                                    setTaskboardLength(e.value)
-                                }
-                                className="w-full"
-                            />
-                        </div>
                     </div>
-                    </div>
-                    
                 </div>
             </div>
             <div className="p-4">
@@ -176,7 +177,7 @@ const TaskSettings = () => {
                         label="Save"
                         icon="pi pi-check"
                         onClick={handleSave}
-                        className="m-4"
+                        className="m-4 h-10"
                         size="small"
                     />
                 </div>
