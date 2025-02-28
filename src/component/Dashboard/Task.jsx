@@ -8,11 +8,10 @@ import { Paginator } from "primereact/paginator";
 import { Dialog } from "primereact/dialog";
 import AddTask from "./AddTask";
 import { useForm } from "react-hook-form";
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 const Task = () => {
-
     const headers = [
         { label: "S.No", key: "sno" },
         { label: "Task No", key: "taskNo" },
@@ -32,7 +31,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -44,7 +43,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -56,7 +55,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -68,7 +67,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -80,7 +79,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -92,7 +91,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -104,7 +103,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -116,7 +115,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -128,7 +127,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -140,7 +139,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "Build UiasdfadsfdfDFwdfdsf",
@@ -152,7 +151,7 @@ const Task = () => {
             dueDate: "2024-02-20",
             estimatedTime: "5h",
             hoursLogged: "4h",
-            assignedBy: "Alice",           
+            assignedBy: "Alice",
         },
         {
             task: "API Integration",
@@ -231,7 +230,7 @@ const Task = () => {
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
     const [show, setShow] = useState(false);
-    
+
     const { register, watch } = useForm({
         defaultValues: { taskName: "" },
     });
@@ -240,15 +239,16 @@ const Task = () => {
         setRows(event.rows);
     };
 
-    const taskName = watch("taskName");   
+    const taskName = watch("taskName");
 
-    const [tableData ,setTableData] = useState(initialData);
+    const [tableData, setTableData] = useState(initialData);
 
-
-    useEffect(()=>{
-        let filteredData = initialData.filter(val => val.task.toLowerCase().includes(taskName.toLowerCase()));
+    useEffect(() => {
+        let filteredData = initialData.filter((val) =>
+            val.task.toLowerCase().includes(taskName.toLowerCase())
+        );
         setTableData(filteredData);
-    },[taskName])
+    }, [taskName]);
 
     const statusTemplate = (rowData) => {
         let statusColor;
@@ -273,9 +273,8 @@ const Task = () => {
         );
     };
 
-    function handleDelete(id)
-    {
-        let modifyData = initialData.filter(taskId => taskId.taskNo !== id);
+    function handleDelete(id) {
+        let modifyData = initialData.filter((taskId) => taskId.taskNo !== id);
         setTableData(modifyData);
     }
 
@@ -293,7 +292,7 @@ const Task = () => {
 
     return (
         <>
-        <ConfirmDialog />
+            <ConfirmDialog />
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
                     <Button
@@ -313,21 +312,16 @@ const Task = () => {
                         outlined
                     />
                 </div>
-
-                {/* <div className="w-full md:w-72"> */}
-                            <div className="w-full md:w-100">
-                                        <IconField iconPosition="left" className="h-10 w-full"  >
-                                            <InputIcon className="pi pi-search h-10" />
-                                            <InputText placeholder="Start Searching...."  {...register("taskName")} className="h-10 w-full" />
-                                        </IconField>
-                                    </div>
-                    {/* <div className="p-inputgroup flex-1 h-10">
-                        <span className="p-inputgroup-addon cursor-pointer">
-                            <i className="pi pi-search"></i>
-                        </span>
-                        <InputText placeholder="Start Searching...."  {...register("taskName")}/>
-                    </div> */}
-                {/* </div> */}
+                <div className="w-full md:w-100">
+                    <IconField iconPosition="left" className="h-10 w-full">
+                        <InputIcon className="pi pi-search h-10" />
+                        <InputText
+                            placeholder="Start Searching...."
+                            {...register("taskName")}
+                            className="h-10 w-full"
+                        />
+                    </IconField>
+                </div>
             </div>
 
             <div className="mx-5">
@@ -340,7 +334,11 @@ const Task = () => {
                     tableStyle={{ minWidth: "60rem" }}
                     tableClassName="custom-table"
                     paginatorClassName="custom-pagination"
-                    emptyMessage={<p className="text-red-500 text-md text-center">No tasks found. Add a new task!</p>}
+                    emptyMessage={
+                        <p className="text-red-500 text-md text-center">
+                            No tasks found. Add a new task!
+                        </p>
+                    }
                     currentPageReportTemplate="{first} to {last} of {totalRecords}"
                     paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
                 >
@@ -369,17 +367,19 @@ const Task = () => {
                                 >
                                     <i className="pi pi-eye mx-2 cursor-pointer"></i>
                                 </button>
-                                <button 
+                                <button
                                     title="Delete"
                                     className="text-red-500 hover:text-red-700 hover:animate-bounce"
-                                    onClick={()=>deleteConfirmation(rowData.taskNo)}
+                                    onClick={() =>
+                                        deleteConfirmation(rowData.taskNo)
+                                    }
                                 >
                                     <i className="pi pi-trash cursor-pointer"></i>
                                 </button>
                             </div>
                         )}
                         headerClassName="custom-table-header"
-                    />                  
+                    />
                 </DataTable>
             </div>
 
