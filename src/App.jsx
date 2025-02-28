@@ -13,7 +13,6 @@ import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
 import Task from "./component/Dashboard/Task.jsx";
 import Ticket from "./component/Dashboard/Ticket.jsx";
-import Email from "./component/dashboard/Messages.jsx";
 import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
@@ -123,7 +122,6 @@ function App() {
                         <Route path="ticket" element={<Ticket />} />
                         <Route path="message" element={<Messages />} />
                         <Route path="ticket/:id" element={<SingleTicket />} />
-                        <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
