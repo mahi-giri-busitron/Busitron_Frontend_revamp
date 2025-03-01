@@ -31,7 +31,7 @@ const Navbar = ({ sectionRefs }) => {
             setScrolling(window.scrollY > 1);
 
             for (const nav of navLinks) {
-                const section = sectionRefs.current[nav.id];
+                const section = sectionRefs?.current[nav.id];
                 if (section) {
                     const rect = section.getBoundingClientRect();
                     if (rect.top <= 100 && rect.bottom >= 100) {
