@@ -71,8 +71,8 @@ const CreateTicket = ({ onHide }) => {
     };
 
     return (
-        <div className="p-4 md:p-6 bg-gray-100 min-h-screen">
-            <div className="max-w-7xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md">
+        <div className=" p-1  rounded-lg border-3 border-gray-100">
+            <div className="mx-auto bg-white p-2 rounded-lg shadow-md">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-6">
                         <h2 className="text-lg font-semibold">
@@ -143,7 +143,7 @@ const CreateTicket = ({ onHide }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 md:mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3  gap-4 md:gap-6 mt-4 md:mt-6">
                         <div>
                             <label className="font-medium">Project</label>
                             <Dropdown
@@ -153,7 +153,7 @@ const CreateTicket = ({ onHide }) => {
                                 options={projects}
                                 optionLabel="label"
                                 placeholder="Select Project"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                className={`w-full  h-10 items-center mt-1 ${
                                     errors.project ? "p-invalid" : ""
                                 }`}
                             />
@@ -172,13 +172,32 @@ const CreateTicket = ({ onHide }) => {
                                 options={ticketTypes}
                                 optionLabel="label"
                                 placeholder="Select Type"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${
+                                className={`w-full  h-10 items-center mt-1 ${
                                     errors.ticketType ? "p-invalid" : ""
                                 }`}
                             />
                             {errors.ticketType && (
                                 <small className="p-error">
                                     {errors.ticketType.message}
+                                </small>
+                            )}
+                        </div>
+                        <div>
+                            <label className="font-medium">Priority</label>
+                            <Dropdown
+                                {...register("priority", {
+                                    required: "Priority is required",
+                                })}
+                                options={priorities}
+                                optionLabel="label"
+                                placeholder="Select Priority"
+                                className={`w-full h-10 items-center mt-1 ${
+                                    errors.priority ? "p-invalid" : ""
+                                }`}
+                            />
+                            {errors.priority && (
+                                <small className="p-error">
+                                    {errors.priority.message}
                                 </small>
                             )}
                         </div>
@@ -201,54 +220,6 @@ const CreateTicket = ({ onHide }) => {
                             </small>
                         )}
                     </div>
-
-                    <div className="mt-8 md:mt-14 cursor-pointer flex items-center">
-                        <span className="font-semibold text-lg text-gray-700">
-                            Other Details
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 mt-3">
-                        <div>
-                            <label className="font-medium">Priority</label>
-                            <Dropdown
-                                {...register("priority", {
-                                    required: "Priority is required",
-                                })}
-                                options={priorities}
-                                optionLabel="label"
-                                placeholder="Select Priority"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${
-                                    errors.priority ? "p-invalid" : ""
-                                }`}
-                            />
-                            {errors.priority && (
-                                <small className="p-error">
-                                    {errors.priority.message}
-                                </small>
-                            )}
-                        </div>
-                        <div>
-                            <label className="font-medium">Channel Name</label>
-                            <Dropdown
-                                {...register("channelName", {
-                                    required: "Channel Name is required",
-                                })}
-                                options={ticketTypes}
-                                optionLabel="label"
-                                placeholder="Select Channel"
-                                className={`w-full md:w-80 h-10 items-center mt-1 ${
-                                    errors.channelName ? "p-invalid" : ""
-                                }`}
-                            />
-                            {errors.channelName && (
-                                <small className="p-error">
-                                    {errors.channelName.message}
-                                </small>
-                            )}
-                        </div>
-                    </div>
-
                     <div className="mt-4 md:mt-6">
                         <label className="font-medium">Description *</label>
                         <Editor
@@ -334,14 +305,14 @@ const CreateTicket = ({ onHide }) => {
                             label="Save"
                             size="small"
                             icon="pi pi-check"
-                            className="p-2 px-4 text-white bg-blue-600 text-sm w-full md:w-auto"
+                            className="p-2 px-4 text-white bg-blue-600 text-sm w-full md:w-auto  h-10"
                         />
                         <Button
                             label="Cancel"
                             severity="secondary"
                             outlined
                             size="small"
-                            className="p-2 px-4 text-gray-600 text-sm w-full md:w-auto"
+                            className="p-2 px-4 text-gray-600 text-sm w-full md:w-auto  h-10"
                             onClick={onHide}
                         />
                     </div>
