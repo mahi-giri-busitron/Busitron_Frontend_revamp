@@ -13,10 +13,11 @@ import WorkLogSection from "./SingleTasks/WorkLog";
 import HistorySection from "./SingleTasks/History";
 import DatesSection from "./SingleTasks/DatesAccordian";
 import { Card } from "primereact/card";
+import { useLocation } from "react-router-dom";
 
 const IssueDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    const [selectedFiles, Setselectedfiles] = useState(null);
+    const [selectedFiles, SetSelectedFiles] = useState(null);
     const [isDialogVisible, setDialogVisible] = useState(false);
     const menu = useRef(null);
     const [subTasks, setSubTasks] = useState([]);
@@ -24,6 +25,10 @@ const IssueDetails = () => {
     const [subTaskText, setSubTaskText] = useState("");
 
     const [activeIndex, setActiveIndex] = useState(0);
+    const location = useLocation();
+    const taskData = location.state;
+
+    console.log(taskData);
 
     const onSelect = (event) => {
         const newFiles = event.files;
@@ -75,41 +80,40 @@ const IssueDetails = () => {
     ];
 
     const issueDetails = {
-        assignee: "Naruto Uzumaki",
-        reporter: "Uchiha Sasuke",
+        assignedTo: taskData?.assignedTo.name,
+        assignedBy: taskData?.assignedBy.name,
         priority: {
-            label: "High",
+            label: taskData?.priority,
             icon: "pi pi-exclamation-triangle",
             color: "text-red-500",
         },
         labels: {
-            label: "Bug",
+            label: taskData?.label,
             icon: "pi pi-tag",
             color: "text-blue-500 cursor-pointer",
         },
-        timeTracking: { label: "No time logged", icon: "pi pi-clock" },
     };
 
     const DateDetails = {
         Dates: {
-            Due: { label: "27/Feb/25" },
+            Due: { label: taskData?.dueDate },
             Created: { label: "3 days ago" },
             Updated: { label: "7 hours ago" },
-            "Start Date": { label: "20/Feb/25" },
-            "End Date": { label: "27/Feb/25" },
+            "Start Date": { label: taskData?.startDate },
+            "End Date": { label: taskData?.endDate },
         },
     };
 
     return (
         <div className="min-h-screen bg-gray-100 p-2  text-gray-600 ">
             <div className="max-w-full flex justify-center items-start mx-auto bg-white shadow-lg rounded-lg p-4  gap-6">
-                {/*left section*/}
                 <div className="space-y-4 w-3/5 max-h-screen overflow-y-auto pr-4">
-                    <p className="text-xs text-blue-500">SC-30</p>
-                    <h1 className="text-2xl font-semibold text-gray-600 ">Task By ID??</h1>
+                    <p className="text-xs text-blue-500">{taskData.taskID}</p>
+                    <h1 className="text-2xl font-semibold text-gray-600 ">
+                        {taskData.title}
+                    </h1>
 
                     <div className="flex flex-wrap gap-3 mt-3 items-center ">
-                        {/* Attach File Button */}
                         <FileUpload
                             mode="basic"
                             chooseLabel="Attach"
@@ -121,23 +125,20 @@ const IssueDetails = () => {
                             className="p-button-secondary p-button-sm "
                         />
 
-                        {/* View Files Button (Only Shows When Files Are Uploaded) */}
                         {uploadedFiles.length > 0 && (
                             <Button
                                 label={`View Files (${uploadedFiles.length})`}
                                 icon="pi pi-folder-open"
                                 className="p-button-text p-button-secondary p-button-sm"
-                                onClick={() => setDialogVisible(true)} // Replace with modal logic
+                                onClick={() => setDialogVisible(true)}
                             />
                         )}
 
-                        {/* More Options Menu */}
                         <div className="relative More_button">
                             <Button
                                 icon="pi pi-ellipsis-v"
                                 className="p-button-secondary "
                                 onClick={(event) => menu.current.toggle(event)}
-                                // label="More"
                             />
                             <Menu
                                 model={[
@@ -145,7 +146,7 @@ const IssueDetails = () => {
                                         label: "Create Sub-task",
                                         icon: "pi pi-plus",
                                         command: () =>
-                                            console.log("Sub-task created"), // Replace with actual logic
+                                            console.log("Sub-task created"),
                                     },
                                 ]}
                                 popup
@@ -155,18 +156,17 @@ const IssueDetails = () => {
                     </div>
 
                     <div className="mt-7">
-                        <h2 className="text-lg font-medium mt-2">Description</h2>
+                        <h2 className="text-lg font-medium mt-2">
+                            Description
+                        </h2>
                         <div className="descrip">
-                        <Card className="h-20 overflow-auto p-0 ">
-                            <p className="m-0 ">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit. Inventore sed consequuntur
-                                error repudiandae numquam deserunt quisquam
-                                repellat libero asperiores earum nam nobis,
-                                culpa ratione quam perferendis esse, cupiditate
-                                neque quas!
-                            </p>
-                        </Card>
+                            <Card className="h-20 overflow-auto p-0 ">
+                                <p className="m-0 ">
+                                    {taskData.description
+                                        ? taskData.description
+                                        : "No description provided."}
+                                </p>
+                            </Card>
                         </div>
                     </div>
 
@@ -233,6 +233,7 @@ const IssueDetails = () => {
                         <DatesSection
                             activeIndex={activeIndex}
                             issueDetails={DateDetails}
+                            taskData={taskData}
                         />
                     </div>
                 </div>
@@ -274,27 +275,6 @@ const IssueDetails = () => {
                     </p>
                 )}
             </Dialog>
-
-            {/*Dialog for subtasks*/}
-            {/* <Dialog
-                header="Create Sub-task"
-                visible={showSubTaskDialog}
-                onHide={() => setShowSubTaskDialog(false)}
-            >
-                <div className="p-4">
-                    <InputText
-                        value={subTaskText}
-                        onChange={(e) => setSubTaskText(e.target.value)}
-                        className="w-full p-2 border rounded"
-                        placeholder="Enter sub-task title"
-                    />
-                    <Button
-                        label="Add"
-                        className="mt-4 p-button-primary"
-                        onClick={addSubTask}
-                    />
-                </div>
-            </Dialog> */}
         </div>
     );
 };

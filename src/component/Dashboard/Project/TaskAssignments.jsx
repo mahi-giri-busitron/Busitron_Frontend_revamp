@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Menu } from "primereact/menu";
 import { InputText } from "primereact/inputtext";
-import AddTask from "../AddTask";
+import AddTask from "../Task/AddTask";
 import { Dialog } from "primereact/dialog";
 
 const TaskAssignments = () => {
