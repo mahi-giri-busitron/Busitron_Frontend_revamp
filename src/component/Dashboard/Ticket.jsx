@@ -555,7 +555,7 @@ const Ticket = () => {
                 <Dialog
                     header="Create Ticket"
                     visible={showCreateTicketModal}
-                    style={{ width: "90vw" }}
+                    style={{ width: "75vw" }}
                     onHide={() => setShowCreateTicketModal(false)}
                     modal
                     className="p-fluid"
