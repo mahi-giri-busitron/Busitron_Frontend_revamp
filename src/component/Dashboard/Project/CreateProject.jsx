@@ -34,7 +34,6 @@ const CreateProject = ({ visible, onHide }) => {
     };
 
     function onSubmit(data) {
-        // console.log(data)
         let modifyData = {
             ...data,
             dueDate: data.dueDate
@@ -44,9 +43,8 @@ const CreateProject = ({ visible, onHide }) => {
                 ? moment(data.startDate, "DDMMYYYY").format("DD-MM-YYYY")
                 : "",
         };
-      
-        // onHide(); 
-        //  reset();
+        onHide(); 
+         reset();
     }
     return (
         <Dialog
