@@ -6,8 +6,8 @@ import { InputTextarea } from "primereact/inputtextarea";
 import "primeicons/primeicons.css";
 import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
+    
 const InviteMemberModal = (props) => {
     const { visible = false, setVisible } = props;
     const [loading, setLoading] = useState(false);
@@ -19,13 +19,21 @@ const InviteMemberModal = (props) => {
         message: "",
     });
 
-    const navigate = useNavigate();
-
     async function handleSubmit() {
         try {
             setLoading(true);
             const apiResponse = await axios.post("/api/v1/auth/register", data);
-            if (apiResponse.data.success) navigate("/signin");
+            if (apiResponse.data.success) {
+                toast.success("Successfully registered");
+                setData({
+                    email: "",
+                    designation: "",
+                    employeeId: "",
+                    message: "",
+                });
+            } else {
+                toast.error("Something went wrong!");
+            }
         } catch (error) {
             setLoading(false);
         } finally {
