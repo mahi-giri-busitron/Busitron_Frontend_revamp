@@ -24,6 +24,9 @@ const Task = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [confirmVisible, setConfirmVisible] = useState(false);
 
+    const [dialogMode, setDialogMode] = useState("add");
+    const [currentTask, setCurrentTask] = useState(null);
+
     useEffect(() => {
         const fetchTasks = async () => {
             try {
@@ -59,6 +62,18 @@ const Task = () => {
         setConfirmVisible(false);
     };
 
+    const handleAddTask = () => {
+        setCurrentTask(null);
+        setDialogMode("add");
+        setShowDialog(true);
+    };
+
+    const handleEditTask = (task) => {
+        setCurrentTask(task);
+        setDialogMode("edit");
+        setShowDialog(true);
+    };
+
     const statusTemplate = (rowData) => {
         const statusColors = {
             Pending: "bg-gray-100 text-gray-800",
@@ -83,18 +98,16 @@ const Task = () => {
                 <div className="flex gap-2">
                     <Button
                         label="Add Task"
-                        onClick={() => setShowDialog(true)}
+                        onClick={handleAddTask}
                         className="h-9"
                         size="small"
                         icon="pi pi-plus"
-                        severity="primary"
                     />
                     <Button
                         label="My Task"
                         className="h-9 hover:bg-black text-white"
                         size="small"
                         icon="pi pi-user"
-                        severity="secondary"
                         outlined
                     />
                 </div>
@@ -116,14 +129,9 @@ const Task = () => {
                     paginator
                     rows={10}
                     removableSort
-                    tableStyle={{ minWidth: "60rem", fontSize: "2px" }}
-                    emptyMessage={
-                        <p className="text-red-500 text-md text-center">
-                            No tasks found. Add a new task!
-                        </p>
-                    }
+                    tableStyle={{ minWidth: "60rem" }}
                 >
-                    <Column field="taskID" header="Task ID" sortable />
+                    <Column field="taskID" header="Task" sortable />
                     <Column field="title" header="Task" />
                     <Column field="assignedTo.name" header="Assigned To" />
                     <Column field="assignedBy.name" header="Assigned By" />
@@ -133,10 +141,8 @@ const Task = () => {
                     <Column
                         header="Action"
                         body={(rowData) => (
-                            <div className="flex gap-2 items-center">
+                            <div className="flex gap-3 items-center">
                                 <button
-                                    title="View"
-                                    className="text-blue-500 hover:text-blue-700"
                                     onClick={() =>
                                         navigate(
                                             `/dashboard/task/${rowData._id}`,
@@ -144,19 +150,19 @@ const Task = () => {
                                         )
                                     }
                                 >
-                                    {" "}
-                                    <i className="pi pi-eye mx-2 cursor-pointer"></i>{" "}
+                                    <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
                                 </button>
+                                <button onClick={() => handleEditTask(rowData)}>
+                                    <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
+                                </button>
+
                                 <button
-                                    title="Delete"
-                                    className="text-red-500 hover:text-red-700"
                                     onClick={() => {
                                         setConfirmVisible(true);
                                         setDeleteId(rowData._id);
                                     }}
                                 >
-                                    {" "}
-                                    <i className="pi pi-trash cursor-pointer"></i>{" "}
+                                    <i className="pi pi-trash text-red-500 cursor-pointer"></i>
                                 </button>
                             </div>
                         )}
@@ -165,13 +171,17 @@ const Task = () => {
             </div>
 
             <Dialog
-                header="Add Task"
+                header={dialogMode === "edit" ? "Edit Task" : "Add Task"}
                 visible={showDialog}
                 style={{ width: "75vw" }}
                 onHide={() => setShowDialog(false)}
-                modal
+                draggable={false}
             >
-                <AddTask setShow={setShowDialog} />
+                <AddTask
+                    setShow={setShowDialog}
+                    task={currentTask}
+                    mode={dialogMode}
+                />
             </Dialog>
 
             <DeleteModal

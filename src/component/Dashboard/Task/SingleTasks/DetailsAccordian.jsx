@@ -9,7 +9,7 @@ const IssueDetailsAccordion = ({ activeIndex, issueDetails }) => {
                     header={
                         <div className="flex items-center space-x-2">
                             <h1 className="text-base font-semibold">
-                                In Progress
+                                People
                             </h1>
                         </div>
                     }

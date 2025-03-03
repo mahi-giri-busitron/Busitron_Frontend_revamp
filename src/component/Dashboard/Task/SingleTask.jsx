@@ -3,8 +3,6 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { ScrollPanel } from "primereact/scrollpanel";
-import { Menu } from "primereact/menu";
-import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
 import "quill/dist/quill.snow.css";
 import CommentSection from "./SingleTasks/Comments";
@@ -17,30 +15,17 @@ import { useLocation } from "react-router-dom";
 
 const IssueDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    const [selectedFiles, SetSelectedFiles] = useState(null);
     const [isDialogVisible, setDialogVisible] = useState(false);
-    const menu = useRef(null);
-    const [subTasks, setSubTasks] = useState([]);
-    const [showSubTaskDialog, setShowSubTaskDialog] = useState(false);
-    const [subTaskText, setSubTaskText] = useState("");
 
     const [activeIndex, setActiveIndex] = useState(0);
     const location = useLocation();
     const taskData = location.state;
 
-    console.log(taskData);
+    // console.log(JSON.stringify(taskData));
 
     const onSelect = (event) => {
         const newFiles = event.files;
         setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    };
-
-    const addSubTask = () => {
-        if (subTaskText.trim()) {
-            setSubTasks([...subTasks, subTaskText]);
-            setSubTaskText("");
-            setShowSubTaskDialog(false);
-        }
     };
 
     const items = [
@@ -82,6 +67,11 @@ const IssueDetails = () => {
     const issueDetails = {
         assignedTo: taskData?.assignedTo.name,
         assignedBy: taskData?.assignedBy.name,
+        status: {
+            label: taskData?.status,
+            icon: "pi pi-pen-to-square",
+            color: "text-green-500",
+        },
         priority: {
             label: taskData?.priority,
             icon: "pi pi-exclamation-triangle",
@@ -108,7 +98,7 @@ const IssueDetails = () => {
         <div className="min-h-screen bg-gray-100 p-2  text-gray-600 ">
             <div className="max-w-full flex justify-center items-start mx-auto bg-white shadow-lg rounded-lg p-4  gap-6">
                 <div className="space-y-4 w-3/5 max-h-screen overflow-y-auto pr-4">
-                    <p className="text-xs text-blue-500">{taskData.taskID}</p>
+                    <p className="text-xs text-blue-500">{taskData?.taskID}</p>
                     <h1 className="text-2xl font-semibold text-gray-600 ">
                         {taskData.title}
                     </h1>
@@ -127,32 +117,12 @@ const IssueDetails = () => {
 
                         {uploadedFiles.length > 0 && (
                             <Button
-                                label={`View Files (${uploadedFiles.length})`}
+                                label={`View Attachments (${uploadedFiles.length})`}
                                 icon="pi pi-folder-open"
                                 className="p-button-text p-button-secondary p-button-sm"
                                 onClick={() => setDialogVisible(true)}
                             />
                         )}
-
-                        <div className="relative More_button">
-                            <Button
-                                icon="pi pi-ellipsis-v"
-                                className="p-button-secondary "
-                                onClick={(event) => menu.current.toggle(event)}
-                            />
-                            <Menu
-                                model={[
-                                    {
-                                        label: "Create Sub-task",
-                                        icon: "pi pi-plus",
-                                        command: () =>
-                                            console.log("Sub-task created"),
-                                    },
-                                ]}
-                                popup
-                                ref={menu}
-                            />
-                        </div>
                     </div>
 
                     <div className="mt-7">
@@ -170,26 +140,6 @@ const IssueDetails = () => {
                         </div>
                     </div>
 
-                    <div>
-                        {subTasks.length > 0 && (
-                            <div className="mt-4">
-                                <h2 className="text-lg font-medium">
-                                    Sub-tasks
-                                </h2>
-                                <ul className="list-disc list-inside">
-                                    {subTasks.map((task, index) => (
-                                        <li
-                                            key={index}
-                                            className="text-gray-700"
-                                        >
-                                            {task}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-                    </div>
-
                     <div className="mt-7 w-full">
                         <h2 className="text-lg font-medium text-center md:text-left">
                             Activity
@@ -205,7 +155,10 @@ const IssueDetails = () => {
                         </div>
                         <div className="mt-4 rounded-lg  bg-white shadow-md ">
                             {activeIndex === 0 && (
-                                <CommentSection showComments={true} />
+                                <CommentSection
+                                    showComments={true}
+                                    taskData={taskData}
+                                />
                             )}
                             {activeIndex === 1 && (
                                 <WorkLogSection
@@ -217,6 +170,7 @@ const IssueDetails = () => {
                                 <HistorySection
                                     showHistory={true}
                                     history={historyData}
+                                    taskData={taskData}
                                 />
                             )}
                         </div>
