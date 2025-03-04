@@ -17,11 +17,13 @@ export const fetchAllUser = createAsyncThunk(
 
 export const deactivateUser = createAsyncThunk(
     "userManagement/deactivateUser",
-    async ({ id, isActiveUser }, { rejectWithValue }) => {
+    async ({ id, isActiveUser, role, designation }, { rejectWithValue }) => {
         try {
             const response = await axios.put("/api/v1/users/inactive", {
                 id,
                 isActiveUser,
+                role,
+                designation,
             });
             return response.data;
         } catch (error) {
@@ -31,7 +33,6 @@ export const deactivateUser = createAsyncThunk(
         }
     }
 );
-
 export const fetchSpecificUser = createAsyncThunk(
     "userManagement/specificUser",
     async (id, { rejectWithValue }) => {
