@@ -12,6 +12,8 @@ import { InputIcon } from "primereact/inputicon";
 import AddTask from "./AddTask";
 import DeleteModal from "../../../shared/DeleteModal";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllUser } from "../../../redux/userManagementSlice";
 
 const Task = () => {
     const { register, watch } = useForm({ defaultValues: { taskName: "" } });
@@ -26,6 +28,11 @@ const Task = () => {
 
     const [dialogMode, setDialogMode] = useState("add");
     const [currentTask, setCurrentTask] = useState(null);
+    const [originalTasks, setOriginalTasks] = useState([]); // Store original tasks separately
+
+    const { currentUser } = useSelector((store) => store.user);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -42,12 +49,17 @@ const Task = () => {
                     })
                 );
                 setTasks(formattedTasks);
+                setOriginalTasks(formattedTasks); // Keep original tasks
             } catch (error) {
                 console.error("Error fetching tasks:", error);
             }
         };
         fetchTasks();
     }, []);
+
+    useEffect(() => {
+        dispatch(fetchAllUser());
+    }, [dispatch]);
 
     useEffect(() => {
         setFilteredTasks(
@@ -76,18 +88,37 @@ const Task = () => {
 
     const statusTemplate = (rowData) => {
         const statusColors = {
-            Pending: "bg-gray-100 text-gray-800",
-            "In Progress": "bg-orange-100 text-orange-800",
-            Completed: "bg-green-100 text-green-800",
+            "To Do": "bg-blue-200 text-blue-800",
+            Review: "bg-purple-200 text-purple-800",
+            Pending: "bg-yellow-200 text-yellow-800",
+            "In Progress": "bg-orange-300 text-orange-900",
+            Completed: "bg-green-200 text-green-800",
+            Close: "bg-gray-300 text-gray-900",
         };
         return (
             <span
-                className={`px-2 py-1 rounded-md text-sm ${
+                className={`inline-flex justify-center w-[120px] px-2 py-1 rounded-md text-sm ${
                     statusColors[rowData.status] || "bg-gray-100 text-gray-800"
                 }`}
             >
                 {rowData.status}
             </span>
+        );
+    };
+
+    const handleAllTask = () => {
+        setTasks(originalTasks);
+    };
+
+    const handleMyTask = () => {
+        if (!currentUser?.data?._id) {
+            console.error("Current user is not defined");
+            return;
+        }
+        setTasks(
+            originalTasks.filter(
+                (task) => task.assignedTo._id === currentUser.data._id
+            )
         );
     };
 
@@ -104,11 +135,20 @@ const Task = () => {
                         icon="pi pi-plus"
                     />
                     <Button
+                        label="Tasks"
+                        className="h-9 hover:bg-black text-white"
+                        size="small"
+                        icon="pi pi-user"
+                        outlined
+                        onClick={handleAllTask}
+                    />
+                    <Button
                         label="My Task"
                         className="h-9 hover:bg-black text-white"
                         size="small"
                         icon="pi pi-user"
                         outlined
+                        onClick={handleMyTask}
                     />
                 </div>
                 <div className="w-full md:w-100">

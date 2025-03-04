@@ -8,10 +8,9 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import axios from "axios";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
-import { fetchAllUser } from "../../../redux/userManagementSlice";
 
 const taskCategoryList = [
     "Project Management",
@@ -56,12 +55,16 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
     } = useForm();
 
     const [existingAttachments, setExistingAttachments] = useState([]);
+    const [newFiles, setNewFiles] = useState([]);
     const fileUploadRef = useRef(null);
+    const [verifiedUsers, setVerifiedUsers] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [assignedBy, setAssignedBy] = useState([]);
     const [files, setFiles] = useState(existingAttachments);
     const [loading, setLoading] = useState(false);
-    const [updatedAttachments, setUpdatedAttachments] = useState([]);
+
+    console.log(existingAttachments);
+    
 
     const { users = [] } = useSelector((store) => store?.userManagement || {});
 
@@ -90,7 +93,6 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
             setValue("status", task.status);
             setValue("attachments", task?.attachments || []);
             setExistingAttachments(task?.attachments || []);
-            setUpdatedAttachments(task?.attachments || []);
             setFiles(task?.attachments || []);
         } else {
             setValue("assignedBy", currentUser?.data?.name);
@@ -134,7 +136,6 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
     const onSubmit = async (data) => {
         const formData = new FormData();
 
-        // Append task details
         formData.append("title", data.title);
         formData.append("taskCategory", data.taskCategory);
         formData.append(
@@ -149,18 +150,11 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
         formData.append("priority", data.priority);
         formData.append("status", data.status);
 
-        // Append remaining existing attachments
-        updatedAttachments.forEach((file) => {
-            formData.append("attachments", file);
-        });
-
-        // Append newly uploaded files
         uploadedFiles.forEach((fileObj) => {
             if (fileObj.status === "uploaded") {
                 formData.append("attachments", fileObj.file);
             }
         });
-
         try {
             if (mode === "edit" && task?._id) {
                 setLoading(true);
@@ -171,11 +165,26 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
                         headers: { "Content-Type": "multipart/form-data" },
                     }
                 );
-
                 if (response?.data.statusCode === 200) {
+                    setLoading(false);
                     toast.success("Task updated successfully!");
                 } else {
+                    setLoading(false);
                     toast.error("Failed to update task!");
+                }
+            } else {
+                setLoading(true);
+                const response = await axios.post(
+                    "/api/v1/task/createTask",
+                    formData,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+                if (response.data.statusCode === 201) {
+                    setLoading(false);
+                    toast.success("Task created successfully!");
+                } else {
+                    setLoading(false);
+                    toast.error("Failed to create task!");
                 }
             }
             setShow(false);
@@ -183,8 +192,6 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
             toast.error(
                 error.response?.data?.message || "Something went wrong!"
             );
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -193,7 +200,6 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
             (_, i) => i !== index
         );
         setExistingAttachments(updatedAttachments);
-        setUpdatedAttachments(updatedAttachments);
         setFiles(updatedAttachments);
     };
 

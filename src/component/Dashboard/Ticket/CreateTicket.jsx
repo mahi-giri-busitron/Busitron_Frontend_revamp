@@ -33,14 +33,11 @@ const CreateTicket = ({ onHide }) => {
         { label: "IT Helpdesk", value: "IT Helpdesk" },
     ];
 
-    const agents = [
-        { label: "Agent 1", value: "Agent 1" },
-        { label: "Agent 2", value: "Agent 2" },
-    ];
-
-    const projects = [
-        { label: "Project A", value: "Project A" },
-        { label: "Project B", value: "Project B" },
+    const status = [
+        { label: "Open", value: "Open" },
+        { label: "Pending", value: "Pending" },
+        { label: "Resolved", value: "Resolved" },
+        { label: "Closed", value: "Closed" },
     ];
 
     const ticketTypes = [
@@ -81,7 +78,7 @@ const CreateTicket = ({ onHide }) => {
                         <Divider />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
                         <div>
                             <label className="font-medium">
                                 Requester Name *
@@ -122,37 +119,18 @@ const CreateTicket = ({ onHide }) => {
                                 </small>
                             )}
                         </div>
-                        <div>
-                            <label className="font-medium">Agent</label>
-                            <Dropdown
-                                {...register("agent", {
-                                    required: "Agent is required",
-                                })}
-                                options={agents}
-                                optionLabel="label"
-                                placeholder="Select Agent"
-                                className={`w-full items-center h-10 mt-1 ${
-                                    errors.agent ? "p-invalid" : ""
-                                }`}
-                            />
-                            {errors.agent && (
-                                <small className="p-error">
-                                    {errors.agent.message}
-                                </small>
-                            )}
-                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3  gap-4 md:gap-6 mt-4 md:mt-6">
                         <div>
-                            <label className="font-medium">Project</label>
+                            <label className="font-medium">Status</label>
                             <Dropdown
-                                {...register("project", {
-                                    required: "Project is required",
+                                {...register("status", {
+                                    required: "Status is required",
                                 })}
-                                options={projects}
+                                options={status}
                                 optionLabel="label"
-                                placeholder="Select Project"
+                                placeholder="Select Status"
                                 className={`w-full  h-10 items-center mt-1 ${
                                     errors.project ? "p-invalid" : ""
                                 }`}
