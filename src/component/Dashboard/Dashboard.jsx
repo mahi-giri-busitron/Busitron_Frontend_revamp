@@ -57,7 +57,6 @@ const Dashboard = () => {
                     style={{
                         maxHeight: "calc(100vh - 85px)",
                         height: "calc(100vh - 85px)",
-                        // maxWidth:"300px",
                         scrollbarWidth: "thin",
                     }}
                 >

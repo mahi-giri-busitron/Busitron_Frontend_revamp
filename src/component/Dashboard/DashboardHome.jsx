@@ -46,23 +46,6 @@ const DashboardHome = () => {
                             })}
                         </div>
                     </div>
-                    <Button
-                        label="Clock In"
-                        icon="pi pi-sign-in"
-                        className="text-[1rem] h-10"
-                        size="small"
-                    />
-                    <div
-                        className="inline-block"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                    >
-                        {isHovered ? (
-                            <i className="pi pi-spin pi-cog text-2xl"></i>
-                        ) : (
-                            <i className="pi pi-cog text-2xl"></i>
-                        )}
-                    </div>
                 </div>
             </div>
 

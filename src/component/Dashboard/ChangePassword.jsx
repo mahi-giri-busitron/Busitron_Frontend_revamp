@@ -1,16 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
-        currentPassword: "",
         newPassword: "",
         confirmPassword: "",
     });
-
-    const { currentUser } = useSelector((store) => store.user);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,14 +21,12 @@ const ChangePassword = () => {
 
         try {
             const response = await axios.post(
-                `/api/v1/auth/changePassword/${currentUser.data._id}`,
+                `/api/v1/auth/changePassword`,
                 formData
             );
-            console.log("Response:", response);
             if (response.data.statusCode === 200) {
                 toast.success("Password changed successfully!");
                 setFormData({
-                    currentPassword: "",
                     newPassword: "",
                     confirmPassword: "",
                 });
@@ -55,18 +49,6 @@ const ChangePassword = () => {
                         Change Password
                     </h2>
                     <form onSubmit={handleSubmit}>
-                        <label className="mt-6 block text-gray-700 font-medium mb-2">
-                            Current Password{" "}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            name="currentPassword"
-                            value={formData.currentPassword}
-                            type="password"
-                            className="w-full p-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            placeholder="Enter current password"
-                            onChange={handleChange}
-                        />
                         <label className="mt-6 block text-gray-700 font-medium mb-2">
                             New Password <span className="text-red-500">*</span>
                         </label>

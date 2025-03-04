@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
 
 const EnterEmailForResetPassword = () => {
     const [email, setEmail] = useState("");
@@ -13,7 +14,17 @@ const EnterEmailForResetPassword = () => {
             const response = await axios.post("/api/v1/auth/isEmailExist", {
                 email,
             });
+
+            console.log(response);
+            
+
+            if (response.data.statusCode === 200) {
+                toast.success(response.data.message || "Forgot password link send Successfully")
+            } else {
+                toast.error("Email does not exist");
+            }            
         } catch (error) {
+            toast.error("Email does not exist");
             setLoading(false);
         } finally {
             setLoading(false);
