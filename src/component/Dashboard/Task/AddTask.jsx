@@ -77,12 +77,14 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
     }, [users]);
 
     useEffect(() => {
+        console.log(task);
+        
         if (mode === "edit" && task) {
             setValue("title", task.title);
             setValue("taskCategory", task.taskCategory);
             setValue("startDate", new Date(task.startDate));
             setValue("dueDate", new Date(task.dueDate));
-            setValue("assignedTo", task.assignedTo?._id);
+            setValue("assignedTo", task.assignedTo._id);
             setValue("assignedBy", task.assignedBy?.name);
             setValue("description", task.description);
             setValue("label", task.label);

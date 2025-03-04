@@ -164,6 +164,7 @@ const IssueDetails = () => {
                                 <WorkLogSection
                                     showWorkLog={true}
                                     workLog={workLogData}
+                                    taskData={taskData}
                                 />
                             )}
                             {activeIndex === 2 && (
