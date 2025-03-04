@@ -155,7 +155,6 @@ const RolesPermissions = () => {
 
             const resetPermissionsPayload = {
                 permissions: {
-                   
                     projects: {
                         add: false,
                         view: false,
@@ -174,7 +173,7 @@ const RolesPermissions = () => {
                         update: false,
                         delete: false,
                     },
-                  
+
                     manage_users: {
                         add: false,
                         view: false,
@@ -268,19 +267,19 @@ const RolesPermissions = () => {
                                     Default role cannot be deleted.
                                 </p>
                             ) : (
-                            <Button
-                                label="Permissions"
-                                icon="pi pi-key"
-                                onClick={() =>
-                                    setExpandedRole(
-                                        expandedRole === role._id
-                                            ? null
-                                            : role._id
-                                    )
-                                }
-                                className="p-button-outlined"
-                            />
-                        )}
+                                <Button
+                                    label="Permissions"
+                                    icon="pi pi-key"
+                                    onClick={() =>
+                                        setExpandedRole(
+                                            expandedRole === role._id
+                                                ? null
+                                                : role._id
+                                        )
+                                    }
+                                    className="p-button-outlined"
+                                />
+                            )}
                         </div>
 
                         <div
@@ -391,8 +390,6 @@ const RolesPermissions = () => {
                                                 className="p-button-primary"
                                             />
                                         </div>
-
-                                       
                                     </form>
                                 </div>
                             )}
@@ -413,7 +410,6 @@ const RolesPermissions = () => {
             >
                 <div className="overflow-x-auto">
                     <DataTable value={roles} scrollable scrollHeight="400px">
-                        
                         <Column field="role" header="User Role" />
                         <Column field="unsyncedUsers" header="Unsynced Users" />
                         <Column
