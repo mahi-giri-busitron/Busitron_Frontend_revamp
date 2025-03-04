@@ -4,9 +4,42 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import "primeicons/primeicons.css";
-
+import axios from "axios";
+import { ProgressSpinner } from "primereact/progressspinner";
+import toast from "react-hot-toast";
+    
 const InviteMemberModal = (props) => {
     const { visible = false, setVisible } = props;
+    const [loading, setLoading] = useState(false);
+
+    const [data, setData] = useState({
+        email: "",
+        designation: "",
+        employeeId: "",
+        message: "",
+    });
+
+    async function handleSubmit() {
+        try {
+            setLoading(true);
+            const apiResponse = await axios.post("/api/v1/auth/register", data);
+            if (apiResponse.data.success) {
+                toast.success("Successfully registered");
+                setData({
+                    email: "",
+                    designation: "",
+                    employeeId: "",
+                    message: "",
+                });
+            } else {
+                toast.error("Something went wrong!");
+            }
+        } catch (error) {
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <Dialog
             visible={visible}
@@ -39,6 +72,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g johndoe@gmail.com"
                                 className="w-full border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.email}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        email: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -48,6 +88,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g HR"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.designation}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        designation: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -57,6 +104,13 @@ const InviteMemberModal = (props) => {
                             <InputText
                                 placeholder="e.g abc123"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.employeeId}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        employeeId: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                         <div>
@@ -67,16 +121,37 @@ const InviteMemberModal = (props) => {
                                 rows={3}
                                 placeholder="Add message (Optional)"
                                 className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
+                                value={data.message}
+                                onChange={(e) =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        message: e.target.value,
+                                    }))
+                                }
                             />
                         </div>
                     </div>
                     <div className="mt-4 flex justify-start">
-                        <Button
-                            label="Send Invite"
-                            icon="pi pi-send"
-                            iconPos="left"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2"
-                        />
+                        {loading ? (
+                            <ProgressSpinner
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                }}
+                                strokeWidth="8"
+                                fill="var(--surface-ground)"
+                                animationDuration=".5s"
+                            />
+                        ) : (
+                            <Button
+                                label="Send Invite"
+                                icon="pi pi-send"
+                                iconPos="left "
+                                size="small"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2 h-10"
+                                onClick={handleSubmit}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

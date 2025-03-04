@@ -5,10 +5,13 @@ import DashboardTask from "./NestedDashboardComponents/DashboardTask.jsx";
 import DashboardProjects from "./NestedDashboardComponents/DashboardProjects.jsx";
 import DashboardTaskboard from "./NestedDashboardComponents/DashboardTaskboard.jsx";
 import DashboardEmployeeList from "./NestedDashboardComponents/DashboardEmployeeList.jsx";
+import { useSelector } from "react-redux";
 
 const DashboardHome = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [time, setTime] = useState(new Date());
+
+    const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,7 +26,7 @@ const DashboardHome = () => {
             <div className="flex flex-wrap items-center justify-between bg-white shadow-md rounded-lg px-6 py-3 m-4">
                 <div className="flex items-center">
                     <h2 className="text-lg font-semibold whitespace-nowrap">
-                        Welcome Manikanta
+                        Welcome {currentUser?.data?.name}
                     </h2>
                 </div>
                 <div className="flex-1"></div>
@@ -46,7 +49,8 @@ const DashboardHome = () => {
                     <Button
                         label="Clock In"
                         icon="pi pi-sign-in"
-                        className="text-[1rem]"
+                        className="text-[1rem] h-10"
+                        size="small"
                     />
                     <div
                         className="inline-block"
@@ -69,7 +73,7 @@ const DashboardHome = () => {
                     auto-rows-auto"
                 >
                     <div className="md:col-span-2 lg:row-span-2 bg-white rounded-lg shadow-md">
-                        <DashboardProfile />
+                        <DashboardProfile currentUser={currentUser} />
                     </div>
 
                     <div className="bg-white rounded-lg p-4 shadow-md">

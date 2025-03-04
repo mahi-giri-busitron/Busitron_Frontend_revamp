@@ -1,17 +1,20 @@
 import React from "react";
-function DashboardProfile() {
+function DashboardProfile({ currentUser }) {
     return (
         <div className="p-0">
             <div className="bg-white flex flex-col rounded-lg shadow-md">
                 <div className="flex gap-8 w-full py-10 pl-12">
-                    <div className="p-8 bg-gray-400 rounded-sm text-white">
-                        <i className="pi pi-user"></i>
-                    </div>
+                    <img
+                        className="w-[90px] h-[90px] rounded-sm"
+                        src={currentUser?.data?.avatar}
+                    />
                     <div>
-                        <h2 className="font-bold text-lg">Manikanta Laveti</h2>
-                        <p>FULL STACK DEVELOPER</p>
+                        <h2 className="font-bold text-lg">
+                            {currentUser?.data?.name}
+                        </h2>
+                        <p>{currentUser?.data?.designation}</p>
                         <p className="text-[0.9rem] text-gray-400">
-                            Employee ID: BU29000025
+                            Employee ID: {currentUser?.data?.employeeId}
                         </p>
                     </div>
                 </div>

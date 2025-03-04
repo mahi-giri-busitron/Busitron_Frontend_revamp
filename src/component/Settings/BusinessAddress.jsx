@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -7,8 +7,19 @@ import { InputText } from "primereact/inputtext";
 import { countryCodes } from "../../utils/countryCodes";
 import { useForm } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
-import { RadioButton } from "primereact/radiobutton";
 import { TabMenu } from "primereact/tabmenu";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    createCompanyLocation,
+    deleteCompanyLocation,
+    editCompanyLocation,
+    getCompanySetting,
+    isDeletedToPrevState,
+    isEditedToPrevState,
+    isNewLocationAddedToPrevState,
+    isRequestFulfilledToPrevState,
+} from "../../redux/companySlice";
+import toast from "react-hot-toast";
 
 const BusinessAddress = () => {
     const {
@@ -18,73 +29,130 @@ const BusinessAddress = () => {
         reset,
         setValue,
     } = useForm();
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [addressToDelete, setAddressToDelete] = useState(null);
-
-    const confirmDeleteAddress = (id) => {
-        setAddressToDelete(id);
-        setShowDeleteDialog(true);
-    };
-
-    const deleteAddress = () => {
-        setAddresses(addresses.filter((addr) => addr.id !== addressToDelete));
-        setShowDeleteDialog(false);
-    };
-
     const [selectedCode, setSelectedCode] = useState(
         countryCodes.find((c) => c.name === "India")
     );
-    const items = [{ label: "Business Address", icon: "pi pi-briefcase" }];
 
-    const [addresses, setAddresses] = useState([
-        {
-            id: 1,
-            location: "Madhapur",
-            address: "Madhapur Hyderabad",
-            country: "India",
-            taxNumber: "",
-            latitude: "",
-            longitude: "",
-            default: true,
-        },
-    ]);
+    const { company, isNewLocationAdded, isDeleted, isEdited } = useSelector(
+        (state) => state.company
+    );
+    const dispatch = useDispatch();
 
+    const [addresses, setAddresses] = useState([]);
+    const [addressID, setAddressID] = useState(null);
     const [showDialog, setShowDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [currentAddress, setCurrentAddress] = useState(null);
+    const [editAddress, setEditAddress] = useState({
+        address: "",
+        city: "",
+        country: "",
+        pinCode: "",
+    });
 
-    const handleAddAddress = (data) => {
-        if (editMode && currentAddress) {
+    useEffect(() => {
+        if (company?.data) {
+            setAddresses(company.data[0]?.location || []);
+        }
+    }, [company]);
+    useEffect(() => {
+        if (isNewLocationAdded) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isNewLocationAddedToPrevState());
+                toast.success("New location added");
+            });
+        }
+    }, [isNewLocationAdded, dispatch]);
+
+    useEffect(() => {
+        if (isDeleted) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isDeletedToPrevState());
+            });
+        }
+    }, [isDeleted, dispatch]);
+
+    useEffect(() => {
+        if (isEdited) {
+            dispatch(getCompanySetting()).then(() => {
+                dispatch(isEditedToPrevState());
+            });
+        }
+    }, [isEdited, dispatch]);
+
+    const confirmDeleteAddress = (id) => {
+        setAddressID(id);
+        setShowDeleteDialog(true);
+    };
+
+    const deleteAddress = async () => {
+        const apiResult = await dispatch(
+            deleteCompanyLocation({
+                companyID: company?.data[0]._id,
+                id: addressID,
+            })
+        );
+
+        if (deleteCompanyLocation.fulfilled.match(apiResult)) {
             setAddresses((prevAddresses) =>
-                prevAddresses.map((addr) =>
-                    addr.id === currentAddress.id
-                        ? {
-                              ...addr,
-                              location: data.location,
-                              address: data.address,
-                              country: selectedCode.name,
-                              taxName: data.taxName || "--",
-                              taxNumber: data.taxNumber || "",
-                              latitude: data.latitude || "",
-                              longitude: data.longitude || "",
-                          }
-                        : addr
-                )
+                prevAddresses.filter((address) => address.id !== addressID)
             );
+
+            toast.success("Address deleted successfully!");
         } else {
-            const newEntry = {
-                id: addresses.length + 1,
-                location: data.location,
-                address: data.address,
-                country: selectedCode.name,
-                taxName: data.taxName || "--",
-                taxNumber: data.taxNumber || "",
-                latitude: data.latitude || "",
-                longitude: data.longitude || "",
-                default: false,
-            };
-            setAddresses([...addresses, newEntry]);
+            toast.error(apiResult?.payload || "Something went wrong!");
+        }
+
+        setShowDeleteDialog(false);
+    };
+
+    const items = [{ label: "Business Address", icon: "pi pi-briefcase" }];
+
+    const handleAddressChange = (e) => {
+        if (e.target) {
+            setEditAddress((prev) => ({
+                ...prev,
+                [e.target.name]: e.target.value,
+            }));
+        } else {
+            setSelectedCode(e.value);
+            setEditAddress((prev) => ({
+                ...prev,
+                country: e.value.name,
+            }));
+        }
+    };
+
+    const handleAddAddress = async (data) => {
+        const updatedAddress = {
+            city: data.city,
+            address: data.address,
+            country: selectedCode.name,
+            pinCode: data.pinCode,
+        };
+
+        if (editMode && currentAddress) {
+            await dispatch(
+                editCompanyLocation({
+                    companyID: company?.data[0]._id,
+                    id: currentAddress.id,
+                    editAddress,
+                })
+            );
+            await dispatch(isRequestFulfilledToPrevState());
+            toast.success("Location update successfully!");
+        } else {
+            await dispatch(
+                createCompanyLocation({
+                    companyID: company?.data[0]._id,
+                    newAddr: JSON.stringify(updatedAddress),
+                })
+            );
+            await dispatch(isRequestFulfilledToPrevState());
+            await dispatch(isNewLocationAddedToPrevState());
         }
 
         setShowDialog(false);
@@ -93,49 +161,35 @@ const BusinessAddress = () => {
         setCurrentAddress(null);
     };
 
+    const handleClick = () => {
+        reset();
+        setEditMode(false);
+        setShowDialog(true);
+    };
+
     return (
         <div className=" bg-white shadow-md rounded-lg">
-          
             <TabMenu
                 model={items}
                 activeIndex={activeIndex}
                 onTabChange={(e) => setActiveIndex(e.index)}
             />
-              <div className="p-5">
-              <Button
-                label="Add New Address"
-                className="m-200"
-                icon="pi pi-plus"
-                onClick={() => {
-                    reset();
-                    setEditMode(false);
-                    setShowDialog(true);
-                }}
-            />
-                </div>
-           
+            <div className="p-5">
+                <Button
+                    label="Add New Address"
+                    className="m-200 h-10"
+                    size="small"
+                    icon="pi pi-plus"
+                    onClick={handleClick}
+                />
+            </div>
+
             <div className="py-5">
                 <DataTable value={addresses} className="p-datatable-sm">
-                    <Column field="id" header="#" />
-                    <Column field="location" header="Location" />
+                    <Column field="city" header="City" />
                     <Column field="address" header="Address" />
                     <Column field="country" header="Country" />
-                    <Column
-                        header="Default"
-                        body={(rowData) => (
-                            <RadioButton
-                                checked={rowData.default}
-                                onChange={() =>
-                                    setAddresses(
-                                        addresses.map((addr) => ({
-                                            ...addr,
-                                            default: addr.id === rowData.id,
-                                        }))
-                                    )
-                                }
-                            />
-                        )}
-                    />
+                    <Column field="pinCode" header="PinCode" />
                     <Column
                         header="Edit"
                         body={(rowData) => (
@@ -146,24 +200,19 @@ const BusinessAddress = () => {
                                 onClick={() => {
                                     setEditMode(true);
                                     setCurrentAddress(rowData);
-                                    setValue("location", rowData.location);
+                                    setValue("city", rowData.city);
                                     setValue("address", rowData.address);
-                                    setValue("taxName", rowData.taxName);
-                                    setValue("taxNumber", rowData.taxNumber);
-                                    setValue("latitude", rowData.latitude);
-                                    setValue("longitude", rowData.longitude);
                                     setSelectedCode(
                                         countryCodes.find(
                                             (c) => c.name === rowData.country
                                         )
                                     );
-
+                                    setValue("pinCode", rowData.pinCode);
                                     setShowDialog(true);
                                 }}
                             />
                         )}
                     />
-
                     <Column
                         header="Actions"
                         body={(rowData) => (
@@ -205,7 +254,10 @@ const BusinessAddress = () => {
                         <Dropdown
                             value={selectedCode}
                             options={countryCodes}
-                            onChange={(e) => setSelectedCode(e.value)}
+                            onChange={(e) => {
+                                handleAddAddress();
+                                setSelectedCode(e.value);
+                            }}
                             placeholder="Select"
                             className="w-full"
                             optionLabel="code"
@@ -213,12 +265,12 @@ const BusinessAddress = () => {
                                 option ? (
                                     <div className="flex items-center gap-1">
                                         <img
-                                            src={option.flag}
-                                            alt={option.name}
+                                            src={option?.flag}
+                                            alt={option?.name}
                                             className="w-6 h-5 hidden sm:block"
                                         />
                                         <span className="text-xs sm:text-sm">
-                                            {option.name}
+                                            {option?.name}
                                         </span>
                                     </div>
                                 ) : (
@@ -232,7 +284,6 @@ const BusinessAddress = () => {
                                         alt={option.name}
                                         className="w-6 h-5"
                                     />
-
                                     <span className="text-xs sm:text-sm">
                                         {option.name}
                                     </span>
@@ -244,38 +295,39 @@ const BusinessAddress = () => {
                     </div>
                     <div>
                         <label className="labelTag">
-                            Location<span className="text-red-700"> *</span>
+                            City<span className="text-red-700"> *</span>
                         </label>
                         <InputText
-                            {...register("location", {
-                                required: "Location is required",
+                            {...register("city", {
+                                required: "City is required",
                             })}
                             placeholder="e.g. New York, Jaipur, Dubai"
                             className="w-full"
+                            onChange={handleAddressChange}
                         />
-                        {errors.location && (
+                        {errors.city && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.location.message}
+                                {errors.city.message}
                             </p>
                         )}
                     </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mt-4">
                     <div>
-                        <label className="labelTag">Tax Name</label>
+                        <label className="labelTag">
+                            PinCode<span className="text-red-700"> *</span>
+                        </label>
                         <InputText
-                            {...register("taxName")}
-                            placeholder="Tax Name"
+                            {...register("pinCode", {
+                                required: "PinCode is required",
+                            })}
+                            placeholder="e.g. 123456"
                             className="w-full"
+                            onChange={handleAddressChange}
                         />
-                    </div>
-                    <div>
-                        <label className="labelTag">Tax Number</label>
-                        <InputText
-                            {...register("taxNumber")}
-                            placeholder="Enter Tax Number"
-                            className="w-full"
-                        />
+                        {errors.pinCode && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.pinCode.message}
+                            </p>
+                        )}
                     </div>
                 </div>
                 <div className="mt-4">
@@ -288,6 +340,7 @@ const BusinessAddress = () => {
                         })}
                         placeholder="e.g. 132, My Street, Kingston, New York 12401"
                         className="w-full"
+                        onChange={handleAddressChange}
                     />
                     {errors.address && (
                         <p className="text-red-500 text-xs mt-1">
@@ -295,26 +348,7 @@ const BusinessAddress = () => {
                         </p>
                     )}
                 </div>
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <label className="labelTag">Latitude</label>
-                        <InputText
-                            {...register("latitude")}
-                            placeholder="e.g. 38.895"
-                            className="w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="labelTag">Longitude</label>
-                        <InputText
-                            {...register("longitude")}
-                            placeholder="e.g. -77.0364"
-                            className="w-full"
-                        />
-                    </div>
-                </div>
             </Dialog>
-
             <Dialog
                 visible={showDeleteDialog}
                 onHide={() => setShowDeleteDialog(false)}

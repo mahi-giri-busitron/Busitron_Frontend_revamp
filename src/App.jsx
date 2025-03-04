@@ -11,28 +11,30 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import EnterEmailForResetPassword from "./pages/EnterEmailForResetPassword.jsx";
 import Create_User from "./pages/Create_User.jsx";
-import Task from "./component/Dashboard/Task.jsx";
-import Ticket from "./component/Dashboard/Ticket.jsx";
-import Email from "./component/Dashboard/Email.jsx";
+import Task from "./component/Dashboard/Task/Task.jsx";
+import Ticket from "./component/Dashboard/Ticket/Ticket.jsx";
 import Profile from "./component/Dashboard/Profile.jsx";
 import Settings from "./component/Dashboard/Settings.jsx";
 import Dashboard from "./component/Dashboard/Dashboard.jsx";
 import DashboardHome from "./component/Dashboard/DashboardHome.jsx";
-import Financial_Management from "./component/Dashboard/Financial_Management.jsx";
-import Performance_Tracking from "./component/Dashboard/Performance_Tracking.jsx";
-import User_Management from "./component/Dashboard/User_Management.jsx";
+import Financial_Management from "./component/Dashboard/Financial/Financial_Management.jsx";
+import Performance_Tracking from "./component/Dashboard/performance/PerformanceTracking.jsx";
+import UserManagement from "./component/Dashboard/Users/UserManagement.jsx";
 import CompanySetting from "./component/Settings/CompanySetting.jsx";
 import BusinessAddress from "./component/Settings/BusinessAddress.jsx";
 import AppSetting from "./component/Settings/AppSetting.jsx";
 import RolePermissions from "./component/Settings/RolePermissions.jsx";
 import TaskSettings from "./component/Settings/TaskSettings.jsx";
 import ModuleSettings from "./component/Settings/ModuleSettings.jsx";
-import SingleTask from "./component/Dashboard/SingleTask.jsx";
-import SingleTicket from "./component/Dashboard/SingleTicket.jsx";
-import SingleEstimate from "./component/Dashboard/SingleEstimate.jsx";
+import SingleTask from "./component/Dashboard/Task/SingleTask.jsx";
+import Messages from "./component/dashboard/Messages.jsx";
+import SingleTicket from "./component/Dashboard/Ticket/SingleTicket.jsx";
 import Project from "./component/Dashboard/Project/Project.jsx";
 import SingleProject from "./component/Dashboard/Project/SingleProject.jsx";
-
+import SingleEstimate from "./component/Dashboard/Financial/SingleEstimate.jsx";
+import UserDetails from "./component/Dashboard/Users/UserDetails.jsx";
+import UsrerPerformanceDetals from "./component/Dashboard/performance/UserperformanceDetails.jsx";
+import ChangePassword from "./component/Dashboard/ChangePassword.jsx";
 function App() {
     const location = useLocation();
 
@@ -82,7 +84,10 @@ function App() {
                 />
                 <Route path="/signin/create-user" element={<Create_User />} />
 
-                <Route path="/enter-new-password" element={<ResetPassword />} />
+                <Route
+                    path="/:email/enter-new-password"
+                    element={<ResetPassword />}
+                />
                 <Route
                     path="/forgot-password"
                     element={<EnterEmailForResetPassword />}
@@ -104,15 +109,19 @@ function App() {
                         />
                         <Route
                             path="user-management"
-                            element={<User_Management />}
+                            element={<UserManagement />}
+                        />
+                        <Route
+                            path="changePassword"
+                            element={<ChangePassword />}
                         />
                         <Route path="project" element={<Project />} />
                         <Route path="project/:id" element={<SingleProject />} />
                         <Route path="task" element={<Task />} />
                         <Route path="task/:id" element={<SingleTask />} />
                         <Route path="ticket" element={<Ticket />} />
+                        <Route path="message" element={<Messages />} />
                         <Route path="ticket/:id" element={<SingleTicket />} />
-                        <Route path="message" element={<Email />} />
                         <Route path="profile" element={<Profile />} />
 
                         <Route path="setting" element={<Settings />}>
@@ -141,6 +150,14 @@ function App() {
                                 element={<ModuleSettings />}
                             />
                         </Route>
+                        <Route
+                            path="/dashboard/user-management/emp/:empid"
+                            element={<UserDetails />}
+                        />
+                        <Route
+                            path="/dashboard/performance-tracking/:empid"
+                            element={<UsrerPerformanceDetals />}
+                        />
                     </Route>
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
