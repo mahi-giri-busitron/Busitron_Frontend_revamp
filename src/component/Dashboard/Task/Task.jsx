@@ -14,6 +14,7 @@ import DeleteModal from "../../../shared/DeleteModal";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../../../redux/userManagementSlice";
+import toast from "react-hot-toast";
 
 const Task = () => {
     const { register, watch } = useForm({ defaultValues: { taskName: "" } });
@@ -28,7 +29,7 @@ const Task = () => {
 
     const [dialogMode, setDialogMode] = useState("add");
     const [currentTask, setCurrentTask] = useState(null);
-    const [originalTasks, setOriginalTasks] = useState([]); // Store original tasks separately
+    const [originalTasks, setOriginalTasks] = useState([]);
 
     const { currentUser } = useSelector((store) => store.user);
 
@@ -49,7 +50,7 @@ const Task = () => {
                     })
                 );
                 setTasks(formattedTasks);
-                setOriginalTasks(formattedTasks); // Keep original tasks
+                setOriginalTasks(formattedTasks);
             } catch (error) {
                 console.error("Error fetching tasks:", error);
             }
@@ -69,9 +70,17 @@ const Task = () => {
         );
     }, [taskName, tasks]);
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         setTasks(tasks.filter((task) => task._id !== deleteId));
         setConfirmVisible(false);
+
+        const response = await axios.delete(`/api/v1/task/${deleteId}`);
+
+        if (response?.data.statusCode === 200) {
+            toast.success("Task deleted successfully!");
+        } else {
+            toast.error("Failed to delete task!");
+        }
     };
 
     const handleAddTask = () => {

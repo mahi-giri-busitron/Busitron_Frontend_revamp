@@ -28,6 +28,7 @@ const SideNavigation = ({
         const apiResult = await dispatch(signOutUser());
         if (signOutUser.fulfilled.match(apiResult)) {
             navigate("/signin");
+            localStorage.clear();
             toast.success("Signed Out Successfully!");
         }
     };
