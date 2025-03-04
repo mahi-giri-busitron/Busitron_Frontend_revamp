@@ -3,54 +3,24 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 
-const UserTasksDetailsTable = () => {
-    const tasks = [
-        {
-            id: 1,
-            taskName:
-                "update the page based on the linked use and the admin panael which should be abbled to merge the task on hthe shifting that",
-            projectName: "Project X",
-            startDate: "2023-01-01",
-            endDate: "2023-01-10",
-            status: "Completed",
-        },
-        {
-            id: 2,
-            taskName: "Task B",
-            projectName: "Project Y",
-            startDate: "2023-02-01",
-            endDate: "2023-02-15",
-            status: "Pending",
-        },
-        {
-            id: 3,
-            taskName: "Task C",
-            projectName: "Project Z",
-            startDate: "2023-03-01",
-            endDate: "2023-03-20",
-            status: "Overdue",
-        },
-        {
-            id: 4,
-            taskName: "Task D",
-            projectName: "Project X",
-            startDate: "2023-04-01",
-            endDate: "2023-04-10",
-            status: "Completed",
-        },
-    ];
-
+const UserTasksDetailsTable = ({ tasks }) => {
     const statusTemplate = (rowData) => {
         let severity;
         switch (rowData.status) {
             case "Completed":
                 severity = "success";
                 break;
-            case "Pending":
+            case "pending":
                 severity = "warning";
                 break;
-            case "Overdue":
+            case "overdue":
                 severity = "danger";
+                break;
+            case "To Do":
+                severity = "info";
+                break;
+            case "In Progress":
+                severity = "primary";
                 break;
             default:
                 severity = null;
@@ -59,17 +29,17 @@ const UserTasksDetailsTable = () => {
             <Tag
                 value={rowData.status}
                 severity={severity}
-                style={{ minWidth: "100px" , fontSize:"10px"}}
+                style={{ minWidth: "100px", fontSize: "10px" }}
             />
         );
     };
 
-    const taskNameTemplate = (rowData) => {
-        const taskName =
-            rowData.taskName.length > 40
-                ? rowData.taskName.substring(0, 37) + "..."
-                : rowData.taskName;
-        return <span>{taskName}</span>;
+    const taskTitleTemplate = (rowData) => {
+        const taskTitle =
+            rowData.title.length > 40
+                ? rowData.title.substring(0, 37) + "..."
+                : rowData.title;
+        return <span>{taskTitle}</span>;
     };
 
     return (
@@ -88,28 +58,29 @@ const UserTasksDetailsTable = () => {
                 tableClassName="custom-table"
             >
                 <Column
-                    field="id"
+                    field="taskID"
                     header="Task ID"
                     headerClassName="custom-table-header"
                 ></Column>
                 <Column
-                    field="taskName"
+                    field="title"
                     header="Task Name"
                     headerClassName="custom-table-header"
-                    body={taskNameTemplate}
+                    body={taskTitleTemplate}
                 ></Column>
+
                 <Column
                     field="startDate"
                     header="Start Date"
                     headerClassName="custom-table-header"
                 ></Column>
                 <Column
-                    field="endDate"
+                    field="dueDate"
                     header="End Date"
                     headerClassName="custom-table-header"
                 ></Column>
                 <Column
-                    header="Status"
+                    header="status"
                     headerClassName="custom-table-header"
                     body={statusTemplate}
                 ></Column>

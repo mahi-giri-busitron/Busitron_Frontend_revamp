@@ -77,8 +77,6 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
     }, [users]);
 
     useEffect(() => {
-        console.log(task);
-        
         if (mode === "edit" && task) {
             setValue("title", task.title);
             setValue("taskCategory", task.taskCategory);
@@ -178,6 +176,21 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
                     toast.success("Task updated successfully!");
                 } else {
                     toast.error("Failed to update task!");
+                }
+            } else {
+                setLoading(true);
+                const response = await axios.post(
+                    "/api/v1/task/createTask",
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+
+                if (response?.data.statusCode === 201) {
+                    toast.success("Task created successfully!");
+                } else {
+                    toast.error("Failed to create task!");
                 }
             }
             setShow(false);
