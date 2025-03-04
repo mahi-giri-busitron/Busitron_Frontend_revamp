@@ -11,7 +11,6 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
-import { fetchAllUser } from "../../../redux/userManagementSlice";
 
 const taskCategoryList = [
     "Project Management",

@@ -21,7 +21,8 @@ const IssueDetails = () => {
     const location = useLocation();
     const taskData = location.state;
 
-    // console.log(JSON.stringify(taskData));
+    console.log(taskData);
+    
 
     const onSelect = (event) => {
         const newFiles = event.files;
@@ -100,7 +101,7 @@ const IssueDetails = () => {
                 <div className="space-y-4 w-3/5 max-h-screen overflow-y-auto pr-4">
                     <p className="text-xs text-blue-500">{taskData?.taskID}</p>
                     <h1 className="text-2xl font-semibold text-gray-600 ">
-                        {taskData.title}
+                        {taskData?.title}
                     </h1>
 
                     <div className="flex flex-wrap gap-3 mt-3 items-center ">

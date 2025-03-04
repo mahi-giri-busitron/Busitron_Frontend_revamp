@@ -2,6 +2,7 @@ import React from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
+import moment from "moment";
 
 const UserTasksDetailsTable = ({ tasks }) => {
     const statusTemplate = (rowData) => {
