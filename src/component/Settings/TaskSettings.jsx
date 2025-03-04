@@ -31,7 +31,7 @@ const TaskSettings = () => {
                 position: "top-right",
             });
         } catch (error) {
-            console.error("Failed to save settings:", error);
+      
             toast.error(
                 error.response?.data?.message || "Failed to send your message.",
                 {

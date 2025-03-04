@@ -39,12 +39,12 @@ const RolesPermissions = () => {
             setPermissions(rolePermissions);
         } catch (error) {
             toast.error("Failed to fetch roles.");
-            console.error("Error fetching roles:", error);
+            
         }
     };
 
     const onSubmitRole = async (data) => {
-        console.log("Form submitted with data:", data);
+        
         try {
             const payload = { role: data.roleName };
             const response = await axios.post(
@@ -55,18 +55,15 @@ const RolesPermissions = () => {
 
             if (response.status === 200 || response.status === 201) {
                 toast.success("Role assigned successfully!");
-                console.log("Success:", response.data);
+               
                 fetchRoles();
             } else {
                 toast.error("Unexpected response from the server.");
-                console.error("Unexpected response:", response);
+                
             }
         } catch (error) {
             toast.error("Failed to assign role!");
-            console.error(
-                "Error:",
-                error.response ? error.response.data : error.message
-            );
+           
         }
     };
 
@@ -88,24 +85,25 @@ const RolesPermissions = () => {
 
             if (response.status === 200 || response.status === 201) {
                 toast.success("Permissions updated successfully!");
-                console.log("Success:", response.data);
+                
                 fetchRoles();
             } else {
                 toast.error("Unexpected response from the server.");
-                console.error("Unexpected response:", response);
+                
             }
         } catch (error) {
             toast.error("Failed to update permissions.");
-            console.error("Error updating permissions:", error);
+            
 
             if (error.response) {
-                console.error("Response data:", error.response.data);
-                console.error("Response status:", error.response.status);
-                console.error("Response headers:", error.response.headers);
+                toast.error("Response data:", error.response.data);
+           
+     
             } else if (error.request) {
-                console.error("No response received:", error.request);
+               
+                toast.error("Response data:", error.response.data);
             } else {
-                console.error("Error setting up the request:", error.message);
+                toast.error("Response data:", error.response.data);
             }
         }
     };
@@ -118,7 +116,6 @@ const RolesPermissions = () => {
     ];
 
     const onSubmit = (data) => {
-        debugger;
         setManageRoleVisible(false);
         reset();
     };
@@ -134,14 +131,11 @@ const RolesPermissions = () => {
                 fetchRoles();
             } else {
                 toast.error("Unexpected response from the server.");
-                console.error("Unexpected response:", response);
+                
             }
         } catch (error) {
             toast.error("Failed to delete role!");
-            console.error(
-                "Error:",
-                error.response ? error.response.data : error.message
-            );
+           
         }
     };
 
@@ -195,7 +189,7 @@ const RolesPermissions = () => {
                 },
             };
 
-            console.log("Reset Permissions Payload:", resetPermissionsPayload); // Debugging
+           
 
             const response = await axios.put(
                 `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`,

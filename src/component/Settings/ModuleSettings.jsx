@@ -41,7 +41,7 @@ const ModuleSettings = () => {
                 });
                 setToggleStates(initialToggleStates);
             } catch (error) {
-                console.error("Error fetching data:", error);
+               toast.error("Response data:");
             }
         };
         fetchData();
@@ -72,10 +72,7 @@ const ModuleSettings = () => {
             );
 
             const payload = { permissions };
-            console.log(
-                "Payload being sent:",
-                JSON.stringify(payload, null, 2)
-            );
+            
 
             await axios.put(
                 `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${_id}`,
@@ -86,7 +83,7 @@ const ModuleSettings = () => {
             toast.success("Settings updated successfully");
         } catch (error) {
             toast.error("Error updating settings");
-            console.error("Error updating settings:", error);
+            
         }
     };
 
