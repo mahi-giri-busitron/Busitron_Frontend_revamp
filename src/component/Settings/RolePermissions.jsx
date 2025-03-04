@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -7,12 +7,15 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
-
+import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const RolesPermissions = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [manageRoleVisible, setManageRoleVisible] = useState(false);
     const [expandedRole, setExpandedRole] = useState(null);
+    const [roles, setRoles] = useState([]);
+    const [permissions, setPermissions] = useState([]);
 
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -21,6 +24,92 @@ const RolesPermissions = () => {
             permissions: {},
         },
     });
+
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+    const fetchRoles = async () => {
+        try {
+            const response = await axios.get(
+                "http://localhost:5421/api/v1/role_permissions"
+            );
+            const rolePermissions = response.data[0].role_permissions;
+            setRoles(rolePermissions);
+            setPermissions(rolePermissions);
+        } catch (error) {
+            toast.error("Failed to fetch roles.");
+            console.error("Error fetching roles:", error);
+        }
+    };
+
+    const onSubmitRole = async (data) => {
+        console.log("Form submitted with data:", data);
+        try {
+            const payload = { role: data.roleName };
+            const response = await axios.post(
+                "http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c",
+                payload,
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success("Role assigned successfully!");
+                console.log("Success:", response.data);
+                fetchRoles();
+            } else {
+                toast.error("Unexpected response from the server.");
+                console.error("Unexpected response:", response);
+            }
+        } catch (error) {
+            toast.error("Failed to assign role!");
+            console.error(
+                "Error:",
+                error.response ? error.response.data : error.message
+            );
+        }
+    };
+
+    const updatePermissions = async (roleId, updatedPermissions) => {
+        try {
+            const payload = {
+                permissions: updatedPermissions,
+            };
+
+            const response = await axios.put(
+                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`,
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success("Permissions updated successfully!");
+                console.log("Success:", response.data);
+                fetchRoles();
+            } else {
+                toast.error("Unexpected response from the server.");
+                console.error("Unexpected response:", response);
+            }
+        } catch (error) {
+            toast.error("Failed to update permissions.");
+            console.error("Error updating permissions:", error);
+
+            if (error.response) {
+                console.error("Response data:", error.response.data);
+                console.error("Response status:", error.response.status);
+                console.error("Response headers:", error.response.headers);
+            } else if (error.request) {
+                console.error("No response received:", error.request);
+            } else {
+                console.error("Error setting up the request:", error.message);
+            }
+        }
+    };
+
     const items = [{ label: "Roles & Permissions", icon: "pi pi-users" }];
 
     const permissionOptions = [
@@ -28,49 +117,110 @@ const RolesPermissions = () => {
         { label: "No", value: "No" },
     ];
 
-    const roles = [
-        {
-            id: 1,
-            role: "App Administrator",
-            unsyncedUsers: 0,
-            deletable: false,
-        },
-        { id: 2, role: "3rd party Admin", unsyncedUsers: 0, deletable: false },
-
-        { id: 3, role: "Employee", unsyncedUsers: 0, deletable: false },
-    ];
-
-    const permissions = [
-        {
-            module: "Leads",
-            add: "Added",
-            view: "All",
-            update: "Added",
-            delete: "None",
-        },
-        {
-            module: "Estimates",
-            add: "None",
-            view: "None",
-            update: "None",
-            delete: "None",
-        },
-        {
-            module: "Clients",
-            add: "None",
-            view: "None",
-            update: "None",
-            delete: "None",
-        },
-    ];
-
     const onSubmit = (data) => {
+        debugger;
         setManageRoleVisible(false);
         reset();
     };
 
+    const deleteRole = async (roleId) => {
+        try {
+            const response = await axios.delete(
+                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`
+            );
+
+            if (response.status === 200 || response.status === 204) {
+                toast.success("Role deleted successfully!");
+                fetchRoles();
+            } else {
+                toast.error("Unexpected response from the server.");
+                console.error("Unexpected response:", response);
+            }
+        } catch (error) {
+            toast.error("Failed to delete role!");
+            console.error(
+                "Error:",
+                error.response ? error.response.data : error.message
+            );
+        }
+    };
+
+    const resetPermissions = async (roleId) => {
+        try {
+            const role = roles.find((r) => r._id === roleId);
+            if (!role) {
+                toast.error("Role not found.");
+                return;
+            }
+
+            const resetPermissionsPayload = {
+                permissions: {
+                   
+                    projects: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                    financial_management: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                    performance_tracking: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                  
+                    manage_users: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                    tickets: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                    settings: {
+                        add: false,
+                        view: false,
+                        update: false,
+                        delete: false,
+                    },
+                },
+            };
+
+            console.log("Reset Permissions Payload:", resetPermissionsPayload); // Debugging
+
+            const response = await axios.put(
+                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`,
+                resetPermissionsPayload, // Send the payload directly
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success("Permissions reset successfully!");
+            } else {
+                toast.error("Unexpected response from the server.");
+            }
+        } catch (error) {
+            toast.error("Failed to reset permissions.");
+        }
+    };
+
     return (
         <div>
+            <Toaster />
             <TabMenu
                 model={items}
                 activeIndex={activeIndex}
@@ -89,7 +239,7 @@ const RolesPermissions = () => {
             <div className="mt-4 space-y-4">
                 {roles.map((role) => (
                     <div
-                        key={role.id}
+                        key={role._id}
                         className="border rounded-lg p-4 shadow-sm"
                     >
                         <div className="flex flex-wrap justify-between items-center gap-3">
@@ -98,11 +248,11 @@ const RolesPermissions = () => {
                                     {role.role}
                                 </strong>
                                 <p className="text-sm text-gray-500">
-                                    {role.unsyncedUsers} Unsynced Users
+                                    0 Unsynced Users
                                 </p>
                             </div>
 
-                            {!role.deletable ? (
+                            {role.role === "Super Admin" ? (
                                 <p className="text-gray-400 text-sm">
                                     Default role cannot be deleted.
                                 </p>
@@ -110,41 +260,85 @@ const RolesPermissions = () => {
                                 <Button
                                     icon="pi pi-trash"
                                     className="p-button-danger"
+                                    onClick={() => deleteRole(role._id)}
                                 />
                             )}
-
+                            {role.role === "Super Admin" ? (
+                                <p className="text-gray-400 text-sm">
+                                    Default role cannot be deleted.
+                                </p>
+                            ) : (
                             <Button
                                 label="Permissions"
                                 icon="pi pi-key"
                                 onClick={() =>
                                     setExpandedRole(
-                                        expandedRole === role.id
+                                        expandedRole === role._id
                                             ? null
-                                            : role.id
+                                            : role._id
                                     )
                                 }
                                 className="p-button-outlined"
                             />
+                        )}
                         </div>
 
                         <div
                             className={`overflow-hidden transition-all duration-300 ${
-                                expandedRole === role.id
+                                expandedRole === role._id
                                     ? "max-h-[500px] mt-4"
                                     : "max-h-0"
                             }`}
                         >
-                            {expandedRole === role.id && (
-                                <div className="border-t mt-2 pt-4 overflow-x-auto">
-                                    <form onSubmit={handleSubmit(onSubmit)}>
+                            {expandedRole === role._id && (
+                                <div className="border-t mt-2 pt-4 overflow-auto max-h-[50vh]">
+                                    <form
+                                        onSubmit={handleSubmit((data) => {
+                                            const updatedPermissions = {};
+                                            if (
+                                                data.permissions &&
+                                                data.permissions[role._id]
+                                            ) {
+                                                Object.keys(
+                                                    data.permissions[role._id]
+                                                ).forEach((module) => {
+                                                    updatedPermissions[module] =
+                                                        {};
+                                                    Object.keys(
+                                                        data.permissions[
+                                                            role._id
+                                                        ][module]
+                                                    ).forEach((perm) => {
+                                                        updatedPermissions[
+                                                            module
+                                                        ][perm] =
+                                                            data.permissions[
+                                                                role._id
+                                                            ][module][perm] ===
+                                                            "Yes";
+                                                    });
+                                                });
+                                            }
+
+                                            updatePermissions(
+                                                role._id,
+                                                updatedPermissions
+                                            );
+                                        })}
+                                    >
                                         <DataTable
-                                            value={permissions}
+                                            value={Object.entries(
+                                                role.permissions
+                                            ).map(([module, perms]) => ({
+                                                module,
+                                                ...perms,
+                                            }))}
                                             scrollable
                                             scrollHeight="flex"
                                         >
                                             <Column
                                                 field="module"
-                                                header="Module"
+                                                header="Moduledsdss"
                                             />
 
                                             {[
@@ -164,10 +358,12 @@ const RolesPermissions = () => {
                                                     }
                                                     body={(rowData) => (
                                                         <Controller
-                                                            name={`permissions.${role.id}.${rowData.module}.${perm}`}
+                                                            name={`permissions.${role._id}.${rowData.module}.${perm}`}
                                                             control={control}
                                                             defaultValue={
                                                                 rowData[perm]
+                                                                    ? "Yes"
+                                                                    : "No"
                                                             }
                                                             render={({
                                                                 field,
@@ -195,6 +391,8 @@ const RolesPermissions = () => {
                                                 className="p-button-primary"
                                             />
                                         </div>
+
+                                       
                                     </form>
                                 </div>
                             )}
@@ -215,7 +413,7 @@ const RolesPermissions = () => {
             >
                 <div className="overflow-x-auto">
                     <DataTable value={roles} scrollable scrollHeight="400px">
-                        <Column field="id" header="#" />
+                        
                         <Column field="role" header="User Role" />
                         <Column field="unsyncedUsers" header="Unsynced Users" />
                         <Column
@@ -227,11 +425,16 @@ const RolesPermissions = () => {
                                     </span>
                                     <div className="h-[40px]lex items-center">
                                         {rowData.role !==
-                                            "App Administrator" && (
+                                            "App_Administrator" && (
                                             <Button
                                                 icon="pi pi-refresh"
                                                 className="p-button-secondary"
                                                 label="Reset Permissions"
+                                                onClick={() =>
+                                                    resetPermissions(
+                                                        rowData._id
+                                                    )
+                                                }
                                             />
                                         )}
                                     </div>
@@ -241,7 +444,7 @@ const RolesPermissions = () => {
                     </DataTable>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmitRole)}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
                         <div>
                             <label
@@ -257,11 +460,11 @@ const RolesPermissions = () => {
                                 rules={{ required: "Role Name is required" }}
                                 render={({ field, fieldState }) => (
                                     <>
-                                        <InputText
+                                        <input
                                             {...field}
                                             id="roleName"
                                             placeholder="Enter Role Name"
-                                            className="w-full"
+                                            className="w-full border p-2 rounded"
                                         />
                                         {fieldState.error && (
                                             <small className="text-red-500">
@@ -272,52 +475,15 @@ const RolesPermissions = () => {
                                 )}
                             />
                         </div>
-
-                        <div>
-                            <label
-                                htmlFor="importRole"
-                                className="block font-medium mb-1"
-                            >
-                                Import from Role
-                            </label>
-                            <Controller
-                                name="importRole"
-                                control={control}
-                                rules={{ required: "Import role is required" }}
-                                render={({ field, fieldState }) => (
-                                    <div>
-                                        <Dropdown
-                                            {...field}
-                                            id="importRole"
-                                            options={roles.map((r) => ({
-                                                label: r.role,
-                                                value: r.role,
-                                            }))}
-                                            placeholder="Select a Role"
-                                            className={`w-full ${
-                                                fieldState.error
-                                                    ? "p-invalid"
-                                                    : ""
-                                            }`}
-                                        />
-                                        {fieldState.error && (
-                                            <small className="text-red-500">
-                                                {fieldState.error.message}
-                                            </small>
-                                        )}
-                                    </div>
-                                )}
-                            />
-                        </div>
                     </div>
 
-                    <div className="flex justify-end mt-4">
-                        <Button
+                    <div className="flex justify-end">
+                        <button
                             type="submit"
-                            label="Save"
-                            icon="pi pi-check"
-                            className="p-button-primary"
-                        />
+                            className="mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"
+                        >
+                            Submit
+                        </button>
                     </div>
                 </form>
             </Dialog>
