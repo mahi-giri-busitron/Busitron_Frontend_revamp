@@ -17,6 +17,8 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import CreateTicket from "./CreateTicket";
 import axios from "axios";
 import { debounce } from "lodash";
+import DeleteModal from "../../../shared/DeleteModal";
+import toast from "react-hot-toast";
 
 const Ticket = () => {
     const menuRef = useRef(null);
@@ -24,6 +26,8 @@ const Ticket = () => {
     const [tickets, setTickets] = useState([]);
     const [showCreateTicketModal, setShowCreateTicketModal] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
+    const [confirmVisible, setConfirmVisible] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     // Fetch Tickets
     const fetchTickets = useCallback(async () => {
@@ -61,13 +65,29 @@ const Ticket = () => {
     }, [searchTerm, tickets]);
 
     const handleCreateTicket = () => {
-        setSelectedTicket(null); // No ticket data for creation
+        setSelectedTicket(null);
         setShowCreateTicketModal(true);
     };
 
     const handleEditTicket = (ticket) => {
-        setSelectedTicket(ticket); // Pass ticket data for editing
+        setSelectedTicket(ticket);
         setShowCreateTicketModal(true);
+    };
+
+    const handleDelete = async () => {
+        setConfirmVisible(false);
+        const response = await axios.delete(
+            `/api/v1/ticket/deleteTicketByID/${deleteId}`
+        );
+
+        console.log(response);
+
+        if (response?.data.statusCode === 200) {
+            setTickets(tickets.filter((ticket) => ticket._id !== deleteId));
+            toast.success("Ticket deleted successfully!");
+        } else {
+            toast.error("Failed to delete ticket!");
+        }
     };
 
     // Status Styling
@@ -199,7 +219,12 @@ const Ticket = () => {
                                     >
                                         <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
                                     </button>
-                                    <button>
+                                    <button
+                                        onClick={() => {
+                                            setConfirmVisible(true);
+                                            setDeleteId(rowData._id);
+                                        }}
+                                    >
                                         <i className="pi pi-trash text-red-500 cursor-pointer"></i>
                                     </button>
                                 </div>
@@ -222,6 +247,11 @@ const Ticket = () => {
                         onHide={() => setShowCreateTicketModal(false)}
                     />
                 </Dialog>
+                <DeleteModal
+                    visible={confirmVisible}
+                    setVisible={setConfirmVisible}
+                    handleDelete={handleDelete}
+                />
             </div>
         </>
     );

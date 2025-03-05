@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { InputNumber } from "primereact/inputnumber";
 import { RadioButton } from "primereact/radiobutton";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { TabMenu } from "primereact/tabmenu";
 import { Toaster, toast } from "react-hot-toast";
@@ -10,7 +11,16 @@ const TaskSettings = () => {
     const [beforeDays, setBeforeDays] = useState(1);
     const [afterDays, setAfterDays] = useState(1);
     const [reminderOnDueDate, setReminderOnDueDate] = useState("NO");
+    const [status, setStatus] = useState("To Do");
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const statusOptions = [
+        "To Do",
+        "In Progress",
+        "Review",
+        "Pending",
+        "Completed",
+    ].map((status) => ({ label: status, value: status }));
 
     const items = [{ label: "Task Settings", icon: "pi pi-list-check" }];
 
@@ -19,6 +29,7 @@ const TaskSettings = () => {
             beforeDueDate: beforeDays,
             afterDueDate: afterDays,
             sendTaskReminder: reminderOnDueDate,
+            status: status,
         };
 
         try {
@@ -31,7 +42,6 @@ const TaskSettings = () => {
                 position: "top-right",
             });
         } catch (error) {
-      
             toast.error(
                 error.response?.data?.message || "Failed to send your message.",
                 {
@@ -94,6 +104,16 @@ const TaskSettings = () => {
                             className="w-full"
                         />
                     </div>
+                </div>
+                <div className="pt-5">
+                    <label>Select Task Status</label>
+                    <Dropdown
+                        value={status}
+                        options={statusOptions}
+                        onChange={(e) => setStatus(e.value)}
+                        placeholder="Select a Status"
+                        className="w-full mt-2"
+                    />
                 </div>
                 <div className="pt-5">
                     <Button
