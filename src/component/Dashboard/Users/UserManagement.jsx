@@ -28,7 +28,7 @@ function User_Management() {
 
     const actionPanel = useRef(null);
     const actions = ["De-Active", "Edit"];
-    const nameTemplete = (user) => {
+    const nameTemplate = (user) => {
         return (
             <p
                 className="hover:text-blue-600 cursor-pointer"
@@ -39,7 +39,7 @@ function User_Management() {
         );
     };
 
-    const dobTamplet = (user) => {
+    const dobTemplate = (user) => {
         return <p>{moment(user?.dateOfBirth).format("D-M-Y")}</p>;
     };
 
@@ -102,15 +102,6 @@ function User_Management() {
             </div>
 
             <DataTable
-                //  value={clients?.filter(
-                //     (client) =>
-                //         client.name
-                //             .toLowerCase()
-                //             .includes(filters.search.toLowerCase()) ||
-                //         client.email
-                //             .toLowerCase()
-                //             .includes(filters.search.toLowerCase())
-                // )}
                 value={clients}
                 emptyMessage="No data available in table"
                 paginator
@@ -130,7 +121,7 @@ function User_Management() {
                 <Column
                     field="name"
                     header="Name"
-                    body={nameTemplete}
+                    body={nameTemplate}
                     headerClassName="custom-table-header"
                 />
                 <Column
@@ -152,7 +143,7 @@ function User_Management() {
                 <Column
                     field="dob"
                     header="Dob"
-                    body={dobTamplet}
+                    body={dobTemplate}
                     headerClassName="custom-table-header"
                 />
                 <Column

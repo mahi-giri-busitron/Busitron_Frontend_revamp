@@ -20,10 +20,14 @@ import { debounce } from "lodash";
 import DeleteModal from "../../../shared/DeleteModal";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Ticket = () => {
+    const menuRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [tickets, setTickets] = useState([]);
+    const [originalTickets, setOriginalTickets] = useState([]);
+    const [shouldReload, setShouldReload] = useState(false);
     const [showCreateTicketModal, setShowCreateTicketModal] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [confirmVisible, setConfirmVisible] = useState(false);
@@ -36,6 +40,7 @@ const Ticket = () => {
         Closed_Tickets: 0,
     });
 
+    const { currentUser } = useSelector((store) => store.user);
     const navigate = useNavigate();
 
     // Fetch Tickets
@@ -43,7 +48,7 @@ const Ticket = () => {
         try {
             const response = await axios.get("/api/v1/ticket/getAllTickets");
             setTickets(response.data.data);
-
+            setOriginalTickets(response.data.data);
             const counts = {
                 Total_Tickets: response.data.data.length,
                 Open_Tickets: 0,
@@ -67,7 +72,7 @@ const Ticket = () => {
 
     useEffect(() => {
         fetchTickets();
-    }, [fetchTickets]);
+    }, [fetchTickets, shouldReload]);
 
     // Handle Search with Debounce
     const handleSearch = useCallback(
@@ -151,6 +156,22 @@ const Ticket = () => {
     const truncateText = (text, maxLength) =>
         text?.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 
+    const handleAllTickets = () => {
+        setTickets(originalTickets);
+    };
+
+    const handleMyTickets = () => {
+        if (!currentUser?.data?._id) {
+            console.error("Current user is not defined");
+            return;
+        }
+        setTickets(
+            originalTickets.filter(
+                (task) => task.assignedBy?._id === currentUser?.data?._id
+            )
+        );
+    };
+
     return (
         <>
             <ConfirmDialog />
@@ -196,23 +217,43 @@ const Ticket = () => {
                 </div>
 
                 {/* Top Bar */}
-                <div className="flex justify-between my-2">
-                    <Button
-                        icon="pi pi-plus"
-                        label="Create Ticket"
-                        severity="primary"
-                        className="md:w-42 h-10"
-                        size="small"
-                        onClick={handleCreateTicket} // Call handleCreateTicket
-                    />
-                    <IconField iconPosition="left" className="h-10">
-                        <InputIcon className="pi pi-search h-10" />
-                        <InputText
-                            placeholder="Search"
-                            className="h-10 w-full md:w-auto"
-                            onChange={(e) => handleSearch(e.target.value)}
+                <div className="flex justify-between my-2 flex-wrap  gap-4">
+                    <div className="flex gap-2">
+                        <Button
+                            icon="pi pi-plus"
+                            label="Create Ticket"
+                            severity="primary"
+                            className=" h-10"
+                            size="small"
+                            onClick={handleCreateTicket} // Call handleCreateTicket
                         />
-                    </IconField>
+                        <Button
+                            label="All Tickets"
+                            className="h-10 hover:bg-black text-white"
+                            size="small"
+                            icon="pi pi-tags"
+                            outlined
+                            onClick={handleAllTickets}
+                        />
+                        <Button
+                            label="My Tickets"
+                            className="h-10 hover:bg-black text-white"
+                            size="small"
+                            icon="pi pi-tag"
+                            outlined
+                            onClick={handleMyTickets}
+                        />
+                    </div>
+                    <div className="w-full md:w-100 ">
+                        <IconField iconPosition="left" className="h-10 w-full">
+                            <InputIcon className="pi pi-search h-10" />
+                            <InputText
+                                placeholder="Search"
+                                className="h-10 w-full "
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                        </IconField>
+                    </div>
                 </div>
 
                 {/* Data Table */}
@@ -296,6 +337,7 @@ const Ticket = () => {
                     <CreateTicket
                         ticketData={selectedTicket} // Pass data if editing
                         onHide={() => setShowCreateTicketModal(false)}
+                        setShouldReload={setShouldReload}
                     />
                 </Dialog>
                 <DeleteModal

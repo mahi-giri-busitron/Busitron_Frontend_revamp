@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const CreateTicket = ({ onHide, ticketData }) => {
+const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
     const {
         control,
         register,
@@ -49,6 +49,8 @@ const CreateTicket = ({ onHide, ticketData }) => {
     useEffect(() => {
         if (ticketData) {
             reset({
+                name: ticketData?.userId?.name,
+                name: ticketData?.userId?.name,
                 assignGroup: ticketData.assignTeam,
                 status: ticketData.status,
                 ticketType: ticketData.ticketType,
@@ -95,6 +97,7 @@ const CreateTicket = ({ onHide, ticketData }) => {
 
                 if (response?.data?.statusCode === 201) {
                     toast.success(response.data.message);
+                    setShouldReload((prev) => !prev);
                 } else {
                     toast.error("Failed to create ticket");
                 }
@@ -109,6 +112,7 @@ const CreateTicket = ({ onHide, ticketData }) => {
 
                 if (response?.data?.statusCode === 200) {
                     toast.success(response.data.message);
+                    setShouldReload((prev) => !prev);
                 } else {
                     toast.error("Failed to update ticket");
                 }
@@ -146,13 +150,17 @@ const CreateTicket = ({ onHide, ticketData }) => {
                         <Divider />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6 items-center">
                         <div>
                             <label className="font-medium">
                                 Requester Name *
                             </label>
                             <InputText
-                                value={currentUser?.data?.name || ""}
+                                value={
+                                    ticketData
+                                        ? ticketData.userId?.name
+                                        : currentUser?.data?.name || ""
+                                }
                                 disabled
                                 className="w-full h-12 mt-1 bg-gray-200"
                             />
