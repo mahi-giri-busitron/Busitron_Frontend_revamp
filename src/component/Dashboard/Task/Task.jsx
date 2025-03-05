@@ -26,6 +26,7 @@ const Task = () => {
     const [showDialog, setShowDialog] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [confirmVisible, setConfirmVisible] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
 
     const [dialogMode, setDialogMode] = useState("add");
     const [currentTask, setCurrentTask] = useState(null);
@@ -56,7 +57,7 @@ const Task = () => {
             }
         };
         fetchTasks();
-    }, []);
+    }, [shouldReload]);
 
     useEffect(() => {
         dispatch(fetchAllUser());
@@ -230,6 +231,7 @@ const Task = () => {
                     setShow={setShowDialog}
                     task={currentTask}
                     mode={dialogMode}
+                    setShouldReload={setShouldReload}
                 />
             </Dialog>
 

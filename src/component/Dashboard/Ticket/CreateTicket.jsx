@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Editor } from "primereact/editor";
 import { Divider } from "primereact/divider";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const CreateTicket = ({ onHide }) => {
+const CreateTicket = ({ onHide, ticketData }) => {
     const {
+        control,
         register,
         handleSubmit,
         formState: { errors },
@@ -17,20 +21,17 @@ const CreateTicket = ({ onHide }) => {
     const [description, setDescription] = useState("");
     const [files, setFiles] = useState([]);
 
+    const { currentUser } = useSelector((store) => store?.user);
+
     const priorities = [
         { label: "Low", value: "Low" },
         { label: "Medium", value: "Medium" },
         { label: "High", value: "High" },
     ];
 
-    const requesters = [
-        { label: "John Doe", value: "John Doe" },
-        { label: "Jane Smith", value: "Jane Smith" },
-    ];
-
     const assignGroups = [
         { label: "Support Team", value: "Support Team" },
-        { label: "IT Helpdesk", value: "IT Helpdesk" },
+        { label: "IT helpdesk", value: "IT helpdesk" },
     ];
 
     const status = [
@@ -45,30 +46,97 @@ const CreateTicket = ({ onHide }) => {
         { label: "Feature Request", value: "Feature Request" },
     ];
 
-    const onSubmit = (data) => {
-        console.log("Form Submitted:", {
-            ...data,
-            description,
-            files,
+    useEffect(() => {
+        if (ticketData) {
+            reset({
+                assignGroup: ticketData.assignTeam,
+                status: ticketData.status,
+                ticketType: ticketData.ticketType,
+                priority: ticketData.priority,
+                ticketSubject: ticketData.ticketSubject,
+            });
+
+            setDescription(ticketData.description);
+
+            setFiles(
+                Array.isArray(ticketData.attachments)
+                    ? ticketData.attachments
+                          .map((attachment) => attachment)
+                          .filter((file) => file !== undefined)
+                    : []
+            );
+        }
+    }, [ticketData, reset]);
+
+    const onSubmit = async (data) => {
+        const formData = new FormData();
+
+        formData.append("userId", currentUser?.data?._id);
+        formData.append("assignTeam", data.assignGroup);
+        formData.append("status", data.status);
+        formData.append("ticketType", data.ticketType);
+        formData.append("priority", data.priority);
+        formData.append("ticketSubject", data.ticketSubject);
+        formData.append("description", description);
+
+        files.forEach((file) => {
+            formData.append("attachments", file);
         });
-        reset();
-        setDescription("");
-        setFiles([]);
-        onHide();
+
+        try {
+            if (!ticketData) {
+                const response = await axios.post(
+                    "/api/v1/ticket/createTicket",
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+
+                if (response?.data?.statusCode === 201) {
+                    toast.success(response.data.message);
+                } else {
+                    toast.error("Failed to create ticket");
+                }
+            } else {
+                const response = await axios.put(
+                    `/api/v1/ticket/${ticketData._id}`,
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+
+                if (response?.data?.statusCode === 200) {
+                    toast.success(response.data.message);
+                } else {
+                    toast.error("Failed to update ticket");
+                }
+            }
+
+            reset();
+            setDescription("");
+            setFiles([]);
+            onHide();
+        } catch (error) {
+            console.error("Error creating ticket:", error);
+        }
     };
 
-    const handleFileChange = (e) => {
-        const newFiles = Array.from(e.target.files);
-        setFiles([...files, ...newFiles]);
+    const handleFileChange = (event) => {
+        if (!event.target.files.length) return;
+        const selectedFiles = Array.from(event.target.files).filter(
+            (file) => file
+        );
+        setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     };
 
     const handleRemoveFile = (index) => {
-        const updatedFiles = files.filter((_, i) => i !== index);
-        setFiles(updatedFiles);
+        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     };
 
     return (
-        <div className=" p-1  rounded-lg border-3 border-gray-100">
+        <div className="p-1 rounded-lg border-3 border-gray-100">
             <div className="mx-auto bg-white p-2 rounded-lg shadow-md">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-6">
@@ -83,35 +151,31 @@ const CreateTicket = ({ onHide }) => {
                             <label className="font-medium">
                                 Requester Name *
                             </label>
-                            <Dropdown
-                                {...register("requesterName", {
-                                    required: "Requester Name is required",
-                                })}
-                                options={requesters}
-                                optionLabel="label"
-                                placeholder="Select Requester"
-                                className={`w-full items-center h-10 mt-1 ${
-                                    errors.requesterName ? "p-invalid" : ""
-                                }`}
+                            <InputText
+                                value={currentUser?.data?.name || ""}
+                                disabled
+                                className="w-full h-12 mt-1 bg-gray-200"
                             />
-                            {errors.requesterName && (
-                                <small className="p-error">
-                                    {errors.requesterName.message}
-                                </small>
-                            )}
                         </div>
                         <div>
                             <label className="font-medium">Assign Team *</label>
-                            <Dropdown
-                                {...register("assignGroup", {
-                                    required: "Assign Group is required",
-                                })}
-                                options={assignGroups}
-                                optionLabel="label"
-                                placeholder="Select Group"
-                                className={`w-full items-center h-10 mt-1 ${
-                                    errors.assignGroup ? "p-invalid" : ""
-                                }`}
+                            <Controller
+                                name="assignGroup"
+                                control={control}
+                                rules={{ required: "Assign Group is required" }}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={assignGroups}
+                                        optionLabel="label"
+                                        placeholder="Select Group"
+                                        className={`w-full h-12 mt-1 ${
+                                            errors.assignGroup
+                                                ? "p-invalid"
+                                                : ""
+                                        }`}
+                                    />
+                                )}
                             />
                             {errors.assignGroup && (
                                 <small className="p-error">
@@ -121,63 +185,63 @@ const CreateTicket = ({ onHide }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3  gap-4 md:gap-6 mt-4 md:mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-6">
                         <div>
                             <label className="font-medium">Status</label>
-                            <Dropdown
-                                {...register("status", {
-                                    required: "Status is required",
-                                })}
-                                options={status}
-                                optionLabel="label"
-                                placeholder="Select Status"
-                                className={`w-full  h-10 items-center mt-1 ${
-                                    errors.project ? "p-invalid" : ""
-                                }`}
+                            <Controller
+                                name="status"
+                                control={control}
+                                rules={{ required: "Status is required" }}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={status}
+                                        optionLabel="label"
+                                        placeholder="Select Status"
+                                        className={`w-full h-12 mt-1 ${
+                                            errors.status ? "p-invalid" : ""
+                                        }`}
+                                    />
+                                )}
                             />
-                            {errors.project && (
-                                <small className="p-error">
-                                    {errors.project.message}
-                                </small>
-                            )}
                         </div>
                         <div>
                             <label className="font-medium">Type</label>
-                            <Dropdown
-                                {...register("ticketType", {
-                                    required: "Ticket Type is required",
-                                })}
-                                options={ticketTypes}
-                                optionLabel="label"
-                                placeholder="Select Type"
-                                className={`w-full  h-10 items-center mt-1 ${
-                                    errors.ticketType ? "p-invalid" : ""
-                                }`}
+                            <Controller
+                                name="ticketType"
+                                control={control}
+                                rules={{ required: "Ticket Type is required" }}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={ticketTypes}
+                                        optionLabel="label"
+                                        placeholder="Select Type"
+                                        className={`w-full h-12 mt-1 ${
+                                            errors.ticketType ? "p-invalid" : ""
+                                        }`}
+                                    />
+                                )}
                             />
-                            {errors.ticketType && (
-                                <small className="p-error">
-                                    {errors.ticketType.message}
-                                </small>
-                            )}
                         </div>
                         <div>
                             <label className="font-medium">Priority</label>
-                            <Dropdown
-                                {...register("priority", {
-                                    required: "Priority is required",
-                                })}
-                                options={priorities}
-                                optionLabel="label"
-                                placeholder="Select Priority"
-                                className={`w-full h-10 items-center mt-1 ${
-                                    errors.priority ? "p-invalid" : ""
-                                }`}
+                            <Controller
+                                name="priority"
+                                control={control}
+                                rules={{ required: "Priority is required" }}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={priorities}
+                                        optionLabel="label"
+                                        placeholder="Select Priority"
+                                        className={`w-full h-12 mt-1 ${
+                                            errors.priority ? "p-invalid" : ""
+                                        }`}
+                                    />
+                                )}
                             />
-                            {errors.priority && (
-                                <small className="p-error">
-                                    {errors.priority.message}
-                                </small>
-                            )}
                         </div>
                     </div>
 
@@ -187,17 +251,13 @@ const CreateTicket = ({ onHide }) => {
                             {...register("ticketSubject", {
                                 required: "Ticket Subject is required",
                             })}
-                            className={`w-full h-10 items-center mt-2 ${
+                            className={`w-full h-12 mt-2 ${
                                 errors.ticketSubject ? "p-invalid" : ""
                             }`}
                             placeholder="Enter ticket subject"
                         />
-                        {errors.ticketSubject && (
-                            <small className="p-error">
-                                {errors.ticketSubject.message}
-                            </small>
-                        )}
                     </div>
+
                     <div className="mt-4 md:mt-6">
                         <label className="font-medium">Description *</label>
                         <Editor
@@ -207,11 +267,6 @@ const CreateTicket = ({ onHide }) => {
                                 errors.description ? "p-invalid" : ""
                             }`}
                         />
-                        {errors.description && (
-                            <small className="p-error">
-                                Description is required
-                            </small>
-                        )}
                     </div>
 
                     <div className="mt-4 md:mt-6">
@@ -238,28 +293,74 @@ const CreateTicket = ({ onHide }) => {
                             <div className="mt-4">
                                 <div className="flex flex-wrap gap-2">
                                     {files.map((file, index) => {
-                                        const isImage =
-                                            file.type.startsWith("image/");
+                                        if (!file) return null;
+
+                                        const filePath = ticketData
+                                            ? String(file)
+                                            : file?.name ?? "";
+
+                                        const fileExtension = filePath.includes(
+                                            "."
+                                        )
+                                            ? filePath
+                                                  .split(".")
+                                                  .pop()
+                                                  .toLowerCase()
+                                            : "";
+
+                                        const fileName = ticketData
+                                            ? filePath.includes("/")
+                                                ? filePath
+                                                      .split("/")
+                                                      .pop()
+                                                      .split("-")
+                                                      .slice(1)
+                                                      .join("-")
+                                                : filePath
+                                            : filePath;
+
+                                        const isImage = [
+                                            "jpg",
+                                            "jpeg",
+                                            "png",
+                                            "gif",
+                                            "webp",
+                                        ].includes(fileExtension);
+                                        const isPDF = fileExtension === "pdf";
+
                                         return (
                                             <div
                                                 key={index}
-                                                className="relative flex items-center bg-gray-100 p-2 rounded-lg w-full md:w-64"
+                                                className="relative flex items-center bg-gray-100 p-2 rounded-lg w-full border"
                                             >
                                                 {isImage ? (
                                                     <img
-                                                        src={URL.createObjectURL(
-                                                            file
-                                                        )}
-                                                        alt={file.name}
+                                                        src={String(file)}
+                                                        alt={fileName}
                                                         className="w-10 h-10 object-cover rounded-md mr-2"
                                                     />
+                                                ) : isPDF ? (
+                                                    <a
+                                                        href={String(file)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center text-blue-600"
+                                                    >
+                                                        <i className="pi pi-file-pdf text-red-600 flex items-center justify-center rounded-md mr-2"></i>
+                                                        <span className="underline">
+                                                            {fileName}
+                                                        </span>
+                                                    </a>
                                                 ) : (
                                                     <i className="pi pi-file text-gray-500 w-10 h-10 flex items-center justify-center bg-gray-200 rounded-md mr-2"></i>
                                                 )}
 
-                                                <span className="text-sm flex-grow truncate">
-                                                    {file.name}
-                                                </span>
+                                                {isImage ? (
+                                                    <span className="text-sm flex-grow truncate">
+                                                        {fileName}
+                                                    </span>
+                                                ) : null}
+
                                                 <button
                                                     type="button"
                                                     className="absolute right-2 text-gray-500 hover:text-red-700"
@@ -277,7 +378,7 @@ const CreateTicket = ({ onHide }) => {
                         )}
                     </div>
 
-                    <div className="mt-6 flex flex-col md:flex-row gap-4 w-full md:w-55">
+                    <div className="mt-15 flex flex-col md:flex-row gap-4 w-full md:w-55">
                         <Button
                             type="submit"
                             label="Save"

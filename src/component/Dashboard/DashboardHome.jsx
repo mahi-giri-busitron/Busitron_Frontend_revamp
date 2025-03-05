@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 const DashboardHome = () => {
-        const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState(new Date());
 
     const { currentUser } = useSelector((state) => state.user);
     const [tasks, setTasks] = useState([]);

@@ -41,7 +41,7 @@ const statusList = [
     "Deleted",
 ];
 
-const AddTask = ({ setShow, task = null, mode = "add" }) => {
+const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
     const { currentUser } = useSelector((store) => store.user);
 
     const {
@@ -173,6 +173,7 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
 
                 if (response?.data.statusCode === 200) {
                     toast.success("Task updated successfully!");
+                    setShouldReload((prev) => !prev);
                 } else {
                     toast.error("Failed to update task!");
                 }
@@ -188,6 +189,7 @@ const AddTask = ({ setShow, task = null, mode = "add" }) => {
 
                 if (response?.data.statusCode === 201) {
                     toast.success("Task created successfully!");
+                    setShouldReload((prev) => !prev);
                 } else {
                     toast.error("Failed to create task!");
                 }
