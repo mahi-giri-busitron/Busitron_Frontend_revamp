@@ -28,12 +28,38 @@ const Ticket = () => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [ticketsCount, setTicketCount] = useState({
+        Total_Tickets: 0,
+        Open_Tickets: 0,
+        Pending_Tickets: 0,
+        Resolved_Tickets: 0,
+        Closed_Tickets: 0,
+    });
+
+    console.log(ticketsCount);
 
     // Fetch Tickets
     const fetchTickets = useCallback(async () => {
         try {
             const response = await axios.get("/api/v1/ticket/getAllTickets");
             setTickets(response.data.data);
+
+            const counts = {
+                Total_Tickets: response.data.data.length,
+                Open_Tickets: 0,
+                Pending_Tickets: 0,
+                Resolved_Tickets: 0,
+                Closed_Tickets: 0,
+            };
+
+            response.data.data.forEach((each) => {
+                if (each.status === "Open") counts.Open_Tickets++;
+                else if (each.status === "Pending") counts.Pending_Tickets++;
+                else if (each.status === "Resolved") counts.Resolved_Tickets++;
+                else if (each.status === "Closed") counts.Closed_Tickets++;
+            });
+
+            setTicketCount(counts);
         } catch (error) {
             console.error("Error fetching tasks:", error);
         }
@@ -132,11 +158,26 @@ const Ticket = () => {
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                     {[
-                        "Total Tickets",
-                        "Open Tickets",
-                        "Pending Tickets",
-                        "Resolved Tickets",
-                        "Closed Tickets",
+                        {
+                            name: "Total Tickets",
+                            value: ticketsCount?.Total_Tickets || 0,
+                        },
+                        {
+                            name: "Open Tickets",
+                            value: ticketsCount?.Open_Tickets || 0,
+                        },
+                        {
+                            name: "Pending Tickets",
+                            value: ticketsCount?.Pending_Tickets || 0,
+                        },
+                        {
+                            name: "Resolved Tickets",
+                            value: ticketsCount?.Resolved_Tickets || 0,
+                        },
+                        {
+                            name: "Closed Tickets",
+                            value: ticketsCount?.Closed_Tickets || 0,
+                        },
                     ].map((title, index) => (
                         <Card
                             key={index}
@@ -144,10 +185,10 @@ const Ticket = () => {
                         >
                             <div>
                                 <p className="font-bold text-gray-600 ml-3 text-sm mb-6">
-                                    {title}
+                                    {title?.name}
                                 </p>
                                 <p className="text-md font-bold ml-3 text-blue-500">
-                                    0
+                                    {title?.value}
                                 </p>
                             </div>
                         </Card>

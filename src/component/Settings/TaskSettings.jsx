@@ -4,7 +4,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { TabMenu } from "primereact/tabmenu";
-import { Toaster, toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios";
 
 const TaskSettings = () => {
@@ -13,6 +13,7 @@ const TaskSettings = () => {
     const [reminderOnDueDate, setReminderOnDueDate] = useState("NO");
     const [status, setStatus] = useState("To Do");
     const [activeIndex, setActiveIndex] = useState(0);
+    const [reminder, setReminder] = useState("");
 
     const statusOptions = [
         "To Do",
@@ -22,13 +23,18 @@ const TaskSettings = () => {
         "Completed",
     ].map((status) => ({ label: status, value: status }));
 
+    const ReminderOptions = ["YES", "NO"].map((reminder) => ({
+        label: reminder,
+        value: reminder,
+    }));
+
     const items = [{ label: "Task Settings", icon: "pi pi-list-check" }];
 
     const handleSave = async () => {
         const reminderPayload = {
             beforeDueDate: beforeDays,
             afterDueDate: afterDays,
-            sendTaskReminder: reminderOnDueDate,
+            sendTaskReminder: reminder,
             status: status,
         };
 
@@ -37,10 +43,7 @@ const TaskSettings = () => {
                 "http://localhost:5421/api/v1/tasksettings/send-reminder",
                 reminderPayload
             );
-            toast.success("Saved successfully!", {
-                duration: 3000,
-                position: "top-right",
-            });
+            toast.success("Send reminder successfully...");
         } catch (error) {
             toast.error(
                 error.response?.data?.message || "Failed to send your message.",
@@ -54,15 +57,14 @@ const TaskSettings = () => {
 
     return (
         <div className="w-full mx-auto">
-            <Toaster />
             <TabMenu
                 model={items}
                 activeIndex={activeIndex}
                 onTabChange={(e) => setActiveIndex(e.index)}
             />
-            <div className="p-2 rounded-lg shadow-md bg-white">
+            <div className="p-4 rounded-lg shadow-md bg-white">
                 <h3 className="text-lg font-medium">Send Reminder</h3>
-                <div className="flex justify-between">
+                <div className="grid grid-cols-2 gap-4 mt-4">
                     <div>
                         <label>
                             Send task reminder before X days of due date
@@ -74,27 +76,6 @@ const TaskSettings = () => {
                         />
                     </div>
                     <div>
-                        <label>Send task reminder on the day of due date</label>
-                        <div className="flex gap-4">
-                            <RadioButton
-                                inputId="yes"
-                                name="reminder"
-                                value="YES"
-                                onChange={() => setReminderOnDueDate("YES")}
-                                checked={reminderOnDueDate === "YES"}
-                            />
-                            <label htmlFor="yes">Yes</label>
-                            <RadioButton
-                                inputId="no"
-                                name="reminder"
-                                value="NO"
-                                onChange={() => setReminderOnDueDate("NO")}
-                                checked={reminderOnDueDate === "NO"}
-                            />
-                            <label htmlFor="no">No</label>
-                        </div>
-                    </div>
-                    <div>
                         <label>
                             Send task reminder after X days of due date
                         </label>
@@ -104,16 +85,25 @@ const TaskSettings = () => {
                             className="w-full"
                         />
                     </div>
-                </div>
-                <div className="pt-5">
-                    <label>Select Task Status</label>
-                    <Dropdown
-                        value={status}
-                        options={statusOptions}
-                        onChange={(e) => setStatus(e.value)}
-                        placeholder="Select a Status"
-                        className="w-full mt-2"
-                    />
+                    <div>
+                        <label>Select Task Status</label>
+                        <Dropdown
+                            value={status}
+                            options={statusOptions}
+                            onChange={(e) => setStatus(e.value)}
+                            className="w-full mt-2"
+                        />
+                    </div>
+                    <div>
+                        <label>Are you sure want to send the mail ?</label>
+                        <Dropdown
+                            value={reminder}
+                            options={ReminderOptions}
+                            onChange={(e) => setReminder(e.value)}
+                            placeholder="Select"
+                            className="w-full mt-2"
+                        />
+                    </div>
                 </div>
                 <div className="pt-5">
                     <Button
