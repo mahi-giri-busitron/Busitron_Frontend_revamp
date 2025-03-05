@@ -363,12 +363,12 @@ const CreateTicket = ({ onHide, ticketData }) => {
 
                                                 <button
                                                     type="button"
-                                                    className="absolute right-2 text-gray-500 hover:text-red-700"
+                                                    className="absolute right-2 text-gray-500 cursor-pointer hover:text-red-500"
                                                     onClick={() =>
                                                         handleRemoveFile(index)
                                                     }
                                                 >
-                                                    <i className="pi pi-times bg-amber-100 px-2"></i>
+                                                    <i className="pi pi-times px-2"></i>
                                                 </button>
                                             </div>
                                         );
