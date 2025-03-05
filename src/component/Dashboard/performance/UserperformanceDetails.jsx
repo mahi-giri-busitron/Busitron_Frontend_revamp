@@ -15,6 +15,7 @@ const UserPerformanceDetails = () => {
             const apiResponse = await axios.get(
                 `/api/v1/performanceTracking/getParticularUserTask/${empid}`
             );
+            console.log(apiResponse.data.data)
 
             setData(apiResponse.data.data);
         } catch (err) {
@@ -25,17 +26,19 @@ const UserPerformanceDetails = () => {
         getParticularUserTask();
     }, []);
     const chartData = {
-        labels: ["Completed", "Pending", "Overdue", "In Progress"],
+        labels: ["To Do", "Completed", "Pending", "Overdue", "In Progress"],
         datasets: [
             {
                 data: [
+                    data?.todo,
                     data?.completedTasks,
                     data?.pendingTasks,
                     data?.dueTasks,
                     data?.["In Progress"],
                 ],
-                backgroundColor: ["#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
+                backgroundColor: ["#abf7b1","#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
                 hoverBackgroundColor: [
+                    "#39e75f",
                     "#10B981",
                     "#F59E0B",
                     "#DC2626",
@@ -62,6 +65,12 @@ const UserPerformanceDetails = () => {
                             <h3 className="text-xl font-bold">Total Tasks</h3>
                             <p className="text-2xl font-semibold text-gray-700">
                                 {data?.totalTasks}
+                            </p>
+                        </Card>
+                        <Card className="pl-4 shadow-md mt-4">
+                            <h3 className="text-xl font-bold">To Do</h3>
+                            <p className="text-2xl font-semibold text-green-600">
+                                {data?.todo}
                             </p>
                         </Card>
                         <Card className="pl-4 shadow-md mt-4">
@@ -97,6 +106,12 @@ const UserPerformanceDetails = () => {
                         <h3 className="text-xl font-bold">Total Tasks</h3>
                         <p className="text-2xl font-semibold text-gray-700">
                             {data?.totalTasks}
+                        </p>
+                    </Card>
+                    <Card className="shadow-md">
+                        <h3 className="text-xl font-bold">To Do</h3>
+                        <p className="text-2xl font-semibold text-green-600">
+                            {data?.todo}
                         </p>
                     </Card>
                     <Card className="shadow-md">

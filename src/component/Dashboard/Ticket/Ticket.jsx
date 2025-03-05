@@ -19,9 +19,9 @@ import axios from "axios";
 import { debounce } from "lodash";
 import DeleteModal from "../../../shared/DeleteModal";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Ticket = () => {
-    const menuRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [tickets, setTickets] = useState([]);
     const [showCreateTicketModal, setShowCreateTicketModal] = useState(false);
@@ -36,7 +36,7 @@ const Ticket = () => {
         Closed_Tickets: 0,
     });
 
-    console.log(ticketsCount);
+    const navigate = useNavigate();
 
     // Fetch Tickets
     const fetchTickets = useCallback(async () => {
@@ -250,7 +250,17 @@ const Ticket = () => {
                             header="Action"
                             body={(rowData) => (
                                 <div className="flex gap-3 items-center">
-                                    <button>
+                                    <button
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                            navigate(
+                                                `/dashboard/ticket/${rowData._id}`,
+                                                {
+                                                    state: rowData,
+                                                }
+                                            )
+                                        }
+                                    >
                                         <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
                                     </button>
                                     <button

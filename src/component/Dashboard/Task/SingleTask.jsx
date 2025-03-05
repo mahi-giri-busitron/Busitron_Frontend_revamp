@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
@@ -21,13 +21,11 @@ const IssueDetails = () => {
     const location = useLocation();
     const taskData = location.state;
 
-    console.log(taskData);
-    
-
-    const onSelect = (event) => {
-        const newFiles = event.files;
-        setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    };
+    useEffect(() => {
+        if (taskData) {
+            setUploadedFiles(taskData?.attachments);
+        }
+    }, []);
 
     const items = [
         { label: "Comments", icon: "pi pi-comments" },
@@ -105,17 +103,6 @@ const IssueDetails = () => {
                     </h1>
 
                     <div className="flex flex-wrap gap-3 mt-3 items-center ">
-                        <FileUpload
-                            mode="basic"
-                            chooseLabel="Attach"
-                            customUpload={false}
-                            auto
-                            multiple
-                            maxFileSize={1000000}
-                            onSelect={onSelect}
-                            className="p-button-secondary p-button-sm "
-                        />
-
                         {uploadedFiles.length > 0 && (
                             <Button
                                 label={`View Attachments (${uploadedFiles.length})`}
@@ -151,7 +138,7 @@ const IssueDetails = () => {
                                 activeIndex={activeIndex}
                                 onTabChange={(e) => setActiveIndex(e.index)}
                                 className="mt-2 w-full md:w-auto text-xs"
-                                style={{ overflowX: "auto" }} // Prevents overflow on smaller screens
+                                style={{ overflowX: "auto" }}
                             />
                         </div>
                         <div className="mt-4 rounded-lg  bg-white shadow-md ">
@@ -200,29 +187,78 @@ const IssueDetails = () => {
                 header="Uploaded Files"
                 visible={isDialogVisible}
                 onHide={() => setDialogVisible(false)}
-                className="w-full max-w-lg"
+                className="w-full max-w-2xl"
             >
                 {uploadedFiles.length > 0 ? (
-                    <ScrollPanel style={{ height: "300px" }}>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-2">
-                            {uploadedFiles.map((file, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col items-center bg-gray-100 p-2 rounded-lg shadow-md"
-                                >
-                                    <img
-                                        src={URL.createObjectURL(file)}
-                                        alt={file.name}
-                                        className="w-24 h-24 object-cover rounded-md mb-2"
-                                    />
-                                    <strong className="text-sm text-gray-700 text-center">
-                                        {file.name}
-                                    </strong>
-                                    <span className="text-xs text-gray-500">
-                                        {(file.size / 1024).toFixed(2)} KB
-                                    </span>
-                                </div>
-                            ))}
+                    <ScrollPanel style={{ height: "500px" }}>
+                        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 p-2">
+                            {uploadedFiles.map((file, index) => {
+                                if (!file) return null;
+
+                                console.log(file);
+
+                                const fileExtension = file.includes(".")
+                                    ? file.split(".").pop().toLowerCase()
+                                    : "";
+
+                                const isImage = [
+                                    "jpg",
+                                    "jpeg",
+                                    "png",
+                                    "gif",
+                                    "webp",
+                                ].includes(fileExtension);
+                                const isPDF = fileExtension === "pdf";
+
+                                const fileName = file
+                                    .split("/")
+                                    .pop()
+                                    .split("-")
+                                    .slice(1)
+                                    .join("-");
+                                console.log(fileName);
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className="flex flex-col items-center bg-gray-100 p-2 rounded-lg shadow-md"
+                                    >
+                                        {isImage ? (
+                                            <a href={file}>
+                                                <div className="flex flex-col justify-center items-center">
+                                                    <img
+                                                        src={file}
+                                                        alt={file
+                                                            .split("/")
+                                                            .pop()
+                                                            .split("-")
+                                                            .slice(1)
+                                                            .join("-")}
+                                                        className="w-24 h-24 object-cover rounded-md mb-2"
+                                                    />
+                                                    <span className="text-center text-black">
+                                                        {fileName}
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        ) : isPDF ? (
+                                            <a
+                                                href={String(file)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center text-blue-600"
+                                            >
+                                                <i className="pi pi-file-pdf text-red-600 flex items-center justify-center rounded-md mr-2"></i>
+                                                <span className="underline">
+                                                    {fileName}
+                                                </span>
+                                            </a>
+                                        ) : (
+                                            <i className="pi pi-file text-gray-500 w-10 h-10 flex items-center justify-center bg-gray-200 rounded-md mr-2"></i>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </ScrollPanel>
                 ) : (

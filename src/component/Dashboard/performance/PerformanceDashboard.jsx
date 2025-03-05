@@ -7,17 +7,19 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PerformanceDashboard = ({ tasks }) => {
     const chartData = {
-        labels: ["Completed", "Pending", "Overdue", "In Progress"],
+        labels: ["To Do", "Completed", "Pending", "Overdue", "In Progress"],
         datasets: [
             {
                 data: [
+                    tasks?.["To Do"],
                     tasks?.["Completed"],
                     tasks?.["Pending"],
                     tasks?.["overdue"],
                     tasks?.["In Progress"],
                 ],
-                backgroundColor: ["#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
+                backgroundColor: ["#abf7b1", "#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
                 hoverBackgroundColor: [
+                    "#39e75f",
                     "#10B981",
                     "#F59E0B",
                     "#DC2626",
@@ -43,6 +45,12 @@ const PerformanceDashboard = ({ tasks }) => {
                     <h3 className="text-xl font-bold">Total Tasks</h3>
                     <p className="text-2xl font-semibold text-gray-700">
                         {tasks?.totalTasks}
+                    </p>
+                </Card>
+                <Card className="shadow-md">
+                    <h3 className="text-xl font-bold">To Do</h3>
+                    <p className="text-2xl font-semibold text-green-600">
+                        {tasks?.["To Do"]}
                     </p>
                 </Card>
                 <Card className="shadow-md">
@@ -76,6 +84,13 @@ const PerformanceDashboard = ({ tasks }) => {
                         <h3 className="text-xl font-bold">Total Tasks</h3>
                         <p className="text-2xl font-semibold text-gray-700">
                             {tasks?.["totalTasks"]}
+                        </p>
+                    </Card>
+
+                    <Card className="pl-4 shadow-md mt-4">
+                        <h3 className="text-xl font-bold">To Do</h3>
+                        <p className="text-2xl font-semibold text-green-600">
+                            {tasks?.["To Do"]}
                         </p>
                     </Card>
                     <Card className="pl-4 shadow-md mt-4">
