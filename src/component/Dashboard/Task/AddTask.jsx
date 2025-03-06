@@ -218,7 +218,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Title */}
                 <div>
-                    <label>Task Title</label>
+                    <label>
+                        Task Title <span className="text-red-500"> *</span>
+                    </label>
                     <InputText
                         {...register("title", {
                             required: "Title is required",
@@ -233,7 +235,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                 </div>
                 {/* Task Category */}
                 <div>
-                    <label>Task Category</label>
+                    <label>
+                        Task Category <span className="text-red-500"> *</span>
+                    </label>
                     <Controller
                         name="taskCategory"
                         control={control}
@@ -256,7 +260,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                 {/* Dates */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label>Start Date</label>
+                        <label>
+                            Start Date <span className="text-red-500"> *</span>
+                        </label>
                         <Controller
                             name="startDate"
                             control={control}
@@ -278,7 +284,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                     </div>
 
                     <div>
-                        <label>Due Date</label>
+                        <label>
+                            Due Date <span className="text-red-500"> *</span>
+                        </label>
                         <Controller
                             name="dueDate"
                             control={control}
@@ -301,7 +309,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                 </div>
                 {/* Assigned To */}
                 <div>
-                    <label>Assigned To</label>
+                    <label>
+                        Assigned To <span className="text-red-500"> *</span>
+                    </label>
                     <Controller
                         name="assignedTo"
                         control={control}

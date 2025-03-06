@@ -65,8 +65,12 @@ const Task = () => {
 
     useEffect(() => {
         setFilteredTasks(
-            tasks.filter((task) =>
-                task.title.toLowerCase().includes(taskName.toLowerCase())
+            tasks.filter(
+                (task) =>
+                    task.title.toLowerCase().includes(taskName.toLowerCase()) ||
+                    task.assignedTo?.name
+                        .toLowerCase()
+                        .includes(taskName.toLowerCase())
             )
         );
     }, [taskName, tasks]);
@@ -181,8 +185,39 @@ const Task = () => {
                     removableSort
                     tableStyle={{ minWidth: "60rem" }}
                 >
-                    <Column field="taskID" header="Task" sortable />
-                    <Column field="title" header="Task" />
+                    <Column
+                        field="taskID"
+                        header="Task Id"
+                        sortable
+                        body={(rowData) => (
+                            <h1
+                                className="hover:text-blue-600 cursor-pointer "
+                                onClick={() => {
+                                    navigate(`/dashboard/task/${rowData._id}`, {
+                                        state: rowData,
+                                    });
+                                }}
+                            >
+                                {rowData.taskID}
+                            </h1>
+                        )}
+                    />
+                    <Column
+                        field="title"
+                        header="Task"
+                        body={(rowData) => (
+                            <h1
+                                className="hover:text-blue-600 cursor-pointer "
+                                onClick={() => {
+                                    navigate(`/dashboard/task/${rowData._id}`, {
+                                        state: rowData,
+                                    });
+                                }}
+                            >
+                                {rowData.title}
+                            </h1>
+                        )}
+                    />
                     <Column field="assignedTo.name" header="Assigned To" />
                     <Column field="assignedBy.name" header="Assigned By" />
                     <Column field="startDate" header="Start Date" />
