@@ -8,6 +8,7 @@ import { Divider } from "primereact/divider";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
     const {
@@ -20,6 +21,7 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
 
     const [description, setDescription] = useState("");
     const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const { currentUser } = useSelector((store) => store?.user);
 
@@ -87,6 +89,7 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
 
         try {
             if (!ticketData) {
+                setLoading(true);
                 const response = await axios.post(
                     "/api/v1/ticket/createTicket",
                     formData,
@@ -96,12 +99,15 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                 );
 
                 if (response?.data?.statusCode === 201) {
+                    setLoading(false);
                     toast.success(response.data.message);
                     setShouldReload((prev) => !prev);
                 } else {
+                    setLoading(false);
                     toast.error("Failed to create ticket");
                 }
             } else {
+                setLoading(true);
                 const response = await axios.put(
                     `/api/v1/ticket/${ticketData._id}`,
                     formData,
@@ -111,9 +117,11 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                 );
 
                 if (response?.data?.statusCode === 200) {
+                    setLoading(false);
                     toast.success(response.data.message);
                     setShouldReload((prev) => !prev);
                 } else {
+                    setLoading(false);
                     toast.error("Failed to update ticket");
                 }
             }
@@ -153,7 +161,8 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6 items-center">
                         <div>
                             <label className="font-medium">
-                                Requester Name *
+                                Requester Name
+                                <span className="text-red-500"> *</span>
                             </label>
                             <InputText
                                 value={
@@ -166,7 +175,10 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                             />
                         </div>
                         <div>
-                            <label className="font-medium">Assign Team *</label>
+                            <label className="font-medium">
+                                Assign Team
+                                <span className="text-red-500"> *</span>
+                            </label>
                             <Controller
                                 name="assignGroup"
                                 control={control}
@@ -199,7 +211,6 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                             <Controller
                                 name="status"
                                 control={control}
-                                rules={{ required: "Status is required" }}
                                 render={({ field }) => (
                                     <Dropdown
                                         {...field}
@@ -214,7 +225,10 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                             />
                         </div>
                         <div>
-                            <label className="font-medium">Type</label>
+                            <label className="font-medium">
+                                Type
+                                <span className="text-red-500"> *</span>
+                            </label>
                             <Controller
                                 name="ticketType"
                                 control={control}
@@ -231,13 +245,17 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                                     />
                                 )}
                             />
+                            {errors.ticketType && (
+                                <small className="p-error">
+                                    {errors.ticketType.message}
+                                </small>
+                            )}
                         </div>
                         <div>
                             <label className="font-medium">Priority</label>
                             <Controller
                                 name="priority"
                                 control={control}
-                                rules={{ required: "Priority is required" }}
                                 render={({ field }) => (
                                     <Dropdown
                                         {...field}
@@ -254,7 +272,10 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                     </div>
 
                     <div className="mt-4 md:mt-6">
-                        <label className="font-medium">Ticket Subject *</label>
+                        <label className="font-medium">
+                            Ticket Subject
+                            <span className="text-red-500"> *</span>
+                        </label>
                         <InputText
                             {...register("ticketSubject", {
                                 required: "Ticket Subject is required",
@@ -264,10 +285,18 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                             }`}
                             placeholder="Enter ticket subject"
                         />
+                        {errors.ticketSubject && (
+                            <p className="text-red-400 text-sm my-1 p-0">
+                                {errors.ticketSubject.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="mt-4 md:mt-6">
-                        <label className="font-medium">Description *</label>
+                        <label className="font-medium">
+                            Description
+                            <span className="text-red-500"> *</span>
+                        </label>
                         <Editor
                             value={description}
                             onTextChange={(e) => setDescription(e.htmlValue)}
@@ -387,21 +416,35 @@ const CreateTicket = ({ onHide, ticketData, setShouldReload }) => {
                     </div>
 
                     <div className="mt-15 flex flex-col md:flex-row gap-4 w-full md:w-55">
-                        <Button
-                            type="submit"
-                            label="Save"
-                            size="small"
-                            icon="pi pi-check"
-                            className="p-2 px-4 text-white bg-blue-600 text-sm w-full md:w-auto  h-10"
-                        />
-                        <Button
-                            label="Cancel"
-                            severity="secondary"
-                            outlined
-                            size="small"
-                            className="p-2 px-4 text-gray-600 text-sm w-full md:w-auto  h-10"
-                            onClick={onHide}
-                        />
+                        {loading ? (
+                            <ProgressSpinner
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                }}
+                                strokeWidth="8"
+                                fill="var(--surface-ground)"
+                                animationDuration=".5s"
+                            />
+                        ) : (
+                            <>
+                                <Button
+                                    type="submit"
+                                    label="Save"
+                                    size="small"
+                                    icon="pi pi-check"
+                                    className="p-2 px-4 text-white bg-blue-600 text-sm w-full md:w-auto  h-10"
+                                />
+                                <Button
+                                    label="Cancel"
+                                    severity="secondary"
+                                    outlined
+                                    size="small"
+                                    className="p-2 px-4 text-gray-600 text-sm w-full md:w-auto  h-10"
+                                    onClick={onHide}
+                                />
+                            </>
+                        )}
                     </div>
                 </form>
             </div>

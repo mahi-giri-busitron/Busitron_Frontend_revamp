@@ -7,7 +7,7 @@ import "primeicons/primeicons.css";
 import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
-    
+
 const InviteMemberModal = (props) => {
     const { visible = false, setVisible } = props;
     const [loading, setLoading] = useState(false);

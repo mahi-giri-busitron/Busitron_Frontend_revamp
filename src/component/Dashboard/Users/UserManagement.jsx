@@ -7,6 +7,8 @@ import InviteMemberModal from "../Navigation/InviteMember.jsx";
 import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 import {
     changeToPrevIsDeleted,
     deactivateUser,
@@ -19,7 +21,7 @@ function User_Management() {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [selectedRowData, setSelectedRowData] = useState();
-
+    const [searchName, setSearchName] = useState("");
     const [filters, setFilters] = useState({
         dateRange: null,
         clientType: null,
@@ -44,7 +46,7 @@ function User_Management() {
     };
 
     const dispatch = useDispatch();
-    const { users, isUpdated } = useSelector((state) => (state.userManagement));
+    const { users, isUpdated } = useSelector((state) => state.userManagement);
     useEffect(() => {
         dispatch(fetchAllUser());
     }, [dispatch]);
@@ -76,33 +78,32 @@ function User_Management() {
                 <Button
                     label="Add User"
                     icon="pi pi-plus"
-                    className="p-button-primary"
+                    className="p-button-primary h-10"
+                    size="small"
                     onClick={() => {
                         setVisible(true);
                     }}
                 />
-                <div className="w-full md:w-72">
-                    <div className="p-inputgroup flex-1 h-9">
-                        <span className="p-inputgroup-addon cursor-pointer">
-                            <i className="pi pi-search"></i>
-                        </span>
-                        <InputText
-                            type="search"
-                            placeholder="Start Searching...."
-                            value={filters.search}
-                            onChange={(e) =>
-                                setFilters({
-                                    ...filters,
-                                    search: e.target.value,
-                                })
-                            }
-                        />
+                <div className=" ">
+                    <div className="w-full md:w-100 ">
+                        <IconField iconPosition="left" className="h-10 w-full">
+                            <InputIcon className="pi pi-search h-10" />
+                            <InputText
+                                placeholder="Search"
+                                className="h-10 w-full "
+                                onChange={(e) => setSearchName(e.target.value)}
+                            />
+                        </IconField>
                     </div>
                 </div>
             </div>
 
             <DataTable
-                value={clients}
+                value={clients.filter((each) =>
+                    each.name
+                        ?.toLowerCase()
+                        .includes(searchName.toLocaleLowerCase())
+                )}
                 emptyMessage="No data available in table"
                 paginator
                 rows={10}
@@ -155,43 +156,31 @@ function User_Management() {
                 <Column
                     header="Action"
                     body={(rowData) => (
-                        <>
-                            <Button
-                                icon="pi pi-ellipsis-h"
-                                className="p-button-text"
-                                onClick={(e) => {
-                                    actionPanel.current.toggle(e);
-                                    setSelectedRowData(rowData);
+                        <div className="flex gap-3 items-center">
+                            <button
+                                className=""
+                                onClick={() =>
+                                    navigate(
+                                        `/dashboard/user-management/emp/${rowData._id}`
+                                    )
+                                }
+                            >
+                                <i className="pi pi-eye text-blue-500 cursor-pointer transition-transform transform hover:scale-110"></i>
+                            </button>
+                            <button
+                                onClick={() => {
+                                    dispatch(
+                                        deactivateUser({
+                                            id: rowData._id,
+                                            isActiveUser: rowData?.isActive,
+                                        })
+                                    );
                                 }}
-                            />
-                            <OverlayPanel ref={actionPanel} className="p-0">
-                                <div className="custom-listbox">
-                                    {actions.map((action, index) => (
-                                        <div
-                                            key={index}
-                                            className={`hover:text-blue-600 cursor-pointer custom-listbox-item ${
-                                                index !== actions.length - 1
-                                                    ? "border-b "
-                                                    : "pb-0"
-                                            } p-2`}
-                                            onClick={() => {
-                                                dispatch(
-                                                    deactivateUser({
-                                                        id: selectedRowData._id,
-                                                        isActiveUser:
-                                                            selectedRowData?.isActive,
-                                                    })
-                                                );
-                                            }}
-                                        >
-                                            {action}
-                                        </div>
-                                    ))}
-                                </div>
-                            </OverlayPanel>
-                        </>
+                            >
+                                <i className="pi pi-trash text-red-500 cursor-pointer transition-transform transform hover:scale-110"></i>
+                            </button>
+                        </div>
                     )}
-                    style={{ width: "100px" }}
                 />
             </DataTable>
             <InviteMemberModal visible={visible} setVisible={setVisible} />

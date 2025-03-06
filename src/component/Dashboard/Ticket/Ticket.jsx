@@ -146,7 +146,15 @@ const Ticket = () => {
         const truncatedText = truncateText(cleanedText, 20);
 
         return (
-            <span className="truncate cursor-pointer" title={cleanedText}>
+            <span
+                className="truncate cursor-pointer hover:text-blue-600"
+                onClick={() => {
+                    navigate(`/dashboard/ticket/${rowData._id}`, {
+                        state: rowData,
+                    });
+                }}
+                title={cleanedText}
+            >
                 {truncatedText}
             </span>
         );
@@ -271,8 +279,21 @@ const Ticket = () => {
                         <Column
                             field="ticketID"
                             header="Ticket No"
-                            body={({ ticketID }) => (
-                                <span title={ticketID}>{ticketID}</span>
+                            className="cursor-pointer hover:text-blue-600"
+                            body={(rowData) => (
+                                <span
+                                    title={rowData.ticketID}
+                                    onClick={() => {
+                                        navigate(
+                                            `/dashboard/ticket/${rowData._id}`,
+                                            {
+                                                state: rowData,
+                                            }
+                                        );
+                                    }}
+                                >
+                                    {rowData?.ticketID}
+                                </span>
                             )}
                         />
                         <Column
