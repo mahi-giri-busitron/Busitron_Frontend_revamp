@@ -5,14 +5,16 @@ import userSlice from "./userSlice.js";
 import themeSlice from "./themeSlice.js";
 import companySlice from "./companySlice.js";
 import appSettingSlice from "./appSettingSlice.js";
-import userManagementSlice from "./userManagementSlice.js"
+import userManagementSlice from "./userManagementSlice.js";
+import estimateSlice from "./estimateSlice.js"
 
 const rootReducer = combineReducers({
     user: userSlice,
     company: companySlice,
     theme: themeSlice,
     appSetting: appSettingSlice,
-    userManagement: userManagementSlice
+    userManagement: userManagementSlice,
+    estimate : estimateSlice
 });
 
 const persistConfig = {

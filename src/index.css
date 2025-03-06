@@ -130,6 +130,27 @@ body {
     padding: 0.2rem;
 }
 
+/* Tool tip */
+
+.global-tooltip {
+    font-size: 14px !important;
+    padding: 4px 8px !important;
+}
+    
+.global-tooltip .p-tooltip-arrow {
+    width: 6px !important;
+    height: 6px !important;
+}
+    
+.global-tooltip .p-tooltip-text {
+    font-size: 14px !important;
+    line-height: 1.02 !important;
+}
+
+.font-size-error{
+    font-size: 14px !important;
+}
+
 /* scrollbar   */
 
 ::-webkit-scrollbar {
