@@ -3,6 +3,7 @@ import { Sidebar } from "primereact/sidebar";
 import SideNavigation from "./SideNavigation.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import GetDashBoardHeader from "./TopNavContacts.jsx";
 
 const TopNavBar = (props) => {
     const [activePath, setActivePath] = useState("");
@@ -47,7 +48,9 @@ const TopNavBar = (props) => {
                         onClick={() => setVisible(true)}
                     ></i>
                 </div>
-                <h2 className="text-2xl font-semibold">Dashboard</h2>
+                <h2 className="text-2xl font-semibold">
+                    <GetDashBoardHeader activePath={activePath} />
+                </h2>
             </div>
             <div
                 className="flex items-center gap-5 rounded-full pr-4 pl-5 py-2 relative"
@@ -88,14 +91,25 @@ const TopNavBar = (props) => {
                     )}
                 </div>
             </div>
-            <Sidebar visible={visible} onHide={() => setVisible(false)}>
-                <SideNavigation
-                    activeTab={activePath}
-                    setActiveTab={setActiveTab}
-                    maximizeSideBar={maximizeSideBar}
-                    setMaximizeSideBar={setMaximizeSideBar}
-                />
-            </Sidebar>
+            <Sidebar
+                visible={visible}
+                onHide={() => setVisible(false)}
+                content={() => (
+                    <div className="relative h-full pr-1">
+                        <i
+                            className=" absolute top-2 right-2 text-right pi pi-times-circle text-xl cursor-pointer hover:text-blue-600"
+                            onClick={() => setVisible(false)}
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                        <SideNavigation
+                            activeTab={activePath}
+                            setActiveTab={setActiveTab}
+                            maximizeSideBar={maximizeSideBar}
+                            setMaximizeSideBar={setMaximizeSideBar}
+                        />
+                    </div>
+                )}
+            ></Sidebar>
         </div>
     );
 };

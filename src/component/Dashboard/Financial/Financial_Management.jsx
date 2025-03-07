@@ -86,7 +86,7 @@ const Financial_Management = () => {
     };
 
     const modifyCurrency = (rowData) => {
-        return `${rowData.currency === "USD" ? "$" : "₹"} ${rowData.summary.finalAmount}`;
+        return `${rowData.currency === "USD" ? "$" : "₹"} ${rowData.summary?.finalAmount}`;
     };
 
     async function handleDelete()
