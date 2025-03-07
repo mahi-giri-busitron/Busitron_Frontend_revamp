@@ -17,12 +17,26 @@ export const getALlEstimates = createAsyncThunk(
     }
 );
 
+export const getSingleEstimate = createAsyncThunk("singleEstimate/get", async(id,{rejectWithValue})=>{
+    try {
+        const res = await axios.get(`/api/v1/estimates/get/${id}`);
+        // console.log("res", res.data.data);
+        return res?.data?.data;
+    } catch (error) {
+        return rejectWithValue(
+            error.response?.data?.message || "Get Estimate Data failed"
+        );
+    }
+})
+
 
 let estimateSlice = createSlice({
     name : "estimate",
     initialState : {
         isLoading: false,
         allEstimateData: null,
+        singleEstimateData : null,
+        isSingleLoading : false,
     },
     reducers : {},
     extraReducers : (builder) =>{
@@ -33,10 +47,17 @@ let estimateSlice = createSlice({
         builder.addCase(getALlEstimates.fulfilled, (state, action)=>{
             state.allEstimateData = action.payload;
             state.isLoading = false;
+        });
+
+        builder.addCase(getSingleEstimate.pending, (state, action) => {
+            state.isSingleLoading = true;
+        });
+
+        builder.addCase(getSingleEstimate.fulfilled, (state, action)=>{
+            state.singleEstimateData = action.payload;
+            state.isSingleLoading = false;
         })
     }
 });
-
-// export const {} = estimateSlice.actions;
 
 export default estimateSlice.reducer;
