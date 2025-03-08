@@ -26,55 +26,66 @@ const SingleEstimate = () => {
         dispatch(getSingleEstimate(estimateId));
     }, [estimateId]);
 
-    const skeletonTemplate = () => <Skeleton />;
-
     if (isSingleLoading) {
         return (
-            <div className="card mx-5 my-4">
-                <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
-                    <div className="flex gap-2">
-                        <Skeleton width="150px" height="40px" />
-                    </div>
-                    <div className="w-full md:w-100">
-                        <Skeleton width="100%" height="40px" />
+            <div className="p-4 h-full text-start">
+                <div className="mx-auto">
+                    <div className="space-y-6">
+                        <Card className="shadow-lg">
+                            <div className="px-4 py-4 flex flex-col md:flex-row gap-6">
+                                <div
+                                    className="w-full md:w-1/2 overflow-y-auto"
+                                    style={{ maxHeight: "70vh" }}
+                                >
+                                    <div className="flex flex-wrap gap-3 mt-3 mb-8 items-center"></div>
+                                    <div className="mb-8">
+                                        <h2 className="text-lg font-bold text-gray-600 mb-2">
+                                            Estimate Subject
+                                        </h2>
+                                        <div className="p-4 bg-gray-50 rounded">
+                                            <Skeleton height="3rem" />
+                                        </div>
+                                    </div>
+                                    <div className="mb-6">
+                                        <h2 className="text-lg font-bold text-gray-600 mb-2">
+                                            Description
+                                        </h2>
+                                        <div className="p-4 bg-gray-50 rounded">
+                                            <Skeleton height="3rem" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    className="w-full md:w-1/2 overflow-y-auto  "
+                                    style={{ maxHeight: "" }}
+                                >
+                                    <div className="">
+                                        <DataTable value={Array(5).fill({})}>
+                                            <Column
+                                                field="designation"
+                                                header="Ticket Details"
+                                                body={() => (
+                                                    <Skeleton height="3rem" />
+                                                )}
+                                            />
+                                        </DataTable>
+                                    </div>
+                                    <div className="  mt-3">
+                                        <DataTable value={Array(2).fill({})}>
+                                            <Column
+                                                field="designation"
+                                                header="Dates"
+                                                body={() => (
+                                                    <Skeleton height="3rem" />
+                                                )}
+                                            />
+                                        </DataTable>{" "}
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
                     </div>
                 </div>
-                <DataTable
-                    value={Array.from({ length: 10 })}
-                    className="p-datatable-striped"
-                >
-                    <Column
-                        field="estimateNumber"
-                        header="Estimate No"
-                        body={skeletonTemplate}
-                    />
-                    <Column
-                        field="clientId.name"
-                        header="Client"
-                        body={skeletonTemplate}
-                    />
-                    <Column
-                        field="Total"
-                        header="Total"
-                        body={skeletonTemplate}
-                    />
-                    <Column
-                        field="validTill"
-                        header="Valid Till"
-                        body={skeletonTemplate}
-                    />
-                    <Column
-                        field="userId.name"
-                        header="Created By"
-                        body={skeletonTemplate}
-                    />
-                    <Column
-                        field="status"
-                        header="Status"
-                        body={skeletonTemplate}
-                    />
-                    <Column header="Action" body={skeletonTemplate} />
-                </DataTable>
             </div>
         );
     }
