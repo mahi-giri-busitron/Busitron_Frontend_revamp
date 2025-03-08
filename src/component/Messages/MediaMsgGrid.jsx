@@ -46,8 +46,8 @@ export default function MediaMsgGrid({ media, incoming }) {
                     />
                 </div>
             ));
-        } else if (media?.length === 3) {
-            return media.slice(0, 3).map((item, index) => (
+        } else if (media?.length === 3 || media?.length === 4) {
+            return media.slice(0, 4).map((item, index) => (
                 <div
                     key={item._id}
                     className="col-span-1 row-span-1 relative rounded-2xl"
@@ -66,7 +66,7 @@ export default function MediaMsgGrid({ media, incoming }) {
                     {media?.slice(0, 3).map((item, index) => (
                         <div
                             key={item._id}
-                            className="col-span-1 row-span-1 relative rounded-2xl "
+                            className="col-span-1 row-span-1 relative rounded-2xl"
                         >
                             <MediaItem
                                 media={item}
@@ -78,14 +78,30 @@ export default function MediaMsgGrid({ media, incoming }) {
                     ))}
                     <div
                         onClick={() => openLightbox(3)}
-                        className="relative rounded-2xl bg-gray-400 bg-body/50 flex flex-row items-center justify-center text-xl text-white font-semibold cursor-pointer"
+                        className="relative col-span-1 row-span-1 rounded-2xl cursor-pointer"
                     >
-                        <div>+{media?.length - 3}</div>
+                        {media[3].type === "video" ? (
+                            <video
+                                src={media[3].url}
+                                className="h-full w-full max-h-36 rounded-lg object-cover opacity-35 brightness-75"
+                                muted
+                                autoPlay={false}
+                            />
+                        ) : (
+                            <img
+                                src={media[3].url}
+                                className="h-full w-full max-h-36 rounded-lg object-cover opacity-35 brightness-75"
+                            />
+                        )}
+                        <div className="absolute inset-0 flex items-center justify-center text-xl text-white font-semibold">
+                            +{media?.length - 4}
+                        </div>
                     </div>
                 </>
             );
         }
     };
+
     return (
         <div
             className={`grid grid-cols-2 grid-rows-2 pt-4 pb-2 gap-3 rounded-2xl rounded-tl-none ${
@@ -124,6 +140,7 @@ export default function MediaMsgGrid({ media, incoming }) {
                             Zoom,
                             Counter,
                             Thumbnails,
+                            Video,
                         ]}
                         open={() => setLightboxOpen(true)}
                         close={() => setLightboxOpen(false)}

@@ -8,6 +8,8 @@ import appSettingSlice from "./appSettingSlice.js";
 import userManagementSlice from "./userManagementSlice.js";
 import estimateSlice from "./estimateSlice.js"
 import projectSlice from "./projectslice.js"
+import chatSlice from "./chatSlice"
+import fileSlice from "./fileSlice"
 
 const rootReducer = combineReducers({
     user: userSlice,
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
     appSetting: appSettingSlice,
     userManagement: userManagementSlice,
     estimate : estimateSlice,
-    project : projectSlice
+    project : projectSlice,
+    chat:chatSlice,
+    file:fileSlice
 });
 
 const persistConfig = {
