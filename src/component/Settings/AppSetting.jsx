@@ -82,7 +82,6 @@ const AppSettings = () => {
 
     const getAppSettingData = async () => {
         const apiResult = await dispatch(getAppSetting());
-        // console.log(apiResult.payload.data[0]._id);
         setAppSettingId(apiResult?.payload?.data[0]?._id);
 
         if (getAppSetting.fulfilled.match(apiResult)) {

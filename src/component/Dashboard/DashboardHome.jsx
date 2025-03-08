@@ -6,12 +6,13 @@ import DashboardProjects from "./NestedDashboardComponents/DashboardProjects.jsx
 import DashboardTaskboard from "./NestedDashboardComponents/DashboardTaskboard.jsx";
 import DashboardEmployeeList from "./NestedDashboardComponents/DashboardEmployeeList.jsx";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const DashboardHome = () => {
-    const [isHovered, setIsHovered] = useState(false);
     const [time, setTime] = useState(new Date());
 
     const { currentUser } = useSelector((state) => state.user);
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -19,6 +20,19 @@ const DashboardHome = () => {
         }, 1000);
 
         return () => clearInterval(interval);
+    }, []);
+
+    async function getUserTasks() {
+        try {
+            const apiResponse = await axios.get("/api/v1/users/getUserTasks");
+            setTasks(apiResponse?.data?.data);
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    useEffect(() => {
+        getUserTasks();
     }, []);
 
     return (
@@ -46,23 +60,6 @@ const DashboardHome = () => {
                             })}
                         </div>
                     </div>
-                    <Button
-                        label="Clock In"
-                        icon="pi pi-sign-in"
-                        className="text-[1rem] h-10"
-                        size="small"
-                    />
-                    <div
-                        className="inline-block"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                    >
-                        {isHovered ? (
-                            <i className="pi pi-spin pi-cog text-2xl"></i>
-                        ) : (
-                            <i className="pi pi-cog text-2xl"></i>
-                        )}
-                    </div>
                 </div>
             </div>
 
@@ -77,15 +74,18 @@ const DashboardHome = () => {
                     </div>
 
                     <div className="bg-white rounded-lg p-4 shadow-md">
-                        <DashboardTask />
+                        <DashboardTask
+                            Pending={tasks?.Pending}
+                            overDue={tasks?.overDue}
+                        />
                     </div>
 
                     <div className="bg-white rounded-lg p-4 shadow-md">
                         <DashboardProjects />
                     </div>
 
-                    <div className="md:col-span-2 lg:row-span-3 bg-white rounded-lg shadow-md">
-                        <DashboardTaskboard />
+                    <div className="md:col-span-2 lg:row-span-3 rounded-lg shadow-md">
+                        <DashboardTaskboard tasks={tasks?.getTasks} />
                     </div>
 
                     <div className="md:col-span-2 lg:row-span-3 bg-white rounded-lg shadow-md">

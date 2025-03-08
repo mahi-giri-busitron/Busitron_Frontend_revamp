@@ -1,86 +1,37 @@
-import React, { useState } from "react";
-import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import TaskBoardAddTask from "./TaskBoardAddTask";
-import TaskBoardSingleTask from "./TaskBoardSingleTask";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-
-const initialData = {
-    todo: [
-        {
-            id: "1",
-            title: "Profile page UI",
-            company: "TaskManagement IT Company",
-            date: "21-02-2025",
-            priority: "low",
-        },
-        {
-            id: "2",
-            title: "Finding bugs and clear",
-            company: "TaskManagement IT Company",
-            date: "21-02-2025",
-            priority: "low",
-        },
-        {
-            id: "3",
-            title: "Comment backend and worklog backend",
-            company: "TaskManagement IT Company",
-            date: "21-02-2025",
-            priority: "medium",
-        },
-        {
-            id: "4",
-            title: "Adding message UI",
-            company: "TaskManagement IT Company",
-            date: "21-02-2025",
-            priority: "high",
-        },
-    ],
-    doing: [
-        {
-            id: "5",
-            title: "Profile page UI",
-            company: "TaskManagement IT Company",
-            date: "22-02-2025",
-            priority: "high",
-        },
-        {
-            id: "6",
-            title: "Working on API integration",
-            company: "TaskManagement IT Company",
-            date: "22-02-2025",
-            priority: "high",
-        },
-    ],
-    completed: [
-        {
-            id: "7",
-            title: "Finding bugs",
-            company: "TaskManagement IT Company",
-            date: "20-02-2025",
-            priority: "high",
-        },
-        {
-            id: "8",
-            title: "Setup project structure",
-            company: "TaskManagement IT Company",
-            date: "20-02-2025",
-            priority: "high",
-        },
-    ],
-};
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const statusConfig = {
-    todo: { label: "To Do", color: "bg-orange-500" },
-    doing: { label: "Doing", color: "bg-blue-500" },
-    completed: { label: "Completed", color: "bg-green-500" },
+    "To Do": { label: "To Do", color: "bg-blue-200 text-blue-80" },
+    "In Progress": {
+        label: "In Progress",
+        color: "bg-orange-300 text-orange-900",
+    },
+    Review: { label: "Review", color: "bg-purple-200 text-purple-800" },
+    Completed: { label: "Completed", color: "bg-green-200 text-green-800" },
+    Pending: { label: "Pending", color: "bg-yellow-200 text-yellow-800" },
+    Close: { label: "Close", color: "bg-gray-300 text-gray-900" },
 };
 
 const TaskBoard = () => {
-    const [tasks, setTasks] = useState(initialData);
-    const [addTask, setAddTask] = useState(false);
-    const [singleTask, setSingleTask] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [tasks, setTasks] = useState([]);
+    const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false);
+
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const { particular } = useSelector((state) => state.project);
+
+    useEffect(() => {
+        if (!particular || particular === null) {
+            dispatch(getParticularproject(id));
+        }
+    }, [dispatch, particular]);
 
     const getPriorityColor = (priority) => {
         switch (priority) {
@@ -95,10 +46,53 @@ const TaskBoard = () => {
         }
     };
 
-    const onDragEnd = (result) => {
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await axios.get(
+                    `/api/v1/task/gettaskbyid/${id}`
+                );
+
+                const formattedTasks = response.data.data.tasks.map(
+                    (task, index) => ({
+                        ...task,
+                        sno: index + 1,
+                        startDate: task.startDate
+                            ? task.startDate.split("T")[0]
+                            : "",
+                        dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
+                    })
+                );
+
+                const updatedTasks = {
+                    "To Do": [],
+                    "In Progress": [],
+                    Review: [],
+                    Completed: [],
+                };
+
+                formattedTasks.forEach((task) => {
+                    const status = task.status;
+                    if (updatedTasks[status]) {
+                        updatedTasks[status].push(task);
+                    }
+                });
+
+                setTasks(updatedTasks);
+            } catch (error) {
+                toast.error(
+                    error.response ? error.response.data : error.message
+                );
+            }
+        };
+        fetchTasks();
+    }, []);
+
+    const onDragEnd = async (result) => {
         if (!result.destination) return;
 
         const { source, destination } = result;
+
         const sourceColumn = [...tasks[source.droppableId]];
         const destinationColumn = [...tasks[destination.droppableId]];
 
@@ -110,84 +104,37 @@ const TaskBoard = () => {
             [source.droppableId]: sourceColumn,
             [destination.droppableId]: destinationColumn,
         });
+
+        setLoading(true);
+
+        try {
+            const status = destination.droppableId;
+
+            const response = await axios.put(
+                `/api/v1/task/${result.draggableId}`,
+                { status: status }
+            );
+
+            toast.success("Task updated successfully!");
+        } catch (error) {
+            toast.error(error.response ? error.response.data : error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="p-6">
-            <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
-                <div className="flex gap-2 flex-wrap md:flex-nowrap">
-                    <Button
-                        label="Add Task"
-                        size="small"
-                        icon="pi pi-plus"
-                        severity="primary"
-                        className="h-10"
-                        onClick={() => setAddTask(true)}
-                    />
-                    <Button
-                        label="Export"
-                        icon="pi pi-upload"
-                        className="p-button-secondary h-10"
-                        size="small"
-                        
-                    />
-                </div>
-
-                <div className="w-full md:w-72">
-                    <div className="p-inputgroup flex-1 h-9">
-                        <span className="p-inputgroup-addon cursor-pointer">
-                            <i className="pi pi-search"></i>
-                        </span>
-                        <InputText
-                            placeholder="Start Searching...."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                </div>
-            </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="grid auto-cols-[25%] gap-6 grid-flow-col overflow-x-auto mt-4">
-                    <div className="bg-gray-200 min-h-fit rounded p-2">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                                <span className="text-gray-700 font-semibold">
-                                    Incomplete
-                                </span>
-                                <span className="bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded">
-                                    0
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="cursor-pointer">
-                                    <i className="pi pi-angle-left text-gray-500"></i>
-                                    <i className="pi pi-angle-right text-gray-500"></i>
-                                </div>
-                                <div>
-                                    <i className="pi pi-ellipsis-h text-gray-500 cursor-pointer"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className=" flex items-center justify-center bg-white rounded text-gray-500 mt-8">
-                            <button
-                                className="p-6 flex flex-row gap-3"
-                                onClick={() => setAddTask(true)}
-                            >
-                                <span className="pi pi-plus mt-1"></span>Add
-                                Task
-                            </button>
-                        </div>
-                    </div>
                     {Object.entries(tasks).map(([columnId, taskList]) => (
                         <Droppable key={columnId} droppableId={columnId}>
                             {(provided) => (
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    className="bg-gray-200 p-4 rounded min-h-[300px]"
+                                    className="bg-gray-100 p-4 rounded h-full"
                                 >
-                                    {/* Header Section with Color, Title, Arrows, and Count */}
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-2">
                                             <span
@@ -211,11 +158,10 @@ const TaskBoard = () => {
                                         </div>
                                     </div>
 
-                                    {/* Task Items */}
                                     {taskList.map((task, index) => (
                                         <Draggable
-                                            key={task.id}
-                                            draggableId={task.id}
+                                            key={task._id}
+                                            draggableId={task._id}
                                             index={index}
                                         >
                                             {(provided) => (
@@ -226,27 +172,37 @@ const TaskBoard = () => {
                                                     className={`border-l-4 ${getPriorityColor(
                                                         task.priority
                                                     )} bg-white shadow p-4 mb-4 rounded`}
-                                                    onClick={() =>
-                                                        setSingleTask(true)
-                                                    }
                                                 >
-                                                    <div className="flex justify-between">
-                                                        <h3 className="text-md font-semibold text-gray-700">
-                                                            {task.title}
-                                                        </h3>
-                                                        <span className="text-gray-500 text-sm">
-                                                            #{task.id}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-gray-500 text-sm">
-                                                        {task.company}
-                                                    </p>
-                                                    <div className="flex text-gray-600 mt-2">
-                                                        <i className="pi pi-calendar text-red-500 mr-2"></i>
-                                                        <span className="text-red-500 text-xs">
-                                                            {task.date}
-                                                        </span>
-                                                    </div>
+                                                    <span
+                                                        className="cursor-pointer"
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/dashboard/task/${task._id}`,
+                                                                {
+                                                                    state: task,
+                                                                }
+                                                            )
+                                                        }
+                                                    >
+                                                        <div className="flex justify-between">
+                                                            <h3 className="text-md font-semibold text-gray-700">
+                                                                {task.title}
+                                                            </h3>
+                                                            <span className="text-gray-500 text-sm">
+                                                                #{task.taskID}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-gray-500 text-sm">
+                                                            {particular?.projectName ||
+                                                                "...loading"}
+                                                        </p>
+                                                        <div className="flex text-gray-600 mt-2">
+                                                            <i className="pi pi-calendar text-red-500 mr-2"></i>
+                                                            <span className="text-red-500 text-xs">
+                                                                {task.startDate}
+                                                            </span>
+                                                        </div>
+                                                    </span>
                                                 </div>
                                             )}
                                         </Draggable>
@@ -256,49 +212,8 @@ const TaskBoard = () => {
                             )}
                         </Droppable>
                     ))}
-                    <div className="bg-gray-200 min-h-fit rounded p-2">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-black rounded-full"></span>
-                                <span className="text-gray-700 font-semibold">
-                                    Waiting for Approval
-                                </span>
-                                <span className="bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded">
-                                    0
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="cursor-pointer">
-                                    <i className="pi pi-angle-left text-gray-500"></i>
-                                    <i className="pi pi-angle-right text-gray-500"></i>
-                                </div>
-                                <div>
-                                    <i className="pi pi-ellipsis-h text-gray-500 cursor-pointer"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="p-8 bg-gray-100 mt-10 gap-6 rounded flex flex-col items-center justify-center">
-                            <div>
-                                <i className="pi pi-database text-gray-500"></i>
-                            </div>
-                            <div>
-                                <p className="text-gray-500">
-                                    No records found
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </DragDropContext>
-
-            <TaskBoardAddTask
-                visible={addTask}
-                onHide={() => setAddTask(false)}
-            />
-            <TaskBoardSingleTask
-                visible={singleTask}
-                onHide={() => setSingleTask(false)}
-            />
         </div>
     );
 };

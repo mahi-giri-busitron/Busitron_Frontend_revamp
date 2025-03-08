@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TabMenu } from "primereact/tabmenu";
-import { useNavigate, useSearchParams, useParams } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 import Overview from "./Overview";
 import TaskBoard from "./TaskBoard";
 import Milestone from "./MileStone";
@@ -11,8 +11,6 @@ import TaskAssignments from "./TaskAssignments.jsx";
 const SingleProject = () => {
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [isOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
 
     const currentTab = searchParams.get("tab") || "overview";
 
@@ -53,7 +51,7 @@ const SingleProject = () => {
                 return (
                     <div>
                         <div>
-                            <FileUploadModal />
+                            <FileUploadModal projectId={id} />
                         </div>
                     </div>
                 );
@@ -61,7 +59,11 @@ const SingleProject = () => {
                 return (
                     <div>
                         <div>
-                            <Milestone />
+                            {id ? (
+                                <Milestone projectId={id} />
+                            ) : (
+                                <div>Loading milestones...</div>
+                            )}
                         </div>
                     </div>
                 );

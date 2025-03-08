@@ -5,6 +5,9 @@ import userSlice from "./userSlice.js";
 import themeSlice from "./themeSlice.js";
 import companySlice from "./companySlice.js";
 import appSettingSlice from "./appSettingSlice.js";
+import userManagementSlice from "./userManagementSlice.js";
+import estimateSlice from "./estimateSlice.js"
+import projectSlice from "./projectslice.js"
 import chatSlice from "./chatSlice"
 import fileSlice from "./fileSlice"
 
@@ -13,6 +16,9 @@ const rootReducer = combineReducers({
     company: companySlice,
     theme: themeSlice,
     appSetting: appSettingSlice,
+    userManagement: userManagementSlice,
+    estimate : estimateSlice,
+    project : projectSlice,
     chat:chatSlice,
     file:fileSlice
 });

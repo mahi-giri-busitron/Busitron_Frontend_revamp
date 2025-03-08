@@ -1,192 +1,243 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Tooltip } from "primereact/tooltip";
 import { useNavigate } from "react-router-dom";
 import CreateEstimate from "./CreateEstimate";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { useDispatch, useSelector } from "react-redux";
+import { getALlEstimates } from "../../../redux/estimateSlice.js";
+import DeleteModal from "../../../shared/DeleteModal.jsx";
+import toast from "react-hot-toast";
+import UpdateEstimate from "./UpdateEstimate.jsx";
+import { Skeleton } from "primereact/skeleton";
 
 const Financial_Management = () => {
-    const [statusFilter, setStatusFilter] = useState("all");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [data, setData] = useState([]);
+
     const [openModel, setOpenModel] = useState(false);
-    const [menuVisible, setMenuVisible] = useState(null);
+    const [openDeleteModel , setOpenDeleteModal] = useState(false);
+    const [openUpdateModal , setOpenUpdateModal] = useState(false);
+    const [deleteId , setDeleteId] = useState(null);
+    const [disableDeleteBtn , setDisableDeleteBtn] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+
     const navigate = useNavigate();
 
-    const statuses = [
-        { label: "All", value: "all" },
-        { label: "Pending", value: "pending" },
-        { label: "Completed", value: "completed" },
-        { label: "In Progress", value: "inProgress" },
-    ];
+    let {register,watch} = useForm();
 
-    const statusOptions = [
-        { label: "Pending", value: "pending" },
-        { label: "Completed", value: "completed" },
-        { label: "Todo", value: "todo" },
-        { label: "In Progress", value: "inProgress" },
-    ];
+    let allEstimate = useSelector(store => store?.estimate?.allEstimateData);
 
-    const handleEstimateClick = (estimateId) => {
-        navigate(`/dashboard/financial-management/${estimateId}`);
-    };
+    let isLoading = useSelector(store => store?.estimate?.isLoading);
 
-    useEffect(() => {
-        const sampleData = Array.from({ length: 30 }, (_, i) => ({
-            id: i + 1,
-            estimate: `EST-${String(i + 1).padStart(
-                3,
-                "0"
-            )} - This is a very long estimate`,
-            client: `Client ${String.fromCharCode(65 + (i % 26))}`,
-            total: (i + 1) * 100,
-            validTill: `2024-08-${String(10 + (i % 20)).padStart(2, "0")}`,
-            created: `2024-07-${String(20 + (i % 10)).padStart(2, "0")}`,
-            estimateRequestNumber: `REQ-${String(i + 1).padStart(3, "0")}`,
-            status: statusOptions[i % statusOptions.length].value,
-        }));
-        setData(sampleData);
-    }, []);
+    const [tableData , setTableData] = useState(allEstimate);
 
-    const onStatusChange = (e, rowData) => {
-        setData((prevData) =>
-            prevData.map((item) =>
-                item.id === rowData.id ? { ...item, status: e.value } : item
-            )
-        );
-    };
+    let dispatch = useDispatch();
+    let estimateNumber = watch("estimateNumber");
 
-    const filteredData = data.filter((item) => {
-        const statusMatch =
-            statusFilter === "all" || item.status === statusFilter;
-        const searchMatch =
-            item.estimate.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.estimateRequestNumber
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase());
-        return statusMatch && searchMatch;
-    });
+    useEffect(()=>{
+        dispatch(getALlEstimates())
+    }, [dispatch]);
 
-    const statusTemplate = (rowData) => (
-        <Dropdown
-            value={rowData.status}
-            options={statusOptions}
-            onChange={(e) => onStatusChange(e, rowData)}
-            placeholder="Select Status"
-            className="w-42 h-8 items-center border rounded px-2 py-0.5 text-sm"
-        />
-    );
+    useEffect(()=>{ 
+        if (!estimateNumber?.trim()) {
+            setTableData(allEstimate);
+        } else {
+            let modify = allEstimate?.filter(val => 
+                val.estimateNumber.toLowerCase().includes(estimateNumber.toLowerCase()) ||
+                (val.clientId?.name?.toLowerCase() || "").includes(estimateNumber.toLowerCase())
+            );
+            setTableData(modify);
+        }
 
-    const estimateTemplate = (rowData) => {
+    },[estimateNumber,allEstimate])
+
+    const statusTemplate = (rowData) => {
+        let statusColor;
+        switch (rowData?.projectStatus) {
+            case "Pending":
+                statusColor = "bg-yellow-200 text-yellow-800";
+                break;
+            case "In Progress":
+                statusColor = "bg-green-100 text-green-600";
+                break;
+            case "Completed":
+                statusColor = "bg-green-400 text-green-800";
+                break;
+            default:
+                statusColor = "bg-gray-100 text-gray-800";
+        }
+
         return (
-            <>
-                <Tooltip target={`.estimate-${rowData.id}`} position="top" />
-                <button
-                    className={`text-blue-900 cursor-pointer estimate-${rowData.id} truncate max-w-[9.375rem]`}
-                    onClick={() => handleEstimateClick(rowData.id)}
-                    data-pr-tooltip={rowData.estimate}
-                >
-                    {rowData.estimate}
-                </button>
-            </>
+            <span
+                className={`px-2 py-1 rounded-md text-sm w-[120px] flex items-center justify-center ${statusColor}`}
+            >
+                {rowData?.projectStatus}
+            </span>
         );
     };
 
-    return (
-        <div className="p-4">
-            {/* Responsive Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
-                <Button
-                    icon="pi pi-plus"
-                    label="Create Estimate"
-                    className="p-button-raised w-full md:w-auto"
-                    onClick={() => setOpenModel(true)}
-                />
-                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
-                    <InputText
-                        type="text"
-                        placeholder="Search..."
-                        className="border rounded h-10 items-center px-2 py-1 w-full md:w-48"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <Dropdown
-                        value={statusFilter}
-                        options={statuses}
-                        onChange={(e) => setStatusFilter(e.value)}
-                        placeholder="Filter Status"
-                        className="border rounded h-10 items-center px-2 py-1 w-full md:w-28"
-                    />
+    const paymentTemplate = (rowData)=>{
+
+        let statusColor;
+        switch (rowData?.paymentStatus) {
+            case "Approved":
+                statusColor = "bg-yellow-200 text-yellow-800";
+                break;
+            case "Paid":
+                statusColor = "bg-green-400 text-green-800";
+                break;
+            default:
+                statusColor = "bg-gray-100 text-gray-800";
+        }
+
+        return (
+            <span
+                className={`px-2 py-1 rounded-md text-sm w-[120px] flex items-center justify-center ${statusColor}`}
+            >
+                {rowData?.paymentStatus}
+            </span>
+        );
+    }
+
+    async function handleDelete()
+    {
+        try {
+            setDisableDeleteBtn(true);
+            let res = await axios.delete(`/api/v1/estimates/delete/${deleteId}`, {withCredentials:true});
+            if(res.data.success){
+                setDisableDeleteBtn(false);
+                toast.success(res.data.message);
+                setOpenDeleteModal(false);
+                dispatch(getALlEstimates())
+            }            
+        } catch (error) {
+            // console.log(error);
+            toast.error("Failed to Delete Record");
+        }
+    }
+    const skeletonTemplate = () => <Skeleton />
+
+    if(isLoading){
+        return <div className="card mx-5 my-4">
+            <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
+                <div className="flex gap-2">
+                    <Skeleton width="150px" height="40px" />
+                </div>
+                <div className="w-full md:w-100">
+                    <Skeleton width="100%" height="40px" />
                 </div>
             </div>
+            <DataTable value={Array.from({ length: 10 })} className="p-datatable-striped">
+                <Column field="estimateNumber" header="Estimate No" body={skeletonTemplate} />
+                <Column field="clientId.name" header="Client" body={skeletonTemplate} />
+                <Column field="Total" header="Total" body={skeletonTemplate} />
+                <Column field="validTill" header="Valid Till" body={skeletonTemplate} />
+                <Column field="userId.name" header="Created By" body={skeletonTemplate} />
+                <Column field="status" header="Status" body={skeletonTemplate} />
+                <Column header="Action" body={skeletonTemplate} />
+            </DataTable>
+        </div>
+    }
 
-            {/* Dialog for Create Estimate */}
-            <Dialog
-                header="Create Estimate"
-                visible={openModel}
-                style={{ width: "90vw" }}
-                onHide={() => setOpenModel(false)}
-            >
-                <CreateEstimate />
-            </Dialog>
+    return (
+    <>
+        <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
+            <div className="flex gap-2">
+                <Button
+                    icon="pi pi-plus"
+                    label="Project Estimate"
+                    className="p-button-raised w-full md:w-auto h-10"
+                    onClick={() => setOpenModel(true)}
+                />
+            </div>
+            <div className="w-full md:w-100">
+                <IconField iconPosition="left" className="h-10 w-full">
+                    <InputIcon className="pi pi-search h-10" />
+                    <InputText
+                        placeholder="Start Searching..."
+                        {...register("estimateNumber")}
+                        className="h-10 w-full"
+                    />
+                </IconField>
+            </div>
+        </div>
 
-            {/* Responsive DataTable */}
+         <div className="mx-5 overflow-x-auto">
             <DataTable
-                value={filteredData}
+                value={tableData}
                 dataKey="id"
                 paginator
                 size="normal"
                 removableSort
                 rows={10}
-                rowsPerPageOptions={[5, 10, 15]}
-                paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                className="p-datatable-sm border-0 shadow-none"
-                responsiveLayout="scroll"
+                rowsPerPageOptions={[5, 10, 15, 20]}
+                tableClassName="custom-table"
+                paginatorClassName="custom-pagination"
+                emptyMessage={
+                    <p className="text-red-500 text-md text-center">
+                        No Estimates found. Add a new Estimate !
+                    </p>
+                }
             >
-                <Column field="id" header="ID" />
-                <Column
-                    field="estimate"
-                    header="Estimate"
-                    body={estimateTemplate}
-                />
-                <Column field="client" header="Client" />
-                <Column field="total" header="Total" />
-                <Column field="validTill" header="Valid Till" />
-                <Column field="created" header="Created" />
-                <Column
-                    field="estimateRequestNumber"
-                    header="Estimate Req No"
-                    className="text-sm"
-                />
-                <Column field="status" header="Status" body={statusTemplate} />
+                <Column field="estimateNumber" header="Estimate No"/>
+                <Column field="clientId.name" header="Client" />
+                <Column field="projectName" header="Project" />
+                <Column field="userId.name" header="Created By" />
+                <Column field="projectStatus" header={`Project Status`} body={statusTemplate} />
+                <Column field="paymentStatus" header="Payment Status" body={paymentTemplate} />
                 <Column
                     header="Action"
                     body={(rowData) => (
-                        <div className="flex gap-2">
-                            <button
-                                className="text-blue-500 hover:text-blue-700"
-                                onClick={() => handleView(rowData)}
-                            >
-                                <i className="pi pi-eye mx-2 cursor-pointer"></i>
+                        <div className="flex items-center gap-3 justify-evenly">
+                            <button title="View More">
+                                <i className="pi pi-eye text-blue-500 cursor-pointer" onClick={()=> navigate(`/dashboard/financial-management/${rowData._id}`)}></i>
                             </button>
-                            <button
-                                className="text-red-500 hover:text-red-700"
-                                onClick={() => handleDelete(rowData)}
-                            >
-                                <i className="pi pi-trash cursor-pointer"></i>
+                            <button disabled={rowData?.paymentStatus =="Paid"} title="Update Status" onClick={()=> {setSelectedItem(rowData) ,setOpenUpdateModal(true)}}>
+                                <i className={`pi pi-pen-to-square text-green-500 ${rowData?.paymentStatus =="Paid" ? "cursor-not-allowed" : "cursor-pointer"}`}></i>
+                            </button>
+                            <button title="">
+                                <i onClick={()=>{setOpenDeleteModal(true), setDeleteId(rowData._id)}}
+                                    className="pi pi-trash text-red-500 cursor-pointer"></i>
                             </button>
                         </div>
                     )}
-                    headerClassName="custom-table-header"
                 />
             </DataTable>
         </div>
+
+        <Dialog
+            header="Project Order Estimate"
+            visible={openModel}
+            style={{ width: "90vw" }}
+            onHide={() => setOpenModel(false)}
+        >
+            <CreateEstimate setOpenModel={setOpenModel} />
+        </Dialog>
+
+        <Dialog
+            header="Update Project Estimate"
+            visible={openUpdateModal}
+            style={{ width: "50vw" }}
+            onHide={() => setOpenUpdateModal(false)}
+        >
+            <UpdateEstimate selectedItem={selectedItem} setOpenUpdateModal={setOpenUpdateModal} />
+        </Dialog>
+
+
+        <DeleteModal 
+            visible={openDeleteModel}
+            setVisible={setOpenDeleteModal}
+            handleDelete={handleDelete}
+            disableDeleteBtn={disableDeleteBtn}
+        />
+
+    </>
     );
 };
 

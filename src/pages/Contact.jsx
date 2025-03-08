@@ -4,6 +4,8 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { countryCodes } from "../utils/countryCodes.jsx";
+import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
 
 const CountryDropdown = ({ selectedCode, setSelectedCode }) => (
     <Dropdown
@@ -49,6 +51,8 @@ const Contact = () => {
         countryCodes.find((c) => c.code === "+91")
     );
 
+    const [loading, setLoading] = useState(false);
+
     const message = watch("message", "");
     const remainingChars = 300 - message.length;
 
@@ -58,6 +62,55 @@ const Contact = () => {
         trigger("phone");
     };
 
+    const onSubmit = async (data) => {
+        setLoading(true);
+        const payload = {
+            name: data.fullName,
+            email: data.email,
+            phone: `${selectedCode.code} ${data.phone}`,
+            message: data.message,
+        };
+
+        try {
+            const response = await axios.post(
+                "/api/v1/contact/emailRequest",
+                payload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 200 && response.data.success) {
+                toast.success("Your message has been sent successfully!", {
+                    duration: 3000,
+                    position: "top-right",
+                });
+                reset();
+            } else {
+                toast.error(
+                    response.data.message || "Failed to send your message.",
+                    {
+                        duration: 3000,
+                        position: "top-right",
+                    }
+                );
+            }
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                    "An error occurred. Please try again later.",
+                {
+                    duration: 3000,
+                    position: "top-right",
+                }
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const renderError = (field) =>
         errors[field] && (
             <p className="text-red-500 text-xs mt-1">{errors[field].message}</p>
@@ -65,9 +118,11 @@ const Contact = () => {
 
     return (
         <div className="h-auto flex flex-col items-center justify-center p-5">
+            <Toaster />
+
             <h1 className="text-4xl font-bold text-black mb-8">Contact Us</h1>
             <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <form className="space-y-4" onSubmit={handleSubmit(reset)}>
+                <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">
                             Full Name
@@ -136,9 +191,13 @@ const Contact = () => {
                         <textarea
                             className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                             placeholder="Your message..."
-                            maxLength={300}
                             {...register("message", {
                                 required: "Message is required",
+                                maxLength: {
+                                    value: 300,
+                                    message:
+                                        "Message must be less than 300 characters",
+                                },
                             })}
                         />
                         <div className="text-xs flex justify-between items-center">
@@ -153,7 +212,7 @@ const Contact = () => {
                                 }
                             >
                                 {remainingChars > 0
-                                    ? `${remainingChars} characters remaining`
+                                    ? remainingChars
                                     : "You have reached your limit"}
                             </span>
                         </div>
@@ -161,9 +220,14 @@ const Contact = () => {
 
                     <Button
                         type="submit"
-                        label="Send Message"
-                        className="px-6 py-2 text-sm text-white font-medium rounded-md shadow-md hover:opacity-90"
+                        label={loading ? "Sending..." : "Send Message"}
+                        className={`px-6 py-2 text-sm text-white font-medium rounded-md shadow-md ${
+                            loading
+                                ? "opacity-50 cursor-not-allowed"
+                                : "hover:opacity-90"
+                        }`}
                         style={{ backgroundColor: "rgba(0, 113, 93, 1)" }}
+                        disabled={loading}
                     />
                 </form>
 

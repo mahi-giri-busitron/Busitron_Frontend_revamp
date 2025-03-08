@@ -6,48 +6,104 @@ import { Dialog } from "primereact/dialog";
 import { MultiSelect } from "primereact/multiselect";
 import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllUser } from "../../../redux/userManagementSlice.js";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const ProjectMembers = () => {
-    const [members, setMembers] = useState([
-        { id: 1, name: "Mr Mahesh Balu Giri", role: "Project Admin" },
-        { id: 2, name: "Mr Ponnana Pavan", role: "Project Admin" },
-    ]);
-
+    const [members, setMembers] = useState([]);
+    const { id } = useParams();
     const [verifiedUsers, setVerifiedUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [shouldUpdate, setShouldUpdate] = useState(false);
+    const [projectMember, setProjectMember] = useState([]);
+    const { users } = useSelector((state) => state.userManagement);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!users || users === null) {
+            dispatch(fetchAllUser());
+        }
+    }, [dispatch, users]);
 
     useEffect(() => {
         setTimeout(() => {
-            setVerifiedUsers([
-                { id: 3, name: "Alice Johnson", role: "Member" },
-                { id: 4, name: "Bob Smith", role: "Member" },
-                { id: 5, name: "Charlie Brown", role: "Member" },
-                { id: 6, name: "David Lee", role: "Member" },
-                { id: 7, name: "Eva Green", role: "Member" },
-            ]);
+            setVerifiedUsers(users);
             setLoading(false);
         }, 2000);
     }, []);
 
-    const filteredMembers = members.filter(
-        (member) =>
-            member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            member.role.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const addMembers = async () => {
+        if (!Array.isArray(selectedUsers) || selectedUsers.length === 0) {
+            toast.error("No users selected");
+            return;
+        }
 
-    const addMembers = () => {
-        if (selectedUsers.length > 0) {
-            const newMembers = selectedUsers.map((user) => ({
-                id: user.id,
-                name: user.name,
-                role: "Member",
-            }));
-            setMembers([...members, ...newMembers]);
-            setDialogVisible(false);
-            setSelectedUsers([]);
+        const newMembers = selectedUsers.map((user) => ({
+            id: user._id,
+            name: user.name,
+            role: "Member",
+        }));
+
+        setMembers((prevMembers) => [...prevMembers, ...newMembers]);
+        setShouldUpdate(true);
+        setDialogVisible(false);
+        setSelectedUsers([]);
+    };
+
+    useEffect(() => {
+        if (shouldUpdate) {
+            axios
+                .put(`/api/v1/project/projects/${id}/members`, members)
+                .then(() => {
+                    fetchParticularMembers();
+                    toast.success("Members updated successfully!");
+                })
+                .catch(() => {
+                    toast.error("Failed to update members.");
+                });
+            setShouldUpdate(false);
+        }
+    }, [members, shouldUpdate]);
+
+    const fetchParticularMembers = async () => {
+        try {
+            const response = await axios.get(
+                `/api/v1/project/projects/${id}/members`
+            );
+            setProjectMember(response.data.data);
+        } catch (error) {
+            toast.error(error.response ? error.response.data : error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchParticularMembers();
+    }, []);
+
+    const deleteProjectMember = async (oid) => {
+        try {
+            const response = await axios.delete(
+                `/api/v1/project/projects/${id}/members/${oid}`
+            );
+
+            if (response.data.statusCode === 200) {
+                toast.success("Deleted member successfully!");
+            } else {
+                toast.error(response.data.message || "Something went wrong");
+            }
+
+            fetchParticularMembers();
+        } catch (error) {
+            toast.error(error.response ? error.response.data : error.message);
         }
     };
 
@@ -64,22 +120,36 @@ const ProjectMembers = () => {
                     />
                 </div>
 
-                <div className="w-full md:w-72">
-                    <div className="p-inputgroup flex-1 h-9">
-                        <span className="p-inputgroup-addon cursor-pointer">
-                            <i className="pi pi-search"></i>
-                        </span>
-                        <InputText
-                            placeholder="Start Searching...."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                <div className="">
+                    <div className="w-full md:w-100">
+                        <IconField iconPosition="left" className="h-10 w-full">
+                            <InputIcon className="pi pi-search h-10" />
+                            <InputText
+                                placeholder="Start Searching..."
+                                className="h-10 w-full"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </IconField>
                     </div>
                 </div>
             </div>
+
             <div className="p-3">
-                <DataTable value={filteredMembers} responsiveLayout="scroll">
-                    <Column field="id" header="#" />
+                <DataTable
+                    value={projectMember.filter((each) =>
+                        each.name
+                            .toLowerCase()
+                            .includes(searchTerm.toLocaleLowerCase())
+                    )}
+                    responsiveLayout="scroll"
+                >
+                    <Column
+                        header="Emp ID"
+                        body={(rowData) => {
+                            return <span>{rowData.employeeId}</span>;
+                        }}
+                    />
                     <Column
                         field="name"
                         header="Name"
@@ -90,22 +160,31 @@ const ProjectMembers = () => {
                             </div>
                         )}
                     />
+                    <Column
+                        field="phoneNumber"
+                        header="Phone"
+                        body={(rowData) => (
+                            <div className="flex items-center">
+                                <span>{rowData?.phoneNumber}</span>
+                            </div>
+                        )}
+                    />
+                    <Column
+                        field="email"
+                        header="Email"
+                        body={(rowData) => (
+                            <div className="flex items-center">
+                                <span>{rowData?.email}</span>
+                            </div>
+                        )}
+                    />
 
                     <Column
                         field="role"
-                        header="User Role"
+                        header="Role"
                         body={(rowData) => (
                             <div className="flex gap-3">
                                 <div className="flex items-center">
-                                    <RadioButton
-                                        inputId={`admin-${rowData.id}`}
-                                        name={`role-${rowData.id}`}
-                                        value="Project Admin"
-                                        checked={
-                                            rowData.role === "Project Admin"
-                                        }
-                                        disabled
-                                    />
                                     <label
                                         htmlFor={`admin-${rowData.id}`}
                                         className="ml-2"
@@ -121,21 +200,19 @@ const ProjectMembers = () => {
                         header="Action"
                         body={(rowData) => (
                             <div className="flex justify-around w-full">
-                                <Button
+                                <button
                                     icon="pi pi-trash"
                                     label="Delete"
                                     className="p-button-primary"
                                     onClick={() =>
-                                        setMembers(
-                                            members.filter(
-                                                (m) => m.id !== rowData.id
-                                            )
-                                        )
+                                        deleteProjectMember(rowData._id)
                                     }
-                                />
+                                >
+                                    <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                                </button>
                             </div>
                         )}
-                        style={{ width: "150px" }} // Optional to control column width
+                        style={{ width: "150px" }}
                     />
                 </DataTable>
             </div>

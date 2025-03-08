@@ -2,7 +2,7 @@ import { Dialog } from "primereact/dialog";
 import React from "react";
 import { Button } from "primereact/button"
 
-const DeleteModal = ({visible, setVisible , handleDelete}) => {
+const DeleteModal = ({visible, setVisible , handleDelete, disableDeleteBtn}) => {
     return (
         <>
             <Dialog
@@ -27,6 +27,7 @@ const DeleteModal = ({visible, setVisible , handleDelete}) => {
                         onClick={() => setVisible(false)}
                     />
                     <Button
+                        disabled={disableDeleteBtn}
                         label="Yes"
                         icon="pi pi-check"
                         className="p-button-danger"

@@ -4,185 +4,118 @@ import { RadioButton } from "primereact/radiobutton";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { TabMenu } from "primereact/tabmenu";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const TaskSettings = () => {
-    const [beforeDays, setBeforeDays] = useState(0);
-    const [afterDays, setAfterDays] = useState(0);
-    const [reminderOnDueDate, setReminderOnDueDate] = useState(true);
-    const [status, setStatus] = useState("Incomplete");
-    const [taskboardLength, setTaskboardLength] = useState(10);
-    const [toggleStates, setToggleStates] = useState({});
+    const [beforeDays, setBeforeDays] = useState(1);
+    const [afterDays, setAfterDays] = useState(1);
+    const [reminderOnDueDate, setReminderOnDueDate] = useState("NO");
+    const [status, setStatus] = useState("To Do");
     const [activeIndex, setActiveIndex] = useState(0);
+    const [reminder, setReminder] = useState("");
+
+    const statusOptions = [
+        "To Do",
+        "In Progress",
+        "Review",
+        "Pending",
+        "Completed",
+    ].map((status) => ({ label: status, value: status }));
+
+    const ReminderOptions = ["YES", "NO"].map((reminder) => ({
+        label: reminder,
+        value: reminder,
+    }));
 
     const items = [{ label: "Task Settings", icon: "pi pi-list-check" }];
 
-    const statusOptions = [
-        { label: "Incomplete", value: "Incomplete" },
-        { label: "To Do", value: "To Do" },
-        { label: "Review", value: "Review" },
-        { label: "Testing", value: "Testing" },
-        { label: "Completed", value: "Completed" },
-    ];
+    const handleSave = async () => {
+        const reminderPayload = {
+            beforeDueDate: beforeDays,
+            afterDueDate: afterDays,
+            sendTaskReminder: reminder,
+            status: status,
+        };
 
-    const toggleOptions = [
-        "Task category",
-        "Project",
-        "Start Date",
-        "Due Date",
-        "Assigned To",
-        "Description",
-        "Label",
-        "Assigned by",
-        "Status",
-        "Priority",
-        "Make Private",
-        "Time estimate",
-        "Comment",
-        "Add File",
-        "Sub Task",
-        "Work log",
-        "Notes",
-        "History",
-        "Hours Logged",
-    ];
-
-    const handleToggleChange = (option) => {
-        setToggleStates((prevState) => ({
-            ...prevState,
-            [option]: !prevState[option],
-        }));
-    };
-
-    const handleSave = () => {
-        setSavedStates(toggleStates);
+        try {
+            await axios.post(
+                "http://localhost:5421/api/v1/tasksettings/send-reminder",
+                reminderPayload
+            );
+            toast.success("Send reminder successfully...");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Failed to send your message.",
+                {
+                    duration: 3000,
+                    position: "top-right",
+                }
+            );
+        }
     };
 
     return (
-        <>
-            <div className="w-full mx-auto">
-                <div className="">
-                    <TabMenu
-                        model={items}
-                        activeIndex={activeIndex}
-                        onTabChange={(e) => setActiveIndex(e.index)}
-                    />
-                </div>
-
-                <div className="p-2  rounded-lg shadow-md bg-white">
-                    <div className="p-2">
-                        <h3 className="text-lg font-medium">Send Reminder</h3>
-                        <div className="flex justify-between">
-                            <div className="mb-4">
-                                <label className="block text-gray-700 mb-1">
-                                    Send task reminder before X days of due date
-                                </label>
-                                <InputNumber
-                                    value={beforeDays}
-                                    onValueChange={(e) =>
-                                        setBeforeDays(e.value)
-                                    }
-                                    className="w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 mb-1">
-                                    Send task reminder on the day of due date
-                                </label>
-                                <div className="flex gap-4">
-                                    <div className="flex items-center">
-                                        <RadioButton
-                                            inputId="yes"
-                                            name="reminder"
-                                            value={true}
-                                            onChange={() =>
-                                                setReminderOnDueDate(true)
-                                            }
-                                            checked={reminderOnDueDate}
-                                        />
-                                        <label htmlFor="yes" className="ml-2">
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <RadioButton
-                                            inputId="no"
-                                            name="reminder"
-                                            value={false}
-                                            onChange={() =>
-                                                setReminderOnDueDate(false)
-                                            }
-                                            checked={!reminderOnDueDate}
-                                        />
-                                        <label htmlFor="no" className="ml-2">
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-between">
-                            <div className="mb-4">
-                                <label className="block text-gray-700 mb-1">
-                                    Send task reminder after X days of due date
-                                </label>
-                                <InputNumber
-                                    value={afterDays}
-                                    onValueChange={(e) => setAfterDays(e.value)}
-                                    className="w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 mb-1">
-                                    Status
-                                </label>
-                                <Dropdown
-                                    value={status}
-                                    options={statusOptions}
-                                    onChange={(e) => setStatus(e.value)}
-                                    placeholder="Select Status"
-                                    className="w-full"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 mb-1">
-                                    Taskboard Default Length
-                                </label>
-                                <InputNumber
-                                    value={taskboardLength}
-                                    onValueChange={(e) =>
-                                        setTaskboardLength(e.value)
-                                    }
-                                    className="w-full"
-                                />
-                            </div>
-                        </div>
+        <div className="w-full mx-auto">
+            <TabMenu
+                model={items}
+                activeIndex={activeIndex}
+                onTabChange={(e) => setActiveIndex(e.index)}
+            />
+            <div className="p-4 rounded-lg shadow-md bg-white">
+                <h3 className="text-lg font-medium">Send Reminder</h3>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label>
+                            Send task reminder before X days of due date
+                        </label>
+                        <InputNumber
+                            value={beforeDays}
+                            onValueChange={(e) => setBeforeDays(e.value)}
+                            className="w-full"
+                        />
                     </div>
-                </div>
-            </div>
-            <div className="p-4">
-                <div className="grid grid-cols-4 gap-4 mt-4">
-                    {toggleOptions.map((option) => (
-                        <div key={option} className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={toggleStates[option] || false}
-                                onChange={() => handleToggleChange(option)}
-                            />
-                            <span>{option}</span>
-                        </div>
-                    ))}
+                    <div>
+                        <label>
+                            Send task reminder after X days of due date
+                        </label>
+                        <InputNumber
+                            value={afterDays}
+                            onValueChange={(e) => setAfterDays(e.value)}
+                            className="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label>Select Task Status</label>
+                        <Dropdown
+                            value={status}
+                            options={statusOptions}
+                            onChange={(e) => setStatus(e.value)}
+                            className="w-full mt-2"
+                        />
+                    </div>
+                    <div>
+                        <label>Are you sure want to send the mail ?</label>
+                        <Dropdown
+                            value={reminder}
+                            options={ReminderOptions}
+                            onChange={(e) => setReminder(e.value)}
+                            placeholder="Select"
+                            className="w-full mt-2"
+                        />
+                    </div>
                 </div>
                 <div className="pt-5">
                     <Button
-                        label="Save"
+                        label="Send"
                         icon="pi pi-check"
                         onClick={handleSave}
-                        className="m-4 h-10"
+                        className="m-4"
                         size="small"
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -3,16 +3,47 @@ import { Card } from "primereact/card";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import UserTasksDetailsTable from "./UserTasksDetailsTable.jsx";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const UsrerPerformanceDetals = () => {
-    const { empId } = useParams();
+const UserPerformanceDetails = () => {
+    const { empid } = useParams();
+    const [data, setData] = useState([]);
+
+    async function getParticularUserTask() {
+        try {
+            const apiResponse = await axios.get(
+                `/api/v1/performanceTracking/getParticularUserTask/${empid}`
+            );
+
+            setData(apiResponse.data.data);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+    useEffect(() => {
+        getParticularUserTask();
+    }, []);
     const chartData = {
-        labels: ["Completed", "Pending", "Overdue", "In Progress"],
+        labels: ["To Do", "Completed", "Pending", "Overdue", "In Progress"],
         datasets: [
             {
-                data: [80, 15, 5, 20],
-                backgroundColor: ["#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
+                data: [
+                    data?.todo,
+                    data?.completedTasks,
+                    data?.pendingTasks,
+                    data?.dueTasks,
+                    data?.["In Progress"],
+                ],
+                backgroundColor: [
+                    "#abf7b1",
+                    "#34D399",
+                    "#FBBF24",
+                    "#EF4444",
+                    "#3B82F6",
+                ],
                 hoverBackgroundColor: [
+                    "#39e75f",
                     "#10B981",
                     "#F59E0B",
                     "#DC2626",
@@ -38,25 +69,31 @@ const UsrerPerformanceDetals = () => {
                         <Card className="pl-4 shadow-md">
                             <h3 className="text-xl font-bold">Total Tasks</h3>
                             <p className="text-2xl font-semibold text-gray-700">
-                                120
+                                {data?.totalTasks}
+                            </p>
+                        </Card>
+                        <Card className="pl-4 shadow-md mt-4">
+                            <h3 className="text-xl font-bold">To Do</h3>
+                            <p className="text-2xl font-semibold text-green-600">
+                                {data?.todo}
                             </p>
                         </Card>
                         <Card className="pl-4 shadow-md mt-4">
                             <h3 className="text-xl font-bold">Completed</h3>
                             <p className="text-2xl font-semibold text-green-600">
-                                80
+                                {data?.completedTasks}
                             </p>
                         </Card>
                         <Card className="pl-4 shadow-md mt-4">
                             <h3 className="text-xl font-bold">Pending</h3>
                             <p className="text-2xl font-semibold text-yellow-500">
-                                15
+                                {data?.pendingTasks}
                             </p>
                         </Card>
                         <Card className="pl-4 shadow-md mt-4">
                             <h3 className="text-xl font-bold">Overdue</h3>
                             <p className="text-2xl font-semibold text-red-500">
-                                5
+                                {data?.dueTasks}
                             </p>
                         </Card>
                     </div>
@@ -73,30 +110,38 @@ const UsrerPerformanceDetals = () => {
                     <Card className="shadow-md ">
                         <h3 className="text-xl font-bold">Total Tasks</h3>
                         <p className="text-2xl font-semibold text-gray-700">
-                            120
+                            {data?.totalTasks}
+                        </p>
+                    </Card>
+                    <Card className="shadow-md">
+                        <h3 className="text-xl font-bold">To Do</h3>
+                        <p className="text-2xl font-semibold text-green-600">
+                            {data?.todo}
                         </p>
                     </Card>
                     <Card className="shadow-md">
                         <h3 className="text-xl font-bold">Completed</h3>
                         <p className="text-2xl font-semibold text-green-600">
-                            80
+                            {data?.completedTasks}
                         </p>
                     </Card>
                     <Card className="shadow-md">
                         <h3 className="text-xl font-bold">Pending</h3>
                         <p className="text-2xl font-semibold text-yellow-500">
-                            15
+                            {data?.pendingTasks}
                         </p>
                     </Card>
                     <Card className="shadow-md">
                         <h3 className="text-xl font-bold">Overdue</h3>
-                        <p className="text-2xl font-semibold text-red-500">5</p>
+                        <p className="text-2xl font-semibold text-red-500">
+                            {data?.dueTasks}
+                        </p>
                     </Card>
                 </div>
             </div>
-            <UserTasksDetailsTable />
+            <UserTasksDetailsTable tasks={data?.getTasks} />
         </div>
     );
 };
 
-export default UsrerPerformanceDetals;
+export default UserPerformanceDetails;
