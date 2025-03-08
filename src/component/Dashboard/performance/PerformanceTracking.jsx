@@ -2,9 +2,21 @@ import React, { useEffect, useState } from "react";
 import UserPerformanceTable from "./Performancetable.jsx";
 import PerformanceDashboard from "./PerformanceDashboard.jsx";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const PerformanceTracking = () => {
     const [tasks, setTasks] = useState();
+
+    const { currentUser } = useSelector((store) => store.user);
+
+    if (currentUser?.data?.role !== "Admin") {
+        return (
+            <Navigate
+                to={`/dashboard/performance-tracking/${currentUser?.data?._id}`}
+            />
+        );
+    }
 
     async function getTasks() {
         try {

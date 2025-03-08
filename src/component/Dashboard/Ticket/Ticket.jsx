@@ -111,7 +111,6 @@ const Ticket = () => {
             `/api/v1/ticket/deleteTicketByID/${deleteId}`
         );
 
-
         if (response?.data.statusCode === 200) {
             setTickets(tickets.filter((ticket) => ticket._id !== deleteId));
             toast.success("Ticket deleted successfully!");
@@ -162,22 +161,6 @@ const Ticket = () => {
     // Truncate Text
     const truncateText = (text, maxLength) =>
         text?.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-
-    const handleAllTickets = () => {
-        setTickets(originalTickets);
-    };
-
-    const handleMyTickets = () => {
-        if (!currentUser?.data?._id) {
-            console.error("Current user is not defined");
-            return;
-        }
-        setTickets(
-            originalTickets.filter(
-                (task) => task.assignedBy?._id === currentUser?.data?._id
-            )
-        );
-    };
 
     return (
         <>
@@ -233,22 +216,6 @@ const Ticket = () => {
                             className=" h-10"
                             size="small"
                             onClick={handleCreateTicket} // Call handleCreateTicket
-                        />
-                        <Button
-                            label="All Tickets"
-                            className="h-10 hover:bg-black text-white"
-                            size="small"
-                            icon="pi pi-tags"
-                            outlined
-                            onClick={handleAllTickets}
-                        />
-                        <Button
-                            label="My Tickets"
-                            className="h-10 hover:bg-black text-white"
-                            size="small"
-                            icon="pi pi-tag"
-                            outlined
-                            onClick={handleMyTickets}
                         />
                     </div>
                     <div className="w-full md:w-100 ">

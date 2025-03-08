@@ -76,9 +76,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
     const [files, setFiles] = useState(existingAttachments);
     const [loading, setLoading] = useState(false);
     const [updatedAttachments, setUpdatedAttachments] = useState([]);
-    const { id } = useParams();
 
     const { users = [] } = useSelector((store) => store.userManagement || {});
+    const { projects = [] } = useSelector((store) => store.project || {});
 
     useEffect(() => {
         if (users.length) {
@@ -114,6 +114,7 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
             setValue("startDate", new Date(task.startDate));
             setValue("dueDate", new Date(task.dueDate));
             setValue("assignedTo", task.assignedTo?._id);
+            setValue("projects", task.projectId);
             setValue("assignedBy", task.assignedBy?.name);
             setValue("description", task.description);
             setValue("label", task.label);
@@ -172,12 +173,12 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
         );
         formData.append("dueDate", moment(data.dueDate).format("YYYY-MM-DD"));
         formData.append("assignedTo", data.assignedTo);
+        formData.append("projectId", data.projects);
         formData.append("assignedBy", currentUser?.data?._id);
         formData.append("description", data.description);
         formData.append("label", data.label);
         formData.append("priority", data.priority);
         formData.append("status", data.status);
-        formData.append("projectId", id);
         updatedAttachments.forEach((file) => {
             formData.append("attachments", file);
         });
@@ -379,6 +380,37 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                     {errors.assignedTo && (
                         <small className="text-red-500">
                             {errors.assignedTo.message}
+                        </small>
+                    )}
+                </div>
+                {/* Project */}
+                <div>
+                    <label>
+                        Project <span className="text-red-500"> *</span>
+                    </label>
+                    <Controller
+                        name="projects"
+                        control={control}
+                        rules={{ required: "Project is required" }}
+                        render={({ field }) => (
+                            <Dropdown
+                                {...field}
+                                options={projects.map((each) => ({
+                                    label: each.projectName,
+                                    value: each._id,
+                                }))}
+                                placeholder="Select Project"
+                                className="w-full"
+                                value={field.value}
+                                onChange={(e) => {
+                                    field.onChange(e.value);
+                                }}
+                            />
+                        )}
+                    />
+                    {errors.projects && (
+                        <small className="text-red-500">
+                            {errors.projects.message}
                         </small>
                     )}
                 </div>

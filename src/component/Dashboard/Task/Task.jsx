@@ -120,21 +120,21 @@ const Task = () => {
         );
     };
 
-    const handleAllTask = () => {
-        setTasks(originalTasks);
-    };
+    // const handleAllTask = () => {
+    //     setTasks(originalTasks);
+    // };
 
-    const handleMyTask = () => {
-        if (!currentUser?.data?._id) {
-            toast.error("Current user is not defined");
-            return;
-        }
-        setTasks(
-            originalTasks.filter(
-                (task) => task.assignedTo._id === currentUser.data._id
-            )
-        );
-    };
+    // const handleMyTask = () => {
+    //     if (!currentUser?.data?._id) {
+    //         toast.error("Current user is not defined");
+    //         return;
+    //     }
+    //     setTasks(
+    //         originalTasks.filter(
+    //             (task) => task.assignedTo._id === currentUser.data._id
+    //         )
+    //     );
+    // };
 
     return (
         <>
@@ -147,22 +147,6 @@ const Task = () => {
                         className="h-9"
                         size="small"
                         icon="pi pi-plus"
-                    />
-                    <Button
-                        label="Tasks"
-                        className="h-9 hover:bg-black text-white"
-                        size="small"
-                        icon="pi pi-user"
-                        outlined
-                        onClick={handleAllTask}
-                    />
-                    <Button
-                        label="My Task"
-                        className="h-9 hover:bg-black text-white"
-                        size="small"
-                        icon="pi pi-user"
-                        outlined
-                        onClick={handleMyTask}
                     />
                 </div>
                 <div className="w-full md:w-100">
