@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -13,17 +12,19 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { useDispatch, useSelector } from "react-redux";
 import { getALlEstimates } from "../../../redux/estimateSlice.js";
-import moment from "moment";
 import DeleteModal from "../../../shared/DeleteModal.jsx";
 import toast from "react-hot-toast";
-import { ProgressSpinner } from 'primereact/progressspinner';
+import UpdateEstimate from "./UpdateEstimate.jsx";
+import { Skeleton } from "primereact/skeleton";
 
 const Financial_Management = () => {
 
     const [openModel, setOpenModel] = useState(false);
     const [openDeleteModel , setOpenDeleteModal] = useState(false);
+    const [openUpdateModal , setOpenUpdateModal] = useState(false);
     const [deleteId , setDeleteId] = useState(null);
     const [disableDeleteBtn , setDisableDeleteBtn] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
 
 
     const navigate = useNavigate();
@@ -44,7 +45,6 @@ const Financial_Management = () => {
     }, [dispatch]);
 
     useEffect(()=>{ 
-
         if (!estimateNumber?.trim()) {
             setTableData(allEstimate);
         } else {
@@ -59,17 +59,14 @@ const Financial_Management = () => {
 
     const statusTemplate = (rowData) => {
         let statusColor;
-        switch (rowData.status) {
-            case "Open":
-                statusColor = "bg-red-200 text-blue-800";
-                break;
+        switch (rowData?.projectStatus) {
             case "Pending":
                 statusColor = "bg-yellow-200 text-yellow-800";
                 break;
-            case "Resolved":
-                statusColor = "bg-green-100 text-green-800";
+            case "In Progress":
+                statusColor = "bg-green-100 text-green-600";
                 break;
-            case "Closed":
+            case "Completed":
                 statusColor = "bg-green-400 text-green-800";
                 break;
             default:
@@ -80,14 +77,33 @@ const Financial_Management = () => {
             <span
                 className={`px-2 py-1 rounded-md text-sm w-[120px] flex items-center justify-center ${statusColor}`}
             >
-                {rowData.status}
+                {rowData?.projectStatus}
             </span>
         );
     };
 
-    const modifyCurrency = (rowData) => {
-        return `${rowData.currency === "USD" ? "$" : "₹"} ${rowData.summary?.finalAmount}`;
-    };
+    const paymentTemplate = (rowData)=>{
+
+        let statusColor;
+        switch (rowData?.paymentStatus) {
+            case "Approved":
+                statusColor = "bg-yellow-200 text-yellow-800";
+                break;
+            case "Paid":
+                statusColor = "bg-green-400 text-green-800";
+                break;
+            default:
+                statusColor = "bg-gray-100 text-gray-800";
+        }
+
+        return (
+            <span
+                className={`px-2 py-1 rounded-md text-sm w-[120px] flex items-center justify-center ${statusColor}`}
+            >
+                {rowData?.paymentStatus}
+            </span>
+        );
+    }
 
     async function handleDelete()
     {
@@ -105,15 +121,27 @@ const Financial_Management = () => {
             toast.error("Failed to Delete Record");
         }
     }
+    const skeletonTemplate = () => <Skeleton />
 
     if(isLoading){
-        return <div className="text-center my-3">
-            <ProgressSpinner 
-                style={{width: '50px', height: '50px'}} 
-                strokeWidth="8" fill="var(--surface-ground)" 
-                animationDuration=".5s" 
-            />
-            <p className="text-gray-500">Loading... Please wait</p>
+        return <div className="card mx-5 my-4">
+            <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
+                <div className="flex gap-2">
+                    <Skeleton width="150px" height="40px" />
+                </div>
+                <div className="w-full md:w-100">
+                    <Skeleton width="100%" height="40px" />
+                </div>
+            </div>
+            <DataTable value={Array.from({ length: 10 })} className="p-datatable-striped">
+                <Column field="estimateNumber" header="Estimate No" body={skeletonTemplate} />
+                <Column field="clientId.name" header="Client" body={skeletonTemplate} />
+                <Column field="Total" header="Total" body={skeletonTemplate} />
+                <Column field="validTill" header="Valid Till" body={skeletonTemplate} />
+                <Column field="userId.name" header="Created By" body={skeletonTemplate} />
+                <Column field="status" header="Status" body={skeletonTemplate} />
+                <Column header="Action" body={skeletonTemplate} />
+            </DataTable>
         </div>
     }
 
@@ -123,7 +151,7 @@ const Financial_Management = () => {
             <div className="flex gap-2">
                 <Button
                     icon="pi pi-plus"
-                    label="Create Estimate"
+                    label="Project Estimate"
                     className="p-button-raised w-full md:w-auto h-10"
                     onClick={() => setOpenModel(true)}
                 />
@@ -159,23 +187,22 @@ const Financial_Management = () => {
             >
                 <Column field="estimateNumber" header="Estimate No"/>
                 <Column field="clientId.name" header="Client" />
-                <Column field="" header="Total" body={modifyCurrency}/>
-                <Column field="validTill" header="Valid Till" />
+                <Column field="projectName" header="Project" />
                 <Column field="userId.name" header="Created By" />
-                <Column field="status" header="Status" body={statusTemplate} />
+                <Column field="projectStatus" header={`Project Status`} body={statusTemplate} />
+                <Column field="paymentStatus" header="Payment Status" body={paymentTemplate} />
                 <Column
                     header="Action"
                     body={(rowData) => (
                         <div className="flex items-center gap-3 justify-evenly">
-                            <button>
+                            <button title="View More">
                                 <i className="pi pi-eye text-blue-500 cursor-pointer" onClick={()=> navigate(`/dashboard/financial-management/${rowData._id}`)}></i>
                             </button>
-                            {/* <button>
-                                <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
-                            </button> */}
-                            <button>
-                                <i 
-                                    onClick={()=>{setOpenDeleteModal(true), setDeleteId(rowData._id)}}
+                            <button disabled={rowData?.paymentStatus =="Paid"} title="Update Status" onClick={()=> {setSelectedItem(rowData) ,setOpenUpdateModal(true)}}>
+                                <i className={`pi pi-pen-to-square text-green-500 ${rowData?.paymentStatus =="Paid" ? "cursor-not-allowed" : "cursor-pointer"}`}></i>
+                            </button>
+                            <button title="">
+                                <i onClick={()=>{setOpenDeleteModal(true), setDeleteId(rowData._id)}}
                                     className="pi pi-trash text-red-500 cursor-pointer"></i>
                             </button>
                         </div>
@@ -185,12 +212,21 @@ const Financial_Management = () => {
         </div>
 
         <Dialog
-            header="Create Estimate"
+            header="Project Order Estimate"
             visible={openModel}
             style={{ width: "90vw" }}
             onHide={() => setOpenModel(false)}
         >
             <CreateEstimate setOpenModel={setOpenModel} />
+        </Dialog>
+
+        <Dialog
+            header="Update Project Estimate"
+            visible={openUpdateModal}
+            style={{ width: "50vw" }}
+            onHide={() => setOpenUpdateModal(false)}
+        >
+            <UpdateEstimate selectedItem={selectedItem} setOpenUpdateModal={setOpenUpdateModal} />
         </Dialog>
 
 

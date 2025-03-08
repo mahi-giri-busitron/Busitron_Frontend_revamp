@@ -23,26 +23,19 @@ const CreateEstimate = ({setOpenModel}) => {
     let currencyList = [{ label: "INR (₹)", value: "INR" } , { label: "USD ($)", value: "USD" }]
 
     const {control,register,handleSubmit,formState: { errors },setValue,watch, setError} = useForm({
-        defaultValues: { quantity: 1, unitPrice: 1, tax: "", discount: 0 },
+        defaultValues: { amount: "",tax: ""},
     });
 
     let [files , setFiles] = useState([]);
     let [isDisabled , setIsDisabled] = useState(false);
-    let [submitLoading , setSubmitLoading] = useState(false)
 
     let dispatch = useDispatch();
 
-    let qty = useWatch({ control, name: "quantity" }) || 0;
-    let unitPrice = useWatch({ control, name: "unitPrice" }) || 0;
-    let tax = useWatch({ control, name: "tax" }) || 0;  // tax percentage
-    let discount = useWatch({ control, name: "discount" }) || 0;
-
-    let baseAmount = qty * unitPrice;
-    let taxValue = tax !== 0 ? (baseAmount * tax) / 100 : 0; // tax value means how much gst amount involved
-    let taxedAmount = baseAmount + taxValue;  // amount that includes tax
-    let subTotal = baseAmount + (baseAmount * tax) / 100;
-    let discountAmount = discount !== 0 ? (taxedAmount * discount) / 100 : 0;
-    let finalAmount = (taxedAmount - discountAmount).toFixed(2);
+    let amount = parseFloat(useWatch({ control, name: "amount" })) || 0;
+    let tax = parseFloat(useWatch({ control, name: "tax" })) || 0;
+    
+    let taxAmount = (amount * tax) / 100;
+    let finalAmount = (amount + taxAmount).toFixed(2);
 
     let currentUser = useSelector((store)=> store?.user?.currentUser);
 
@@ -73,40 +66,29 @@ const CreateEstimate = ({setOpenModel}) => {
     {
         let formData = new FormData();
 
-        // console.log("files attached ", files);
-
-        if(data?.estimateNumber?.trim()== "")
+        if(data?.projectName?.trim()== "")
         {
-            setError("estimateNumber",{type: "manual", message : "Estimate No required*"});
+            setError("projectName",{type: "manual", message : "Project Name required*"});
+            return;
+        }
+
+        if(data?.amount == "")
+        {
+            setError("amount",{type: "manual", message : "Amount Required*"});
             return;
         }
 
         formData.append("userId",currentUser.data._id);
-        formData.append("estimateNumber", data.estimateNumber);
         formData.append("validTill", data.validTill ? moment(data.validTill).format("DD-MM-YYYY") : "");
         formData.append("currency", data.currency);
         formData.append("clientId", data.client);
-        formData.append("productName", data.productName);
-        formData.append("responseMessage", data.responseMessage);
-    
-        const products = {
-            itemName: data.itemName,
-            itemDescription: data.itemDescription,
-            quantity: qty.toString(),
-            unitPrice: unitPrice.toString(),
-            taxPercentage: tax.toString(),
-            amount: taxedAmount.toString(),
-        };
-        formData.append("products",JSON.stringify(products));
-
-        const summary = {
-            subTotal: subTotal.toString(),
-            discount: discount.toString(),
-            taxAmount: taxValue.toString(),
-            finalAmount: finalAmount.toString(),
-        };
-        formData.append("summary",JSON.stringify(summary));
-
+        formData.append("projectName", data.projectName);
+        formData.append("amount", data.amount);
+        formData.append("description", data.description)
+        formData.append("taxPercentage", data.tax);
+        formData.append("taxAmount", taxAmount || "0");
+        formData.append("finalAmount", finalAmount || "0");
+       
         if(files.length){
             files.forEach(val=>{
                 formData.append("uploadedFile", val);
@@ -137,55 +119,31 @@ const CreateEstimate = ({setOpenModel}) => {
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-lg max-w-full mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
-                Estimate Details
-            </h1>
-
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div className="">
                         <label className="block text-gray-700 font-medium">
-                            Estimate Number  <span className="text-red-500">*</span>
-                        </label>
-                        <InputText
-                            className="w-full h-10"
-                            placeholder="EST#001"
-                            {...register("estimateNumber", {
-                                required: "Estimate Number required",
-                                onChange: (e) => {
-                                    e.target.value = removeDomElementsFromInput(e.target.value);
-                                    e.target.value = e.target.value.trim()
-                                },
-                            })}
-                        />
-                        {errors.estimateNumber && (
-                            <p className="text-red-400 font-size-error">
-                                {errors.estimateNumber.message}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="">
-                        <label className="block text-gray-700 font-medium">
-                            Valid Till <span className="text-red-500">*</span>
+                            Client  <span className="text-red-500">*</span>
                         </label>
                         <Controller
-                            name="validTill"
+                            name="client"
                             control={control}
-                            rules={{ required: "Valid Till Date required" }}
+                            rules={{ required: "Client required" }}
                             render={({ field }) => (
-                                <Calendar
-                                    value={field.value}
-                                    id="buttondisplay"
-                                    dateFormat="dd/mm/yy"
-                                    className="w-full h-10"
-                                    showIcon
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                    }}
+                                <Dropdown
+                                    {...field}
+                                    className="w-full h-10 items-center"
+                                    options={allAdmins}
+                                    placeholder="Select Client"
+                                    onChange={(e) => field.onChange(e.value)}
                                 />
                             )}
-                        />
+                            />
+                            {errors.client && (
+                                <p className="text-red-400 font-size-error">
+                                    {errors.client.message}
+                                </p>
+                            )}
                     </div>
 
                     <div className="">
@@ -215,123 +173,86 @@ const CreateEstimate = ({setOpenModel}) => {
                                 </p>
                             )}
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-                    <div className="flex items-end space-x-2 w-full">
-                        <div className="w-full">
-                            <label className="block text-gray-700 font-medium">
-                                Client  <span className="text-red-500">*</span>
-                            </label>
-                            <Controller
-                                name="client"
-                                control={control}
-                                rules={{ required: "Client required" }}
-                                render={({ field }) => (
-                                    <Dropdown
-                                        {...field}
-                                        className="w-full h-10 items-center"
-                                        options={allAdmins}
-                                        placeholder="Select Client"
-                                        onChange={(e) => field.onChange(e.value)}
-                                    />
-                                )}
+                    <div className="">
+                        <label className="block text-gray-700 font-medium">
+                            Valid Till <span className="text-red-500">*</span>
+                        </label>
+                        <Controller
+                            name="validTill"
+                            control={control}
+                            rules={{ required: "Valid Till Date required" }}
+                            render={({ field }) => (
+                                <Calendar
+                                    value={field.value}
+                                    id="buttondisplay"
+                                    dateFormat="dd/mm/yy"
+                                    placeholder="Enter Date"
+                                    className="w-full h-10"
+                                    minDate={new Date()}
+                                    showIcon
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
                                 />
-                            {errors.client && (
-                                <p className="text-red-400 font-size-error">
-                                    {errors.client.message}
-                                </p>
                             )}
-                        </div>
+                        />
+                        {errors.validTill && (
+                            <p className="text-red-400 font-size-error">
+                                {errors.validTill.message}
+                            </p>
+                        )}
                     </div>
                 </div>
 
-                {/* <div className="my-3 w-full">
-                    <label className="block text-gray-700 font-medium">
-                        Description 
-                    </label>
-                    <Editor
-                        name="description"
-                        className="w-full mt-1"
-                        onTextChange={(e) => {
-                            let removeTag =
-                                e.htmlValue &&
-                                e.htmlValue.replace(/<\/?p>/g, "");
-                                setValue("description", removeTag, {
-                                shouldValidate: true,
-                            });                        
-                        }}
-                    />
-                </div> */}
-
-                <div className="grid grid-cols-1 gap-2">
-                    <label htmlFor="productName" className="text-gray-700 font-medium">
-                        Product / Task Name <span className="text-red-500">*</span>
-                    </label>
-                    
-                    <InputText
-                        id="productName"
-                        className="w-full md:w-1/3 h-10"
-                        placeholder="Enter Product / Task"
-                        {...register("productName", {
-                            required: "Product / Task required",
-                        })}
-                        onInput={(e) => {
-                            let sanitizedText = removeDomElementsFromInput(e.target.value);
-                            e.target.value = sanitizedText.charAt(0).toUpperCase() + sanitizedText.slice(1);
-                        }}
-                    />
-
-                    {errors.productName && (
-                        <p className="text-red-400 font-size-error">
-                            {errors.productName.message}
-                        </p>
-                    )}
-                </div>
-
-    {/* first table */}
-                <div className="my-3 overflow-x-auto">
-                    <table className="w-full border-collapse border border-gray-300">
+                <div className="my-5 overflow-x-auto rounded-md">
+                    <table className="table-auto border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="border border-gray-300 p-2 text-left">
-                                    Description
+                                <th className="border border-gray-300 p-2 text-center">
+                                    Project Name
                                 </th>
                                 <th className="border border-gray-300 p-2 text-center">
-                                    Quantity
-                                </th>
-                                <th className="border border-gray-300 p-2 text-center">
-                                    Unit Price
+                                    Amount
                                 </th>
                                 <th className="border border-gray-300 p-2 text-center">
                                     Tax (%)
                                 </th>
                                 <th className="border border-gray-300 p-2 text-center">
-                                    Amount
+                                    Tax Amount
+                                </th>
+                                <th className="border border-gray-300 p-2 text-center">
+                                    Final Amount
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="border border-gray-300 p-2">
+                                <td className="w-[40%] border border-gray-300 p-1 text-center">
                                     <InputText
-                                        name="itemName"
-                                        className="h-10 w-full"
-                                        placeholder="Item Name"
-                                        {...register("itemName")}
-                                        onInput={(e)=> {
-                                            let sanitize = removeDomElementsFromInput(e.target.value);
-                                            e.target.value = sanitize.charAt(0).toUpperCase() + sanitize.slice(1);                           
+                                        className="w-full h-10"
+                                        placeholder="Enter Project "
+                                        {...register("projectName", {
+                                            required: "Project Name required",
+                                        })}
+                                        onInput={(e) => {
+                                            let sanitizedText = removeDomElementsFromInput(e.target.value);
+                                            e.target.value = sanitizedText.charAt(0).toUpperCase() + sanitizedText.slice(1);
                                         }}
                                     />
+                                    {errors.projectName && (
+                                        <p className="text-red-400 font-size-error">
+                                            {errors.projectName.message}
+                                        </p>
+                                    )}
                                 </td>
-                                <td className="border border-gray-300 p-1 text-center">
+                                <td className="border border-gray-300 p-1 text-center w-[15%]">
                                     <InputText
                                         tooltip="Only Numbers are allowed"
-                                        className="h-10 w-24 text-end"
-                                        placeholder="1"
-                                        {...register("quantity", {
-                                            required: "Qty Required",
+                                        className="h-10 w-full text-end"
+                                        placeholder="Enter Amount"
+                                        {...register("amount", {
+                                            required: "Amount Required",
                                         })}
                                         tooltipOptions={{
                                             position: "top",
@@ -342,29 +263,14 @@ const CreateEstimate = ({setOpenModel}) => {
                                             e.target.value = parseInt(e.target.value) || ""
                                         }}
                                     />
+                                    {errors.amount && (
+                                        <p className="text-red-400 font-size-error">
+                                            {errors.amount.message}
+                                        </p>
+                                    )}
                                 </td>
-                                <td className="border border-gray-300 p-1 text-center">
-                                    <InputText
-                                        tooltip="Only Numbers are allowed"
-                                        tooltipOptions={{
-                                            position: "top",
-                                            className: "global-tooltip",
-                                        }}
-                                        className="h-10 w-24 text-end"
-                                        placeholder="0"
-                                        {...register("unitPrice", {
-                                            required: "Unit Price Required",
-                                        })}
-                                        onInput={(e) =>
-                                            (e.target.value =
-                                                e.target.value.replace(
-                                                    /\D/g,
-                                                    ""
-                                                ))
-                                        }
-                                    />
-                                </td>
-                                <td className="border border-gray-300 p-2 text-center">
+                                
+                                <td className="border border-gray-300 p-2 text-center w-[15%]">
                                     <Controller
                                         name="tax"
                                         control={control}
@@ -387,37 +293,41 @@ const CreateEstimate = ({setOpenModel}) => {
                                         </p>
                                     )}
                                 </td>
+                                <td className="bg-gray-50 p-2 text-center w-[15%]">{taxAmount || 0}</td>
                                 <td
-                                    rowSpan={2}
-                                    className="bg-gray-200 p-2 text-center"
+                                    className="bg-gray-200 p-2 text-center w-[15%]"
                                 >
-                                    {taxedAmount || 0}
+                                    {finalAmount || 0}
                                 </td>
                             </tr>
+
                             <tr>
                                 <td
                                     colSpan={3}
                                     className="border border-gray-300 p-2"
                                 >
                                     <InputTextarea
-                                        name="itemDescription"
+                                        name="description"
                                         rows={3}
                                         className="w-full"
-                                        placeholder="Enter Description"
-                                        {...register("itemDescription")}
+                                        placeholder="Enter Project Description (optional)"
+                                        {...register("description")}
                                         onInput={(e)=> {
                                             let sanitize = removeDomElementsFromInput(e.target.value);
                                             e.target.value = sanitize.charAt(0).toUpperCase() + sanitize.slice(1);                           
                                         }}
                                     />
                                 </td>
-                                <td className="border border-gray-300 p-2 text-center">
+                                <td 
+                                    className="border border-gray-300 p-2 text-center" 
+                                    colSpan={2}
+                                >
                                 {files && files.length <5 ?(
                                     <>
                                         <label htmlFor="fileUpload" className="cursor-pointer">
                                             <img src={cloud} alt="Upload" className="w-10 mx-auto" />
                                             <span className="text-sm font-bold text-gray-400 hover:text-gray-700">
-                                            Choose a file
+                                                Choose a file
                                             </span>
                                         </label>
                                     <input
@@ -437,13 +347,13 @@ const CreateEstimate = ({setOpenModel}) => {
                 </div>
                 
                 {Array.isArray(files) && files.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 my-2">
                         {files.map((file, index) => (
                             <div 
                                 key={index} 
                                 className="flex items-center bg-gray-100 p-1 rounded-md"
                             >
-                                <span className="text-gray-700 text-sm truncate max-w-[120px]">{file.name}</span>
+                                <span className="text-gray-700 text-sm truncate max-w-[150px]">{file.name}</span>
                                 <i
                                     title="Remove File"
                                     className="pi pi-times text-red-700 font-bold ml-2 cursor-pointer"
@@ -454,104 +364,7 @@ const CreateEstimate = ({setOpenModel}) => {
                     </div>
                 )}
 
-                <div className="my-3 overflow-x-auto">
-                    <table className="w-full border border-gray-300 border-collapse">
-                        <tbody>
-                            <tr>
-                                <td
-                                    rowSpan={4}
-                                    className="hidden w-1/2 sm:table-cell p-2 border border-gray-300"
-                                ></td>
-                                <td
-                                    colSpan={2}
-                                    className="p-2 border border-gray-300 text-gray-500"
-                                >
-                                    Sub Total
-                                </td>
-                                <td
-                                    colSpan={""}
-                                    className="p-2 border border-gray-300 "
-                                >
-                                    {subTotal || 0}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="p-2 border border-gray-300 text-gray-500">
-                                    Discount (%)
-                                </td>
-                                <td className="p-2 border border-gray-300 flex">
-                                    <InputText
-                                        tooltip="Only Numbers are allowed"
-                                        tooltipOptions={{
-                                            position: "top",
-                                            className: "global-tooltip",
-                                        }}
-                                        className="h-10 text-end w-full"
-                                        placeholder="0"
-                                        {...register("discount", {
-                                            required: "Discount required",
-                                            max: 100,
-                                            maxLength: 100,
-                                        })}
-                                        onInput={(e) => {
-                                            let value = e.target.value.replace(/\D/g,"");
-                                            if (value.length > 2)
-                                                value = value.slice(0, 2);
-                                            if (parseInt(value) > 100)
-                                                value = "100";
-                                            e.target.value = value;
-                                        }}
-                                    />
-                                </td>
-                                <td className="p-2 border border-gray-300">
-                                    {discountAmount || 0}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="p-2 border border-gray-300 text-gray-500">
-                                    Tax
-                                </td>
-                                <td
-                                    colSpan={2}
-                                    className="p-2 border border-gray-300 text-right"
-                                >
-                                    {taxValue || 0}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td
-                                    colSpan={2}
-                                    className="p-2 border border-gray-300 text-center"
-                                >
-                                    Total
-                                </td>
-                                <td className="p-2 border border-gray-300">
-                                    {finalAmount || 0}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td className="p-2 border border-gray-300">
-                                    <label className="text-sm text-gray-500">
-                                        Response for the recipient
-                                    </label>
-                                    <InputTextarea
-                                        rows={3}
-                                        className="w-full"
-                                        placeholder="Eg. Thank Your for your business"
-                                        {...register("responseMessage")}
-                                        onInput={(e)=> {
-                                            let sanitize = removeDomElementsFromInput(e.target.value);
-                                            e.target.value = sanitize.charAt(0).toUpperCase() + sanitize.slice(1);                           
-                                        }}
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div className={`${isDisabled ? "" : "flex gap-2"} `}>
+                <div className={`${isDisabled ? "" : "flex gap-2 mt-2"} `}>
                 {
                     isDisabled ? (
                         <div className="text-center">
