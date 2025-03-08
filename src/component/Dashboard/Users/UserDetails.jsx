@@ -4,6 +4,7 @@ import { Divider } from "primereact/divider";
 import profile_pic from "../../../assets/images/dashboard/profilepic.jpg";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import axios from 'axios';
 import {
     deactivateUser,
     fetchSpecificUser,
@@ -52,6 +53,27 @@ const UserDetails = () => {
         }
     }, [userInfo, editable]);
 
+
+
+    const [taskCount, setTaskCount] = useState(0);
+    const [ticketCount, setTicketCount] = useState(0);
+    const [projects, setProjects] = useState(0);
+    
+    useEffect(() => {
+        dispatch(fetchSpecificUser(empid));
+    
+        axios.get(`http://localhost:5421/api/v1/userdashboard/${empid}`)
+            .then((response) => {
+                const data = response.data; 
+                if (data.success) {
+                    setTaskCount(data.data.taskCount);
+                    setTicketCount(data.data.ticketCount);
+                    setProjects(data.data.projectCount);
+                }
+            })
+            .catch((error) => console.error("Error fetching user data:", error));
+    }, [dispatch, empid]);
+
     const getUserDetailsUi = () => {
         switch (true) {
             case isLoading:
@@ -62,7 +84,8 @@ const UserDetails = () => {
                         <Card className="shadow-lg">
                             <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                                 <img
-                                    src={userInfo?.avatar}
+                                    src={userInfo?.avatar || profile_pic}
+                                    alt="Profile"
                                     className="w-1/2 md:w-1/5 aspect-square lg:max-w-[240px]"
                                 />
                                 <div className="flex flex-col flex-1">
@@ -86,37 +109,22 @@ const UserDetails = () => {
                                         </p>
                                         <hr></hr>
                                     </div>
-                                    <div className="flex  flex-1 w-full  h-full  justify-around text-center mt-4">
-                                        <div className="shadow-lg p-4 flex-1 gap-3  flex-wrap flex flex-col justify-between">
-                                            <p className="text-gray-500 ">
-                                                Open Tasks
-                                            </p>
-                                            <p className=" font-bold text-lg sm:text-lg md:text-xl">
-                                                0
-                                            </p>
+                                    <div className="flex flex-1 w-full h-full justify-around text-center mt-4">
+                                        <div className="shadow-lg p-4 flex-1 gap-3 flex-wrap flex flex-col justify-between">
+                                            <p className="text-gray-500">Open Tasks</p>
+                                            <p className="font-bold text-lg sm:text-lg md:text-xl">{taskCount}</p>
                                         </div>
                                         <div className="shadow-lg p-4 flex-1 md:w-50 flex flex-col justify-between">
-                                            <p className="text-gray-500">
-                                                Projects
-                                            </p>
+                                            <p className="text-gray-500">Projects</p>
                                             <p className="text-lg sm:text-lg md:text-xl font-bold">
-                                                2
+                                                {projects ?? 0}
                                             </p>
                                         </div>
+                                      
                                         <div className="shadow-lg p-4 flex-1 flex flex-col justify-between">
-                                            <p className="text-gray-500">
-                                                Hours Logged
-                                            </p>
+                                            <p className="text-gray-500">Tickets</p>
                                             <p className="text-lg sm:text-lg md:text-xl font-bold">
-                                                0
-                                            </p>
-                                        </div>
-                                        <div className="shadow-lg p-4 flex-1 flex flex-col justify-between">
-                                            <p className="text-gray-500">
-                                                Tickets
-                                            </p>
-                                            <p className="text-lg  sm:text-lg md:text-xl font-bold">
-                                                0
+                                                {ticketCount ?? 0}
                                             </p>
                                         </div>
                                     </div>
@@ -187,7 +195,8 @@ const UserDetails = () => {
                                         </p>
                                     ) : (
                                         <InputText
-                                            value={userInfo?.employeeId}
+                                            value={userInfo?.name}
+                                            className="p-inputtext-sm h-10"
                                             disabled
                                         />
                                     )}
