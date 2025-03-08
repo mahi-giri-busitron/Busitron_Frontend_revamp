@@ -1,19 +1,14 @@
 import React from "react";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import moment from "moment";
 
 const DatesAccordion = ({ taskData }) => {
-    const formatDate = (dateString) => {
-        return dateString
-            ? new Date(dateString).toISOString().split("T")[0]
-            : null;
-    };
-
     const dates = {
-        Due: taskData?.dueDate,
-        Created: formatDate(taskData?.createdAt),
-        Updated: formatDate(taskData?.updatedAt),
-        "Start Date": taskData?.startDate,
-        "End Date": taskData?.dueDate,
+        Due: moment(taskData?.dueDate).format("DD-MM-YYYY"),
+        Created: moment(taskData?.createdAt).format("DD-MM-YYYY"),
+        Updated: moment(taskData?.updatedAt).format("DD-MM-YYYY"),
+        "Start Date": moment(taskData?.startDate).format("DD-MM-YYYY"),
+        "End Date": moment(taskData?.dueDate).format("DD-MM-YYYY"),
     };
 
     return (

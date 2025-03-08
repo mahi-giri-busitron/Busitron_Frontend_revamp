@@ -242,6 +242,24 @@ const UserDetails = () => {
                             <div className="grid grid-cols-1  gap-4 text-gray-600">
                                 <div className="grid grid-cols-2 lg:grid-cols-4  p-3 items-center">
                                     <p className="font-semibold  text-base md:text-base">
+                                        Company Name:
+                                    </p>
+                                    {!editable ? (
+                                        <p className="text-sm md:text-base">
+                                            {userInfo?.companyName}
+                                        </p>
+                                    ) : (
+                                        <InputText
+                                            value={userInfo?.companyName}
+                                            className="p-inputtext-sm h-10"
+                                            disabled
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1  gap-4 text-gray-600">
+                                <div className="grid grid-cols-2 lg:grid-cols-4  p-3 items-center">
+                                    <p className="font-semibold  text-base md:text-base">
                                         Gender:
                                     </p>
                                     {!editable ? (

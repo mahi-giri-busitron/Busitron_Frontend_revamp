@@ -12,16 +12,12 @@ const SingleTicket = () => {
     const [isDialogVisible, setDialogVisible] = useState(false);
     const location = useLocation();
     const taskData = location.state;
-    console.log(taskData);
 
     useEffect(() => {
         if (taskData) {
             setUploadedFiles(taskData?.attachments);
         }
     }, []);
-
-    console.log(uploadedFiles);
-    
 
     return (
         <div className="p-4 h-full text-start">
@@ -178,8 +174,6 @@ const SingleTicket = () => {
                             {uploadedFiles.map((file, index) => {
                                 if (!file) return null;
 
-                                console.log(file);
-
                                 const fileExtension = file.includes(".")
                                     ? file.split(".").pop().toLowerCase()
                                     : "";
@@ -199,7 +193,6 @@ const SingleTicket = () => {
                                     .split("-")
                                     .slice(1)
                                     .join("-");
-                                console.log(fileName);
 
                                 return (
                                     <div

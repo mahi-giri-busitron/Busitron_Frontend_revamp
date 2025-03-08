@@ -8,9 +8,10 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import axios from "axios";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 const taskCategoryList = [
     "Project Management",
@@ -52,7 +53,21 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
         setValue,
         trigger,
         watch,
-    } = useForm();
+        reset,
+    } = useForm({
+        defaultValues: {
+            taskCategory: "",
+            title: "",
+            assignedTo: {},
+            assignedBy: {},
+            startDate: "",
+            dueDate: "",
+            description: "",
+            label: "",
+            priority: "",
+            status: "",
+        },
+    });
 
     const [existingAttachments, setExistingAttachments] = useState([]);
     const fileUploadRef = useRef(null);
@@ -61,8 +76,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
     const [files, setFiles] = useState(existingAttachments);
     const [loading, setLoading] = useState(false);
     const [updatedAttachments, setUpdatedAttachments] = useState([]);
+    const { id } = useParams();
 
-    const { users = [] } = useSelector((store) => store?.userManagement || {});
+    const { users = [] } = useSelector((store) => store.userManagement || {});
 
     useEffect(() => {
         if (users.length) {
@@ -76,12 +92,28 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
     }, [users]);
 
     useEffect(() => {
+        if (task) {
+            reset({
+                ...task,
+                assignedTo: task.assignedTo || {},
+                assignedBy: task.assignedBy || {},
+                startDate: task.startDate
+                    ? moment(task.startDate).format("YYYY-MM-DD")
+                    : "",
+                dueDate: task.dueDate
+                    ? moment(task.dueDate).format("YYYY-MM-DD")
+                    : "",
+            });
+        }
+    }, [task, reset]);
+
+    useEffect(() => {
         if (mode === "edit" && task) {
             setValue("title", task.title);
             setValue("taskCategory", task.taskCategory);
             setValue("startDate", new Date(task.startDate));
             setValue("dueDate", new Date(task.dueDate));
-            setValue("assignedTo", task.assignedTo._id);
+            setValue("assignedTo", task.assignedTo?._id);
             setValue("assignedBy", task.assignedBy?.name);
             setValue("description", task.description);
             setValue("label", task.label);
@@ -132,8 +164,6 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
 
     const onSubmit = async (data) => {
         const formData = new FormData();
-
-        // Append task details
         formData.append("title", data.title);
         formData.append("taskCategory", data.taskCategory);
         formData.append(
@@ -147,16 +177,17 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
         formData.append("label", data.label);
         formData.append("priority", data.priority);
         formData.append("status", data.status);
-
-        // Append remaining existing attachments
+        formData.append("projectId", id);
         updatedAttachments.forEach((file) => {
             formData.append("attachments", file);
         });
 
-        // Append newly uploaded files
         uploadedFiles.forEach((fileObj) => {
-            if (fileObj.status === "uploaded") {
-                formData.append("attachments", fileObj.file);
+            const file = fileObj.file || fileObj;
+            if (file instanceof File) {
+                formData.append("attachments", file);
+            } else {
+                console.error("Invalid file type:", file);
             }
         });
 
@@ -216,7 +247,6 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
     return (
         <div className="p-4 rounded-lg">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {/* Title */}
                 <div>
                     <label>
                         Task Title <span className="text-red-500"> *</span>
@@ -271,6 +301,13 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                                 <Calendar
                                     {...field}
                                     showIcon
+                                    value={
+                                        field.value
+                                            ? new Date(field.value)
+                                            : task?.startDate
+                                            ? new Date(task.startDate)
+                                            : null
+                                    }
                                     dateFormat="dd/mm/yy"
                                     className="w-full"
                                 />
@@ -295,6 +332,13 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                                 <Calendar
                                     {...field}
                                     showIcon
+                                    value={
+                                        field.value
+                                            ? new Date(field.value)
+                                            : task?.dueDate
+                                            ? new Date(task.dueDate)
+                                            : null
+                                    }
                                     dateFormat="dd/mm/yy"
                                     className="w-full"
                                 />
@@ -342,7 +386,7 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                 <div>
                     <label>Assigned By</label>
                     <InputText
-                        value={watch("assignedBy")}
+                        value={task?.assignedBy?.name || currentUser.data.name}
                         disabled
                         className="w-full bg-gray-100"
                     />
@@ -412,11 +456,9 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                         />
                     </div>
                 </div>
-                {/* Attachments */}
                 <div>
                     <label className="font-medium">Attachments</label>
 
-                    {/* Display Existing Attachments */}
                     {files.map((file, index) => {
                         const fileUrl =
                             typeof file === "string"
@@ -479,7 +521,6 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                         );
                     })}
 
-                    {/* File Upload Component */}
                     <Controller
                         name="attachments"
                         control={control}

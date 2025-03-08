@@ -16,7 +16,6 @@ import { useLocation } from "react-router-dom";
 const IssueDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isDialogVisible, setDialogVisible] = useState(false);
-
     const [activeIndex, setActiveIndex] = useState(0);
     const location = useLocation();
     const taskData = location.state;
@@ -31,36 +30,6 @@ const IssueDetails = () => {
         { label: "Comments", icon: "pi pi-comments" },
         { label: "Work Log", icon: "pi pi-list" },
         { label: "History", icon: "pi pi-history" },
-    ];
-
-    const workLogData = [
-        {
-            author: "Varsha Rajendra Meshram",
-            date: "20-Feb-2025",
-            timeSpent: "1 day",
-            description: "Completed task implementation.",
-        },
-    ];
-
-    const historyData = [
-        {
-            author: "M Harisha",
-            date: "04-Feb-2025",
-            changes: [
-                {
-                    field: "Status",
-                    original: "Open [1]",
-                    new: "SW Dev [11400]",
-                },
-                {
-                    field: "Remaining Estimate",
-                    original: "1 day [28800]",
-                    new: "0 minutes [0]",
-                },
-                { field: "Time Spent", original: "", new: "1 day [28800]" },
-                { field: "Worklog Id", original: "", new: "1000286 [1000286]" },
-            ],
-        },
     ];
 
     const issueDetails = {
@@ -121,7 +90,7 @@ const IssueDetails = () => {
                             <Card className="h-20 overflow-auto p-0 ">
                                 <p className="m-0 ">
                                     {taskData.description
-                                        ? taskData.description
+                                        ? taskData.description.replace(/<\/?p>/g, "")
                                         : "No description provided."}
                                 </p>
                             </Card>
@@ -151,14 +120,12 @@ const IssueDetails = () => {
                             {activeIndex === 1 && (
                                 <WorkLogSection
                                     showWorkLog={true}
-                                    workLog={workLogData}
                                     taskData={taskData}
                                 />
                             )}
                             {activeIndex === 2 && (
                                 <HistorySection
                                     showHistory={true}
-                                    history={historyData}
                                     taskData={taskData}
                                 />
                             )}
@@ -195,8 +162,6 @@ const IssueDetails = () => {
                             {uploadedFiles.map((file, index) => {
                                 if (!file) return null;
 
-                                console.log(file);
-
                                 const fileExtension = file.includes(".")
                                     ? file.split(".").pop().toLowerCase()
                                     : "";
@@ -216,7 +181,6 @@ const IssueDetails = () => {
                                     .split("-")
                                     .slice(1)
                                     .join("-");
-                                console.log(fileName);
 
                                 return (
                                     <div

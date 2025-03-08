@@ -111,7 +111,6 @@ const Ticket = () => {
             `/api/v1/ticket/deleteTicketByID/${deleteId}`
         );
 
-        console.log(response);
 
         if (response?.data.statusCode === 200) {
             setTickets(tickets.filter((ticket) => ticket._id !== deleteId));

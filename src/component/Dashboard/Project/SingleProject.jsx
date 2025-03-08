@@ -53,7 +53,7 @@ const SingleProject = () => {
                 return (
                     <div>
                         <div>
-                            <FileUploadModal />
+                            <FileUploadModal projectId={id} />
                         </div>
                     </div>
                 );
@@ -61,7 +61,11 @@ const SingleProject = () => {
                 return (
                     <div>
                         <div>
-                            <Milestone />
+                            {id ? (
+                                <Milestone projectId={id} />
+                            ) : (
+                                <div>Loading milestones...</div>
+                            )}
                         </div>
                     </div>
                 );

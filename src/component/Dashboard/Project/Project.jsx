@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "primeicons/primeicons.css";
 import CreateProject from "./CreateProject.jsx";
@@ -8,160 +8,49 @@ import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
-const projects = [
-    {
-        id: 1,
-        name: "Full-Stack E-Commerce Platform with Payment Gateway Integration Full-Stack E-Commerce Platform with Payment Gateway Integration",
-        members: 22,
-        startDate: "17-02-2025",
-        endDate: "25-02-2025",
-    },
-    {
-        id: 2,
-        name: "AI-Powered Job Portal with Resume Parsing and Smart Recommendations",
-        members: 12,
-        startDate: "18-02-2025",
-        endDate: "26-02-2025",
-    },
-    {
-        id: 3,
-        name: "Real-Time Chat Application with WebSockets and Push Notifications",
-        members: 27,
-        startDate: "19-02-2025",
-        endDate: "27-02-2025",
-    },
-    {
-        id: 4,
-        name: "Multi-Tenant SaaS-Based Project Management Dashboard",
-        members: 15,
-        startDate: "20-02-2025",
-        endDate: "28-02-2025",
-    },
-    {
-        id: 5,
-        name: "Social Media Platform with Live Streaming and Video Sharing",
-        members: 19,
-        startDate: "21-02-2025",
-        endDate: "01-03-2025",
-    },
-    {
-        id: 6,
-        name: "E-Learning Platform with Interactive Courses and AI-Powered Assessments",
-        members: 24,
-        startDate: "22-02-2025",
-        endDate: "02-03-2025",
-    },
-    {
-        id: 7,
-        name: "Healthcare Management System with Doctor-Patient Video Consultations",
-        members: 30,
-        startDate: "23-02-2025",
-        endDate: "03-03-2025",
-    },
-    {
-        id: 8,
-        name: "Blockchain-Integrated Digital Asset Marketplace for NFTs",
-        members: 30,
-        startDate: "24-02-2025",
-        endDate: "04-03-2025",
-    },
-    {
-        id: 9,
-        name: "Automated Expense Tracker with AI-Based Financial Insights",
-        members: 16,
-        startDate: "25-02-2025",
-        endDate: "05-03-2025",
-    },
-    {
-        id: 10,
-        name: "AI-Powered Blogging and Content Management System with SEO Optimization",
-        members: 25,
-        startDate: "26-02-2025",
-        endDate: "06-03-2025",
-    },
-    {
-        id: 11,
-        name: "Full-Stack E-Commerce Platform with Payment Gateway Integration",
-        members: 22,
-        startDate: "17-02-2025",
-        endDate: "25-02-2025",
-    },
-    {
-        id: 12,
-        name: "AI-Powered Job Portal with Resume Parsing and Smart Recommendations",
-        members: 12,
-        startDate: "18-02-2025",
-        endDate: "26-02-2025",
-    },
-    {
-        id: 13,
-        name: "Real-Time Chat Application with WebSockets and Push Notifications",
-        members: 27,
-        startDate: "19-02-2025",
-        endDate: "27-02-2025",
-    },
-    {
-        id: 14,
-        name: "Multi-Tenant SaaS-Based Project Management Dashboard",
-        members: 15,
-        startDate: "20-02-2025",
-        endDate: "28-02-2025",
-    },
-    {
-        id: 15,
-        name: "Social Media Platform with Live Streaming and Video Sharing",
-        members: 19,
-        startDate: "21-02-2025",
-        endDate: "01-03-2025",
-    },
-    {
-        id: 16,
-        name: "E-Learning Platform with Interactive Courses and AI-Powered Assessments",
-        members: 24,
-        startDate: "22-02-2025",
-        endDate: "02-03-2025",
-    },
-    {
-        id: 17,
-        name: "Healthcare Management System with Doctor-Patient Video Consultations",
-        members: 30,
-        startDate: "23-02-2025",
-        endDate: "03-03-2025",
-    },
-    {
-        id: 18,
-        name: "Blockchain-Integrated Digital Asset Marketplace for NFTs",
-        members: 30,
-        startDate: "24-02-2025",
-        endDate: "04-03-2025",
-    },
-    {
-        id: 19,
-        name: "Automated Expense Tracker with AI-Based Financial Insights",
-        members: 16,
-        startDate: "25-02-2025",
-        endDate: "05-03-2025",
-    },
-    {
-        id: 20,
-        name: "AI-Powered Blogging and Content Management System with SEO Optimization",
-        members: 25,
-        startDate: "26-02-2025",
-        endDate: "06-03-2025",
-    },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getAllprojects } from "../../../redux/projectslice.js";
+import { fetchAllUser } from "../../../redux/userManagementSlice.js";
+import toast from "react-hot-toast";
+import axios from "axios";
+import moment from "moment";
 
 const ProjectList = () => {
     const navigate = useNavigate();
     const [searchProject, setSearchProject] = useState("");
     const [isOpen, setIsOpen] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const projectsPerPage = 10;
+    const projectsPerPage = 100;
     const [showAddProject, setShowAddProject] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [particular, setparticular] = useState(null);
 
-    const filteredProjects = projects.filter((project) =>
-        project.name.toLowerCase().includes(searchProject.toLowerCase())
-    );
+    const { projects } = useSelector((state) => state.project);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllprojects());
+    }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(fetchAllUser());
+    }, []);
+
+    useEffect(() => {
+        if (particular) {
+            setShowAddProject(true);
+        }
+    }, [particular]);
+
+    const filteredProjects = useMemo(() => {
+        return projects?.length
+            ? projects.filter((project) =>
+                  project.projectName
+                      ?.toLowerCase()
+                      .includes(searchProject.toLowerCase())
+              )
+            : [];
+    }, [projects, searchProject]);
 
     const indexOfLastProject = currentPage * projectsPerPage;
     const indexOfFirstProject = indexOfLastProject - projectsPerPage;
@@ -169,17 +58,46 @@ const ProjectList = () => {
         indexOfFirstProject,
         indexOfLastProject
     );
+
+    const SendDataToEdit = (data) => {
+        setparticular(data);
+        setEditMode(true);
+        setShowAddProject(true); // Ensure the modal opens in edit mode
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await axios.delete(
+                `/api/v1/project/projects/${id}`
+            );
+            if (response.data.statusCode === 200) {
+                toast.success("Details deleted successfully!!");
+                FetchProjects();
+            } else {
+                toast.error(response.data.message || "Something went wrong");
+            }
+        } catch (error) {
+            console.error(
+                "Error:",
+                error.response ? error.response.data : error.message
+            );
+        }
+    };
+
     return (
         <div className="p-4 sm:px-5 sm:text-sm text-xs overflow-x-auto">
             <div className="flex justify-between mb-4">
                 <Button
-                    label="Add Task"
-                    onClick={() => setShowAddProject(true)}
+                    label="Add Project"
+                    onClick={() => {
+                        setShowAddProject(true);
+                        setEditMode(false); // Ensure editMode is false when adding a new project
+                    }}
                     className="p-button-sm h-10"
                     icon="pi pi-plus"
                     severity="primary"
                 />
-                <div className=" md:w-75  w-1/3 ">
+                <div className=" md:w-75 w-1/3">
                     <IconField iconPosition="left" className="h-10 ">
                         <InputIcon className="pi pi-search h-10" />
                         <InputText
@@ -192,10 +110,20 @@ const ProjectList = () => {
                 </div>
             </div>
 
-            <CreateProject
-                visible={showAddProject}
-                onHide={() => setShowAddProject(false)}
-            />
+            {showAddProject && (
+                <CreateProject
+                    visible={showAddProject}
+                    onHide={() => {
+                        setShowAddProject(false);
+                        setEditMode(false); // Reset editMode when closing the modal
+                    }}
+                    onRemove={() => setparticular(null)}
+                    Data={particular}
+                    onCloseedit={() => setIsOpen(false)}
+                    onRecall={() => FetchProjects()}
+                    editMode={editMode} // Pass editMode state properly
+                />
+            )}
 
             <DataTable
                 tableStyle={{ minWidth: "60rem" }}
@@ -220,17 +148,20 @@ const ProjectList = () => {
                     style={{ width: "30px" }}
                 />
                 <Column
-                    field="name"
+                    field="projectName"
                     header="Project Name"
                     headerClassName="custom-table-header"
                     style={{ width: "30%", maxWidth: "500px" }}
                     body={(rowData) => {
-                        const prjName = rowData.name;
+                        const prjName = rowData.projectName;
+
                         return (
                             <span
                                 className="text-gray-600 cursor-pointer hover:underline w-[100%] text-ellipsis overflow-hidden whitespace-nowrap "
                                 onClick={() =>
-                                    navigate(`/dashboard/project/${rowData.id}`)
+                                    navigate(
+                                        `/dashboard/project/${rowData._id}`
+                                    )
                                 }
                                 style={{
                                     display: "inline-block",
@@ -243,7 +174,7 @@ const ProjectList = () => {
                     }}
                 />
                 <Column
-                    field="members"
+                    field="projectMembers"
                     header="Members"
                     headerClassName="custom-table-header"
                     style={{ minWidth: "140px" }}
@@ -253,7 +184,7 @@ const ProjectList = () => {
                             <i className="pi pi-user text-gray-500 bg-gray-200 rounded-full text-xs p-1 absolute left-4"></i>
                             <i className="pi pi-user text-gray-500 bg-gray-200 rounded-full text-xs p-1 absolute left-8"></i>
                             <span className="ml-12 absolute left-5">
-                                +{rowData.members}
+                                +{rowData.projectMembers.length}
                             </span>
                         </div>
                     )}
@@ -263,43 +194,50 @@ const ProjectList = () => {
                     header="Start Date"
                     headerClassName="custom-table-header"
                     style={{ minWidth: "150px" }}
+                    body={(rowData) =>
+                        rowData.startDate
+                            ? moment(rowData.startDate).format("DD-MM-YYYY")
+                            : "N/A"
+                    }
                 />
                 <Column
                     field="endDate"
                     header="End Date"
                     headerClassName="custom-table-header"
                     style={{ minWidth: "150px" }}
+                    body={(rowData) =>
+                        rowData.endDate
+                            ? moment(rowData.endDate).format("DD-MM-YYYY")
+                            : "N/A"
+                    }
                 />
                 <Column
                     header="Action"
-                    headerClassName="custom-table-header"
                     body={(rowData) => (
-                        <div className="relative sm:pl-5 pl-5">
+                        <div className="flex gap-3 items-center">
                             <button
-                                className="text-gray-500"
-                                onClick={() =>
-                                    setIsOpen(
-                                        isOpen === rowData.id
-                                            ? null
-                                            : rowData.id
-                                    )
-                                }
+                                onClick={() => {
+                                    navigate(
+                                        `/dashboard/project/${rowData._id}`,
+                                        {
+                                            state: rowData,
+                                        }
+                                    );
+                                }}
                             >
-                                ⋮
+                                <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
                             </button>
-                            {isOpen === rowData.id && (
-                                <div className="absolute right-0 mt-1 w-24 bg-white/70 backdrop-blur-md border rounded-lg shadow-lg">
-                                    <button className="w-full px-2 py-1 text-left hover:bg-gray-200">
-                                        Edit
-                                    </button>
-                                    <button className="w-full px-2 py-1 text-left hover:bg-gray-200">
-                                        Duplicate
-                                    </button>
-                                    <button className="w-full px-2 py-1 text-left hover:bg-gray-200 text-red-500">
-                                        Delete
-                                    </button>
-                                </div>
-                            )}
+                            <button onClick={() => SendDataToEdit(rowData)}>
+                                <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    handleDelete(rowData._id);
+                                }}
+                            >
+                                <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                            </button>
                         </div>
                     )}
                 />

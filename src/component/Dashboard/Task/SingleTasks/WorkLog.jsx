@@ -77,7 +77,6 @@ const WorkLogSection = ({ showWorkLog, taskData }) => {
             const response = await axios.get(
                 `/api/v1/workLog/worklogs/${taskData._id}`
             );
-            console.log(response);
 
             setWorkLog(response.data.data);
         } catch (error) {

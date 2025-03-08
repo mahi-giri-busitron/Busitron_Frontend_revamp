@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -7,56 +8,86 @@ import "primeicons/primeicons.css";
 import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
-const InviteMemberModal = (props) => {
-    const { visible = false, setVisible } = props;
+const InviteMemberModal = ({ visible = false, setVisible }) => {
     const [loading, setLoading] = useState(false);
+    const { currentUser } = useSelector((store) => store.user);
 
-    const [data, setData] = useState({
-        email: "",
-        designation: "",
-        employeeId: "",
-        message: "",
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm({
+        defaultValues: {
+            email: "",
+            designation: "",
+            employeeId: "",
+            companyName: "",
+            message: "",
+        },
     });
 
-    async function handleSubmit() {
+    const onSubmit = async (data) => {
+        // event.preventDefault();
         try {
             setLoading(true);
-            const apiResponse = await axios.post("/api/v1/auth/register", data);
-            if (apiResponse.data.success) {
-                toast.success("Successfully registered");
-                setData({
-                    email: "",
-                    designation: "",
-                    employeeId: "",
-                    message: "",
-                });
+            const apiResponse = await axios.post(
+                "http://localhost:5421/api/v1/auth/register",
+                data
+            );
+
+            if (apiResponse.data.statusCode === 201) {
+                toast.success(
+                    apiResponse.data.message || "Successfully registered",
+                    {
+                        icon: "✅",
+                    }
+                );
+
+                setVisible(false);
             } else {
-                toast.error("Something went wrong!");
+                toast.error(
+                    apiResponse.data.message || "Something went wrong!"
+                );
             }
         } catch (error) {
-            setLoading(false);
+            if (error.response && error.response.data) {
+                toast.error(
+                    error.response.data.message ||
+                        "Error occurred while submitting"
+                );
+            } else {
+                toast.error("Network error. Please try again.");
+                console.log("error", error);
+            }
         } finally {
             setLoading(false);
+            reset();
+            setVisible(false);
         }
-    }
+    };
+
     return (
         <Dialog
             visible={visible}
             onHide={() => setVisible(false)}
-            className="w-[90%] md:w-[60%] min-h-[450px] !bg-white rounded-2xl shadow-xl "
+            className="w-[90%] md:w-[65%] min-h-[450px] !bg-white rounded-2xl shadow-xl"
             closable={false}
         >
             <div>
                 <button
                     onClick={() => setVisible(false)}
-                    className=" p-2  rounded-full hover:bg-gray-100 cursor-pointer absolute top-3 right-3 text-gray-600 hover:text-blue-900 transition-all "
+                    className="p-2 rounded-full hover:bg-gray-100 cursor-pointer absolute top-3 right-3 text-gray-600 hover:text-blue-900 transition-all"
                 >
                     <i className="pi pi-times text-2xl hover:text-blue-900"></i>
                 </button>
-                <div className=" rounded-2xl  relative p-3 pt-0">
+                <div className="rounded-2xl relative p-3 pt-0">
                     <h2 className="text-2xl font-bold text-black-600">
-                        Invite Member - Busitron IT Solutions Pvt Ltd
+                        {currentUser.data.role === "SuperAdmin"
+                            ? "Invite Admin - Busitron IT Solutions Pvt Ltd"
+                            : "Invite Employee - Busitron IT Solutions Pvt Ltd"}
                     </h2>
                     <hr className="border-gray-300 my-3" />
                     <p className="text-gray-500 text-center text-s font-medium bg-gray-100 p-2 rounded-md mt-2.5 flex items-center gap-2">
@@ -64,22 +95,31 @@ const InviteMemberModal = (props) => {
                         Employees receive an email to log in and update their
                         profile through the self-service portal.
                     </p>
-                    <div className="mt-4 space-y-4">
+                    <hr className="border-gray-300 my-3" />
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-4"
+                    >
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
                                 Email
                             </label>
                             <InputText
                                 placeholder="e.g johndoe@gmail.com"
-                                className="w-full border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
-                                value={data.email}
-                                onChange={(e) =>
-                                    setData((prev) => ({
-                                        ...prev,
-                                        email: e.target.value,
-                                    }))
-                                }
+                                className="w-full border rounded-md p-2"
+                                {...register("email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        message: "Invalid email format",
+                                    },
+                                })}
                             />
+                            {errors.email && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </div>
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
@@ -87,15 +127,16 @@ const InviteMemberModal = (props) => {
                             </label>
                             <InputText
                                 placeholder="e.g HR"
-                                className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
-                                value={data.designation}
-                                onChange={(e) =>
-                                    setData((prev) => ({
-                                        ...prev,
-                                        designation: e.target.value,
-                                    }))
-                                }
+                                className="w-full border rounded-md p-2"
+                                {...register("designation", {
+                                    required: "Designation is required",
+                                })}
                             />
+                            {errors.designation && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.designation.message}
+                                </p>
+                            )}
                         </div>
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
@@ -103,15 +144,33 @@ const InviteMemberModal = (props) => {
                             </label>
                             <InputText
                                 placeholder="e.g abc123"
-                                className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
-                                value={data.employeeId}
-                                onChange={(e) =>
-                                    setData((prev) => ({
-                                        ...prev,
-                                        employeeId: e.target.value,
-                                    }))
-                                }
+                                className="w-full border rounded-md p-2"
+                                {...register("employeeId", {
+                                    required: "Employee ID is required",
+                                })}
                             />
+                            {errors.employeeId && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.employeeId.message}
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block font-semibold text-gray-700 mb-1">
+                                Company Name
+                            </label>
+                            <InputText
+                                placeholder="Company Name"
+                                className="w-full border rounded-md p-2"
+                                {...register("companyName", {
+                                    required: "Company Name is required",
+                                })}
+                            />
+                            {errors.companyName && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.companyName.message}
+                                </p>
+                            )}
                         </div>
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
@@ -120,39 +179,27 @@ const InviteMemberModal = (props) => {
                             <InputTextarea
                                 rows={3}
                                 placeholder="Add message (Optional)"
-                                className="w-full border border-gray-300 rounded-md p-2 text-gray-800 hover:border-blue-500 focus:border-blue-500 focus:ring-0"
-                                value={data.message}
-                                onChange={(e) =>
-                                    setData((prev) => ({
-                                        ...prev,
-                                        message: e.target.value,
-                                    }))
-                                }
+                                className="w-full border rounded-md p-2"
+                                {...register("message")}
                             />
                         </div>
-                    </div>
-                    <div className="mt-4 flex justify-start">
-                        {loading ? (
-                            <ProgressSpinner
-                                style={{
-                                    width: "50px",
-                                    height: "50px",
-                                }}
-                                strokeWidth="8"
-                                fill="var(--surface-ground)"
-                                animationDuration=".5s"
-                            />
-                        ) : (
-                            <Button
-                                label="Send Invite"
-                                icon="pi pi-send"
-                                iconPos="left "
-                                size="small"
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md  flex items-center gap-2 h-10"
-                                onClick={handleSubmit}
-                            />
-                        )}
-                    </div>
+                        <div className="mt-4 flex justify-start">
+                            {loading ? (
+                                <ProgressSpinner
+                                    style={{ width: "50px", height: "50px" }}
+                                    strokeWidth="8"
+                                    animationDuration=".5s"
+                                />
+                            ) : (
+                                <Button
+                                    label="Send Invite"
+                                    icon="pi pi-send"
+                                    type="submit"
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                                />
+                            )}
+                        </div>
+                    </form>
                 </div>
             </div>
         </Dialog>

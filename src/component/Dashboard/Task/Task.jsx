@@ -126,7 +126,7 @@ const Task = () => {
 
     const handleMyTask = () => {
         if (!currentUser?.data?._id) {
-            console.error("Current user is not defined");
+            toast.error("Current user is not defined");
             return;
         }
         setTasks(

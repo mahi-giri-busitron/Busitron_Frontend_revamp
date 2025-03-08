@@ -15,7 +15,6 @@ const UserPerformanceDetails = () => {
             const apiResponse = await axios.get(
                 `/api/v1/performanceTracking/getParticularUserTask/${empid}`
             );
-            console.log(apiResponse.data.data)
 
             setData(apiResponse.data.data);
         } catch (err) {
@@ -36,7 +35,13 @@ const UserPerformanceDetails = () => {
                     data?.dueTasks,
                     data?.["In Progress"],
                 ],
-                backgroundColor: ["#abf7b1","#34D399", "#FBBF24", "#EF4444", "#3B82F6"],
+                backgroundColor: [
+                    "#abf7b1",
+                    "#34D399",
+                    "#FBBF24",
+                    "#EF4444",
+                    "#3B82F6",
+                ],
                 hoverBackgroundColor: [
                     "#39e75f",
                     "#10B981",
