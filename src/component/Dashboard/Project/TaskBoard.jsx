@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import TaskBoardAddTask from "./TaskBoardAddTask";
-import TaskBoardSingleTask from "./TaskBoardSingleTask";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -21,8 +19,6 @@ const statusConfig = {
 
 const TaskBoard = () => {
     const [tasks, setTasks] = useState([]);
-    const [addTask, setAddTask] = useState(false);
-    const [singleTask, setSingleTask] = useState(false);
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -218,15 +214,6 @@ const TaskBoard = () => {
                     ))}
                 </div>
             </DragDropContext>
-
-            <TaskBoardAddTask
-                visible={addTask}
-                onHide={() => setAddTask(false)}
-            />
-            <TaskBoardSingleTask
-                visible={singleTask}
-                onHide={() => setSingleTask(false)}
-            />
         </div>
     );
 };
