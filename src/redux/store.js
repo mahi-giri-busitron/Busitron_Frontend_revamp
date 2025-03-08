@@ -5,12 +5,16 @@ import userSlice from "./userSlice.js";
 import themeSlice from "./themeSlice.js";
 import companySlice from "./companySlice.js";
 import appSettingSlice from "./appSettingSlice.js";
+import chatSlice from "./chatSlice"
+import fileSlice from "./fileSlice"
 
 const rootReducer = combineReducers({
     user: userSlice,
     company: companySlice,
     theme: themeSlice,
     appSetting: appSettingSlice,
+    chat:chatSlice,
+    file:fileSlice
 });
 
 const persistConfig = {
