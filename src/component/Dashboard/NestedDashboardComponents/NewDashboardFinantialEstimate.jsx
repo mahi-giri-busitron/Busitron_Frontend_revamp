@@ -65,9 +65,9 @@ export default function NewDashboardFinantialEstimate() {
                         header="Payment Status"
                         body={(rowData) => {
                             if (rowData.paymentStatus === "Paid") {
-                                return "Recieved";
+                                return "Received";
                             } else {
-                                return "Not Recieved";
+                                return "Not Received";
                             }
                         }}
                     ></Column>
