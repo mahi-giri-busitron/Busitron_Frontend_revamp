@@ -27,9 +27,9 @@ export default function AddConversation({ open, handleClose }) {
                 open ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
         >
-            <div className="w-full max-w-lg rounded-lg bg-white dark:bg-gray-800 shadow-lg transform transition-all scale-100 p-6">
+            <div className="w-full max-w-lg rounded-lg bg-white shadow-lg transform transition-all scale-100 p-6">
                 <div className="flex items-center justify-between border-b pb-3">
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                    <h2 className="text-lg font-semibold text-gray-800 ">
                         Start a Conversation
                     </h2>
                     <button
@@ -40,14 +40,14 @@ export default function AddConversation({ open, handleClose }) {
                     </button>
                 </div>
 
-                <div className="mt-4 max-h-80 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+                <div className="mt-4 max-h-80 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-gray-400  scrollbar-track-gray-200 ">
                     {users?.map((user) => (
                         <div
                             key={user._id}
-                            className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                            className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition"
                         >
                             <div className="flex items-center space-x-3">
-                                <div className="relative h-12 w-12 rounded-full overflow-hidden bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                                <div className="relative h-12 w-12 rounded-full overflow-hidden bg-gray-300  flex items-center justify-center">
                                     {user.avatar ? (
                                         <img
                                             src={user.avatar}
@@ -60,7 +60,7 @@ export default function AddConversation({ open, handleClose }) {
                                         </span>
                                     )}
                                 </div>
-                                <span className="text-gray-800 dark:text-gray-200 font-medium">
+                                <span className="text-gray-800  font-medium">
                                     {user.name || "Unknown User"}
                                 </span>
                             </div>

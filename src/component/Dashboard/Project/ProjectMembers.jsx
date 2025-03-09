@@ -27,6 +27,16 @@ const ProjectMembers = () => {
     const [projectMember, setProjectMember] = useState([]);
     const { users } = useSelector((state) => state.userManagement);
     const dispatch = useDispatch();
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     useEffect(() => {
         if (!users || users === null) {
@@ -111,13 +121,15 @@ const ProjectMembers = () => {
         <div className="py-4">
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
-                    <Button
-                        label="Add members"
-                        size="small"
-                        icon="pi pi-plus"
-                        severity="primary"
-                        onClick={() => setDialogVisible(true)}
-                    />
+                    {canAdd && (
+                        <Button
+                            label="Add members"
+                            size="small"
+                            icon="pi pi-plus"
+                            severity="primary"
+                            onClick={() => setDialogVisible(true)}
+                        />
+                    )}
                 </div>
 
                 <div className="">
@@ -200,16 +212,18 @@ const ProjectMembers = () => {
                         header="Action"
                         body={(rowData) => (
                             <div className="flex justify-around w-full">
-                                <button
-                                    icon="pi pi-trash"
-                                    label="Delete"
-                                    className="p-button-primary"
-                                    onClick={() =>
-                                        deleteProjectMember(rowData._id)
-                                    }
-                                >
-                                    <i className="pi pi-trash text-red-500 cursor-pointer"></i>
-                                </button>
+                                {canDelete && (
+                                    <button
+                                        icon="pi pi-trash"
+                                        label="Delete"
+                                        className="p-button-primary"
+                                        onClick={() =>
+                                            deleteProjectMember(rowData._id)
+                                        }
+                                    >
+                                        <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                                    </button>
+                                )}
                             </div>
                         )}
                         style={{ width: "150px" }}

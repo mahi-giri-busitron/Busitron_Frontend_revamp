@@ -9,12 +9,15 @@ import { Dialog } from "primereact/dialog";
 import axios from "axios";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const TaskAssignments = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [show, setShow] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [mode, setMode] = useState("");
     const [shouldReload, setShouldReload] = useState(false);
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
     const { control, setValue, getValues, reset } = useForm({
         defaultValues: {
             tasks: [],
@@ -22,6 +25,15 @@ const TaskAssignments = () => {
     });
 
     const { id } = useParams();
+    const userRole = currentUser?.data?.role;
+
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     const fetchTasks = async () => {
         try {
@@ -68,17 +80,19 @@ const TaskAssignments = () => {
         <div className="p-4">
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
-                    <Button
-                        label="Add Task"
-                        onClick={() => {
-                            setSelectedTask(null);
-                            setMode("add");
-                            setShow(true);
-                        }}
-                        size="small"
-                        icon="pi pi-plus"
-                        severity="primary"
-                    />
+                    {canAdd && (
+                        <Button
+                            label="Add Task"
+                            onClick={() => {
+                                setSelectedTask(null);
+                                setMode("add");
+                                setShow(true);
+                            }}
+                            size="small"
+                            icon="pi pi-plus"
+                            severity="primary"
+                        />
+                    )}
                 </div>
 
                 <div className="w-full md:w-72">
@@ -196,6 +210,7 @@ const TaskAssignments = () => {
                 onHide={() => setShow(false)}
                 modal
                 className="p-fluid"
+                draggable = {false}
             >
                 <AddTask
                     setShow={setShow}

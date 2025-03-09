@@ -8,11 +8,22 @@ import { Column } from "primereact/column";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import toast from "react-hot-toast";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { useSelector } from "react-redux";
 
 export default function FileManager({ projectId }) {
     const [files, setFiles] = useState([]);
     const [dialogVisible, setDialogVisible] = useState(false);
     const fileUploadRef = useRef(null);
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     useEffect(() => {
         if (!projectId) return;
@@ -146,11 +157,13 @@ export default function FileManager({ projectId }) {
             <div className="my-4 mx-5">
                 <ConfirmDialog />
                 <div className="flex gap-2 flex-wrap md:flex-nowrap">
-                    <Button
-                        label="Add Files"
-                        icon="pi pi-plus"
-                        onClick={openDialog}
-                    />
+                    {canAdd && (
+                        <Button
+                            label="Add Files"
+                            icon="pi pi-plus"
+                            onClick={openDialog}
+                        />
+                    )}
                 </div>
                 <div className="py-4">
                     <DataTable value={files} emptyMessage="No files added yet.">

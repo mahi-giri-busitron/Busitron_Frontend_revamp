@@ -86,9 +86,9 @@ export default function MessagesInbox() {
     return (
         <>
             {currentConversation ? (
-                <div className="flex h-full flex-col bg-gray-100 dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden">
+                <div className="flex h-full flex-col bg-gray-100 shadow-lg rounded-lg overflow-hidden">
 
-                    <div className="sticky flex items-center justify-between bg-white dark:bg-gray-800 px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700 shadow-md">
+                    <div className="sticky flex items-center justify-between bg-white px-6 py-3 border-b-2 border-gray-300 shadow-md">
                         <div className="flex items-center">
                             {this_user?.avatar ? (
                                 <img
@@ -102,10 +102,10 @@ export default function MessagesInbox() {
                                 </div>
                             )}
                             <div className="ml-4">
-                                <h5 className="text-lg font-semibold text-gray-800 dark:text-white">
+                                <h5 className="text-lg font-semibold text-gray-800 ">
                                     {this_user?.name}
                                 </h5>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm text-gray-600 ">
                                     {this_user?.designation}
                                 </p>
                             </div>
@@ -148,7 +148,7 @@ export default function MessagesInbox() {
                         ))}
                     </div>
 
-                    <div className="sticky bottom-0 bg-white dark:bg-gray-800 px-6 py-3 border-t-2 border-gray-300 dark:border-gray-700 shadow-md">
+                    <div className="sticky bottom-0 bg-white px-6 py-3 border-t-2 border-gray-300 shadow-md">
                         <form className="flex items-center space-x-4">
                             <div className="relative flex-grow">
                                 <input

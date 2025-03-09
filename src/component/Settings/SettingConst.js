@@ -25,10 +25,5 @@ export const GetSettingNavigation = () => {
             path: "/dashboard/setting/task-settings",
             icon: "pi pi-sitemap",
         },
-        {
-            label: "Module-Settings",
-            path: "/dashboard/setting/module-settings",
-            icon: "pi pi-sitemap",
-        },
     ];
 };

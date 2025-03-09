@@ -50,7 +50,7 @@ export default function Attachment() {
 
             <div
                 ref={dropdown}
-                className={`absolute right-0 -top-24 z-40 w-54 space-y-1 rounded-sm border border-stroke bg-white p-1.5 shadow-default dark:border-strokedark dark:bg-boxdark ${
+                className={`absolute right-0 -top-24 z-40 w-54 space-y-1 rounded-sm border border-stroke bg-white p-1.5 shadow-default ${
                     dropdownOpen ? "block" : "hidden"
                 }`}
             >
@@ -60,7 +60,7 @@ export default function Attachment() {
                         dispatch(ToggleMediaModal(true));
                         setDropdownOpen(false);
                     }}
-                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray dark:hover:bg-meta-4"
+                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray"
                 >
                     <i className="pi pi-image"></i>
                     Images
@@ -71,7 +71,7 @@ export default function Attachment() {
                         dispatch(ToggleMediaModal(true));
                         setDropdownOpen(false);
                     }}
-                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray dark:hover:bg-meta-4"
+                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray"
                 >
                     <i className="pi pi-video"></i>
                     Videos
@@ -82,7 +82,7 @@ export default function Attachment() {
                         dispatch(ToggleDocumentModal(true));
                         setDropdownOpen(false);
                     }}
-                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray dark:hover:bg-meta-4"
+                    className="flex w-full items-center gap-2 rounded-sm px-4 py-1.5 text-left text-sm hover:bg-gray "
                 >
                     <i className="pi pi-file"></i>
                     Files & Documents

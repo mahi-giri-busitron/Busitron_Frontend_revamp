@@ -20,12 +20,22 @@ const statusConfig = {
 const TaskBoard = () => {
     const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
 
     const [loading, setLoading] = useState(false);
 
     const { id } = useParams();
     const dispatch = useDispatch();
     const { particular } = useSelector((state) => state.project);
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     useEffect(() => {
         if (!particular || particular === null) {
@@ -89,39 +99,40 @@ const TaskBoard = () => {
     }, []);
 
     const onDragEnd = async (result) => {
+        if (!canEdit) {
+            toast.error("You do not have permission to move tasks.");
+            return;
+        }  
         if (!result.destination) return;
-
+    
         const { source, destination } = result;
-
+    
         const sourceColumn = [...tasks[source.droppableId]];
         const destinationColumn = [...tasks[destination.droppableId]];
-
+    
         const [movedTask] = sourceColumn.splice(source.index, 1);
         destinationColumn.splice(destination.index, 0, movedTask);
-
+    
         setTasks({
             ...tasks,
             [source.droppableId]: sourceColumn,
             [destination.droppableId]: destinationColumn,
         });
-
+    
         setLoading(true);
-
+    
         try {
             const status = destination.droppableId;
-
-            const response = await axios.put(
-                `/api/v1/task/${result.draggableId}`,
-                { status: status }
-            );
-
+    
+            await axios.put(`/api/v1/task/${result.draggableId}`, { status });
+    
             toast.success("Task updated successfully!");
         } catch (error) {
             toast.error(error.response ? error.response.data : error.message);
         } finally {
             setLoading(false);
         }
-    };
+    };   
 
     return (
         <div className="p-6">
@@ -163,24 +174,31 @@ const TaskBoard = () => {
                                             key={task._id}
                                             draggableId={task._id}
                                             index={index}
+                                            isDragDisabled={!canEdit}
                                         >
-                                            {(provided) => (
+                                            {(provided, snapshot) => (
                                                 <div
                                                     ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
+                                                    {...(canEdit
+                                                        ? provided.draggableProps
+                                                        : {})}
+                                                    {...(canEdit
+                                                        ? provided.dragHandleProps
+                                                        : {})}
                                                     className={`border-l-4 ${getPriorityColor(
                                                         task.priority
-                                                    )} bg-white shadow p-4 mb-4 rounded`}
+                                                    )} bg-white shadow p-4 mb-4 rounded ${
+                                                        !canEdit
+                                                            ? "opacity-50 cursor-not-allowed"
+                                                            : ""
+                                                    }`}
                                                 >
                                                     <span
                                                         className="cursor-pointer"
                                                         onClick={() =>
                                                             navigate(
                                                                 `/dashboard/task/${task._id}`,
-                                                                {
-                                                                    state: task,
-                                                                }
+                                                                { state: task }
                                                             )
                                                         }
                                                     >

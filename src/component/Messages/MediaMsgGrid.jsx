@@ -105,7 +105,7 @@ export default function MediaMsgGrid({ media, incoming }) {
     return (
         <div
             className={`grid grid-cols-2 grid-rows-2 pt-4 pb-2 gap-3 rounded-2xl rounded-tl-none ${
-                incoming ? "bg-gray dark:bg-boxdark-2" : "bg-transparent"
+                incoming ? "bg-gray " : "bg-transparent"
             }`}
         >
             {renderMedia()}
@@ -177,7 +177,7 @@ function MediaItem({ media, index, openLightbox, lightboxOpen }) {
                     onClick={() => openLightbox(index)}
                 />
             )}
-            <button className="absolute top-3 right-4 bg-gray/80 dark:bg-boxdark px-2 rounded-md hover:bg-opacity-80 hover:cursor-pointer hover:text-black dark:hover:text-white  bg-gray-300">
+            <button className="absolute top-3 right-4 bg-gray/80  px-2 rounded-md hover:bg-opacity-80 hover:cursor-pointer hover:text-black  bg-gray-300">
                 <i className="pi pi-download text-gray-500"></i>
             </button>
         </>
