@@ -11,7 +11,6 @@ export default function NewDashboardFinantialEstimate() {
         (state) => state.estimate
     );
     const { currentUser } = useSelector((state) => state.user);
-    console.log(currentUser.data.role);
 
     useEffect(() => {
         dispatch(getALlEstimates());
@@ -22,7 +21,14 @@ export default function NewDashboardFinantialEstimate() {
     return (
         <>
             {currentUser?.data?.role === "SuperAdmin" && (
-                <DataTable value={allEstimateData || []} paginator rows={5}>
+                <DataTable
+                    value={allEstimateData || []}
+                    paginator
+                    rows={5}
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+                >
                     <Column
                         field="estimateNumber"
                         header="Estimate No"
@@ -40,6 +46,27 @@ export default function NewDashboardFinantialEstimate() {
                     <Column
                         field="paymentStatus"
                         header="Payment Status"
+                        body={(rowData) => {
+                            const commonClasses =
+                                "py-1 px-2 rounded-md w-[120px] text-center inline-block";
+                            if (rowData.paymentStatus === "Paid") {
+                                return (
+                                    <span
+                                        className={`bg-green-600 ${commonClasses}`}
+                                    >
+                                        {rowData.paymentStatus}
+                                    </span>
+                                );
+                            } else {
+                                return (
+                                    <span
+                                        className={`bg-green-200 ${commonClasses}`}
+                                    >
+                                        {rowData.paymentStatus}
+                                    </span>
+                                );
+                            }
+                        }}
                     ></Column>
                 </DataTable>
             )}
@@ -64,10 +91,24 @@ export default function NewDashboardFinantialEstimate() {
                         field="paymentStatus"
                         header="Payment Status"
                         body={(rowData) => {
+                            const commonClasses =
+                                "py-1 px-2 rounded-md w-[120px] text-center inline-block";
                             if (rowData.paymentStatus === "Paid") {
-                                return "Received";
+                                return (
+                                    <span
+                                        className={`bg-green-300 ${commonClasses}`}
+                                    >
+                                        Received
+                                    </span>
+                                );
                             } else {
-                                return "Not Received";
+                                return (
+                                    <span
+                                        className={`bg-red-400 text-white ${commonClasses}`}
+                                    >
+                                        Not Received
+                                    </span>
+                                );
                             }
                         }}
                     ></Column>

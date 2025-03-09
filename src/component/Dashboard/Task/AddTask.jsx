@@ -586,7 +586,6 @@ const AddTask = ({ setShow, task = null, mode = "add", setShouldReload }) => {
                 ) : (
                     <Button label="Save" type="submit" />
                 )}
-                ;
             </form>
         </div>
     );

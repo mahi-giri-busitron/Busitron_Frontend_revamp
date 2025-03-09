@@ -58,6 +58,7 @@ const UserDetails = () => {
     const [taskCount, setTaskCount] = useState(0);
     const [ticketCount, setTicketCount] = useState(0);
     const [projects, setProjects] = useState(0);
+   
     
     useEffect(() => {
         dispatch(fetchSpecificUser(empid));
