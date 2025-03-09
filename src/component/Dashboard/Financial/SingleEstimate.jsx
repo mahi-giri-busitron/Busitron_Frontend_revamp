@@ -46,6 +46,14 @@ const SingleEstimate = () => {
                                             <Skeleton height="3rem" />
                                         </div>
                                     </div>
+                                    <div className="mb-8">
+                                        <h2 className="text-lg font-bold text-gray-600 mb-2">
+                                            Project Name
+                                        </h2>
+                                        <div className="p-4 bg-gray-50 rounded">
+                                            <Skeleton height="3rem" />
+                                        </div>
+                                    </div>
                                     <div className="mb-6">
                                         <h2 className="text-lg font-bold text-gray-600 mb-2">
                                             Description
@@ -107,6 +115,16 @@ const SingleEstimate = () => {
                                     <div className="p-4 bg-gray-50 rounded">
                                         <p>
                                             {singleEstimateData?.estimateNumber}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="mb-8">
+                                    <h2 className="text-lg font-bold text-gray-600 mb-2">
+                                        Project Name
+                                    </h2>
+                                    <div className="p-4 bg-gray-50 rounded">
+                                        <p>
+                                            {singleEstimateData?.projectName}
                                         </p>
                                     </div>
                                 </div>
