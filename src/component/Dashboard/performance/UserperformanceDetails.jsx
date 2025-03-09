@@ -33,7 +33,7 @@ const UserPerformanceDetails = () => {
                     data?.completedTasks,
                     data?.pendingTasks,
                     data?.dueTasks,
-                    data?.["In Progress"],
+                    data?.inprogress,
                 ],
                 backgroundColor: [
                     "#abf7b1",
