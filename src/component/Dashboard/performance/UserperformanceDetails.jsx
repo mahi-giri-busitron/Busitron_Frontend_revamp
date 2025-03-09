@@ -102,7 +102,13 @@ const UserPerformanceDetails = () => {
                             Task Breakdown
                         </h3>
                         <div className="md:p-15 lg:p-20">
-                            <Pie data={chartData} options={chartOptions} />
+                            {data?.totalTasks == 0 ? (
+                                <div className=" w-full h-full ">
+                                    User don't have any assigned tasks...
+                                </div>
+                            ) : (
+                                <Pie data={chartData} options={chartOptions} />
+                            )}
                         </div>
                     </div>
                 </div>
