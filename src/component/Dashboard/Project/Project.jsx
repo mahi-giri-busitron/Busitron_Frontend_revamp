@@ -24,10 +24,18 @@ const ProjectList = () => {
     const [showAddProject, setShowAddProject] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [particular, setparticular] = useState(null);
-
     const { projects } = useSelector((state) => state.project);
     const dispatch = useDispatch();
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
 
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
     useEffect(() => {
         dispatch(getAllprojects());
     }, [dispatch]);
@@ -87,16 +95,19 @@ const ProjectList = () => {
     return (
         <div className="p-4 sm:px-5 sm:text-sm text-xs overflow-x-auto">
             <div className="flex justify-between mb-4">
-                <Button
-                    label="Add Project"
-                    onClick={() => {
-                        setShowAddProject(true);
-                        setEditMode(false); // Ensure editMode is false when adding a new project
-                    }}
-                    className="p-button-sm h-10"
-                    icon="pi pi-plus"
-                    severity="primary"
-                />
+                {canAdd && (
+                    <Button
+                        label="Add Project"
+                        onClick={() => {
+                            setShowAddProject(true);
+                            setEditMode(false); // Ensure editMode is false when adding a new project
+                        }}
+                        className="p-button-sm h-10"
+                        icon="pi pi-plus"
+                        severity="primary"
+                    />
+                )}
+
                 <div className=" md:w-75 w-1/3">
                     <IconField iconPosition="left" className="h-10 ">
                         <InputIcon className="pi pi-search h-10" />
@@ -227,17 +238,21 @@ const ProjectList = () => {
                             >
                                 <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
                             </button>
-                            <button onClick={() => SendDataToEdit(rowData)}>
-                                <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
-                            </button>
+                            {canEdit && (
+                                <button onClick={() => SendDataToEdit(rowData)}>
+                                    <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
+                                </button>
+                            )}
 
-                            <button
-                                onClick={() => {
-                                    handleDelete(rowData._id);
-                                }}
-                            >
-                                <i className="pi pi-trash text-red-500 cursor-pointer"></i>
-                            </button>
+                            {canDelete && (
+                                <button
+                                    onClick={() => {
+                                        handleDelete(rowData._id);
+                                    }}
+                                >
+                                    <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                                </button>
+                            )}
                         </div>
                     )}
                 />

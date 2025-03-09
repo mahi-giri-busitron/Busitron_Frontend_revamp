@@ -12,6 +12,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { ProgressSpinner } from "primereact/progressspinner";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const Milestone = ({ projectId }) => {
     const [visible, setVisible] = useState(false);
@@ -19,6 +20,16 @@ const Milestone = ({ projectId }) => {
     const [editingId, setEditingId] = useState(null);
     const { control, handleSubmit, reset, setValue } = useForm();
     const [loading, setLoading] = useState(false);
+    const { roles = [] } = useSelector((store) => store.rolesPermissions) || {};
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.projects || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
     const statusOptions = [
         { label: "Complete", value: "Complete" },
         { label: "Incomplete", value: "Incomplete" },
@@ -119,12 +130,14 @@ const Milestone = ({ projectId }) => {
                 />
             )}
             <div className="mb-6 flex justify-start">
-                <Button
-                    label="Create Milestone"
-                    icon="pi pi-plus"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 transition h-10"
-                    onClick={() => setVisible(true)}
-                />
+                {canAdd && (
+                    <Button
+                        label="Create Milestone"
+                        icon="pi pi-plus"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600 transition h-10"
+                        onClick={() => setVisible(true)}
+                    />
+                )}
             </div>
 
             <h2 className="text-2xl font-semibold mb-6">MILESTONES</h2>
@@ -173,29 +186,33 @@ const Milestone = ({ projectId }) => {
                     header="Action"
                     body={(rowData) => (
                         <div className="flex">
-                            <Button
-                                icon="pi pi-pen-to-square"
-                                className=" "
-                                style={{
-                                    backgroundColor: "white",
-                                    color: "green",
-                                    outline: "none",
-                                    boxShadow: "none",
-                                    border: "none",
-                                }}
-                                onClick={() => handleEdit(rowData)}
-                            />
-                            <Button
-                                icon="pi pi-trash"
-                                className="focus:outline-none focus:ring-0"
-                                style={{
-                                    backgroundColor: "white",
-                                    color: "red",
-                                    boxShadow: "none",
-                                    border: "none",
-                                }}
-                                onClick={() => handleDelete(rowData._id)}
-                            />
+                            {canEdit && (
+                                <Button
+                                    icon="pi pi-pen-to-square"
+                                    className=" "
+                                    style={{
+                                        backgroundColor: "white",
+                                        color: "green",
+                                        outline: "none",
+                                        boxShadow: "none",
+                                        border: "none",
+                                    }}
+                                    onClick={() => handleEdit(rowData)}
+                                />
+                            )}
+                            {canDelete && (
+                                <Button
+                                    icon="pi pi-trash"
+                                    className="focus:outline-none focus:ring-0"
+                                    style={{
+                                        backgroundColor: "white",
+                                        color: "red",
+                                        boxShadow: "none",
+                                        border: "none",
+                                    }}
+                                    onClick={() => handleDelete(rowData._id)}
+                                />
+                            )}
                         </div>
                     )}
                 />

@@ -25,6 +25,8 @@ const Financial_Management = () => {
     const [deleteId , setDeleteId] = useState(null);
     const [disableDeleteBtn , setDisableDeleteBtn] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const { roles } = useSelector((store) => store.rolesPermissions);
+    const { currentUser } = useSelector((store) => store.user);
 
 
     const navigate = useNavigate();
@@ -39,6 +41,15 @@ const Financial_Management = () => {
 
     let dispatch = useDispatch();
     let estimateNumber = watch("estimateNumber");
+    const userRole = currentUser?.data?.role;
+
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.financial_management || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     useEffect(()=>{
         dispatch(getALlEstimates())
@@ -149,12 +160,14 @@ const Financial_Management = () => {
     <>
         <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
             <div className="flex gap-2">
+            {canAdd && (
                 <Button
                     icon="pi pi-plus"
-                    label="Project Estimate"
-                    className="p-button-raised w-full md:w-auto h-10"
+                    label=" Create Project Estimate"
+                    className="p-button-raised w-full md:w-auto "
                     onClick={() => setOpenModel(true)}
                 />
+            )}             
             </div>
             <div className="w-full md:w-100">
                 <IconField iconPosition="left" className="h-10 w-full">
@@ -198,13 +211,19 @@ const Financial_Management = () => {
                             <button title="View More">
                                 <i className="pi pi-eye text-blue-500 cursor-pointer" onClick={()=> navigate(`/dashboard/financial-management/${rowData._id}`)}></i>
                             </button>
-                            <button disabled={rowData?.paymentStatus =="Paid"} title="Update Status" onClick={()=> {setSelectedItem(rowData) ,setOpenUpdateModal(true)}}>
+                            {canEdit && (
+                                <button disabled={rowData?.paymentStatus =="Paid"} title="Update Status" onClick={()=> {setSelectedItem(rowData) ,setOpenUpdateModal(true)}}>
                                 <i className={`pi pi-pen-to-square text-green-500 ${rowData?.paymentStatus =="Paid" ? "cursor-not-allowed" : "cursor-pointer"}`}></i>
                             </button>
-                            <button title="">
+                            )}
+                            
+                            {canDelete && (
+                                <button title="">
                                 <i onClick={()=>{setOpenDeleteModal(true), setDeleteId(rowData._id)}}
                                     className="pi pi-trash text-red-500 cursor-pointer"></i>
                             </button>
+                            )}
+                            
                         </div>
                     )}
                 />

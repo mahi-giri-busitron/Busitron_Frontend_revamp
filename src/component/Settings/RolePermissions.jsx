@@ -5,17 +5,25 @@ import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
-import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    fetchRolesPermissions,
+    addRole,
+    updateRolePermissions,
+    deleteRole,
+    resetRolePermissions,
+} from "../../redux/RolesPermissionsSlice";
 
 const RolesPermissions = () => {
+    const dispatch = useDispatch();
+    const { roles, loading, error } = useSelector(
+        (state) => state.rolesPermissions
+    );
+    const [expandedRole, setExpandedRole] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [manageRoleVisible, setManageRoleVisible] = useState(false);
-    const [expandedRole, setExpandedRole] = useState(null);
-    const [roles, setRoles] = useState([]);
-    const [permissions, setPermissions] = useState([]);
 
     const { control, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -26,85 +34,54 @@ const RolesPermissions = () => {
     });
 
     useEffect(() => {
-        fetchRoles();
-    }, []);
-
-    const fetchRoles = async () => {
-        try {
-            const response = await axios.get(
-                "http://localhost:5421/api/v1/role_permissions"
-            );
-            const rolePermissions = response.data[0].role_permissions;
-            setRoles(rolePermissions);
-            setPermissions(rolePermissions);
-        } catch (error) {
-            toast.error("Failed to fetch roles.");
-            
-        }
-    };
+        dispatch(fetchRolesPermissions())
+            .unwrap()
+            .then(() => {
+                toast.success("Roles fetched successfully");
+            })
+            .catch(() => {
+                toast.error("Failed to fetch roles");
+            });
+    }, [dispatch]);
 
     const onSubmitRole = async (data) => {
-        
         try {
-            const payload = { role: data.roleName };
-            const response = await axios.post(
-                "http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c",
-                payload,
-                { headers: { "Content-Type": "application/json" } }
-            );
-
-            if (response.status === 200 || response.status === 201) {
-                toast.success("Role assigned successfully!");
-               
-                fetchRoles();
-            } else {
-                toast.error("Unexpected response from the server.");
-                
-            }
-        } catch (error) {
-            toast.error("Failed to assign role!");
-           
+            await dispatch(addRole(data.roleName)).unwrap();
+            toast.success("Role added successfully");
+        } catch (err) {
+            toast.error("Failed to add role");
         }
     };
 
     const updatePermissions = async (roleId, updatedPermissions) => {
         try {
-            const payload = {
-                permissions: updatedPermissions,
-            };
-
-            const response = await axios.put(
-                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`,
-                payload,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            if (response.status === 200 || response.status === 201) {
-                toast.success("Permissions updated successfully!");
-                
-                fetchRoles();
-            } else {
-                toast.error("Unexpected response from the server.");
-                
-            }
+            await dispatch(
+                updateRolePermissions({
+                    roleId,
+                    permissions: updatedPermissions,
+                })
+            ).unwrap();
+            toast.success("Permissions updated successfully");
+        } catch (err) {
+            toast.error("Failed to update permissions");
+        }
+    };
+    const DeleteRole = async (roleId) => {
+        try {
+            await dispatch(deleteRole(roleId)).unwrap();
+            toast.success("Role deleted successfully!");
         } catch (error) {
-            toast.error("Failed to update permissions.");
-            
+            toast.error("Failed to delete role!");
+        }
+    };
+    
 
-            if (error.response) {
-                toast.error("Response data:", error.response.data);
-           
-     
-            } else if (error.request) {
-               
-                toast.error("Response data:", error.response.data);
-            } else {
-                toast.error("Response data:", error.response.data);
-            }
+    const resetPermissions = async (roleId) => {
+        try {
+            await dispatch(resetRolePermissions(roleId)).unwrap();
+            toast.success("Permissions reset successfully");
+        } catch (err) {
+            toast.error("Failed to reset permissions");
         }
     };
 
@@ -119,98 +96,6 @@ const RolesPermissions = () => {
         setManageRoleVisible(false);
         reset();
     };
-
-    const deleteRole = async (roleId) => {
-        try {
-            const response = await axios.delete(
-                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`
-            );
-
-            if (response.status === 200 || response.status === 204) {
-                toast.success("Role deleted successfully!");
-                fetchRoles();
-            } else {
-                toast.error("Unexpected response from the server.");
-                
-            }
-        } catch (error) {
-            toast.error("Failed to delete role!");
-           
-        }
-    };
-
-    const resetPermissions = async (roleId) => {
-        try {
-            const role = roles.find((r) => r._id === roleId);
-            if (!role) {
-                toast.error("Role not found.");
-                return;
-            }
-
-            const resetPermissionsPayload = {
-                permissions: {
-                    projects: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-                    financial_management: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-                    performance_tracking: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-
-                    manage_users: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-                    tickets: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-                    settings: {
-                        add: false,
-                        view: false,
-                        update: false,
-                        delete: false,
-                    },
-                },
-            };
-
-           
-
-            const response = await axios.put(
-                `http://localhost:5421/api/v1/role_permissions/67c19715a7ed1b3ddd180f4c/${roleId}`,
-                resetPermissionsPayload, // Send the payload directly
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            if (response.status === 200 || response.status === 201) {
-                toast.success("Permissions reset successfully!");
-            } else {
-                toast.error("Unexpected response from the server.");
-            }
-        } catch (error) {
-            toast.error("Failed to reset permissions.");
-        }
-    };
-
     return (
         <div>
             <Toaster />
@@ -245,7 +130,7 @@ const RolesPermissions = () => {
                                 </p>
                             </div>
 
-                            {role.role === "Super Admin" ? (
+                            {role.role === "SuperAdmin" ? (
                                 <p className="text-gray-400 text-sm">
                                     Default role cannot be deleted.
                                 </p>
@@ -253,10 +138,10 @@ const RolesPermissions = () => {
                                 <Button
                                     icon="pi pi-trash"
                                     className="p-button-danger"
-                                    onClick={() => deleteRole(role._id)}
+                                    onClick={() => DeleteRole(role._id)}
                                 />
                             )}
-                            {role.role === "Super Admin" ? (
+                            {role.role === "SuperAdmin" ? (
                                 <p className="text-gray-400 text-sm">
                                     Default role cannot be deleted.
                                 </p>

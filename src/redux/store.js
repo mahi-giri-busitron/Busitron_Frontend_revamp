@@ -10,6 +10,7 @@ import estimateSlice from "./estimateSlice.js"
 import projectSlice from "./projectslice.js"
 import chatSlice from "./chatSlice"
 import fileSlice from "./fileSlice"
+import rolesPermissionsSlice from "./RolesPermissionsSlice.js"
 
 const rootReducer = combineReducers({
     user: userSlice,
@@ -20,7 +21,9 @@ const rootReducer = combineReducers({
     estimate : estimateSlice,
     project : projectSlice,
     chat:chatSlice,
-    file:fileSlice
+    file:fileSlice,
+    rolesPermissions: rolesPermissionsSlice,
+
 });
 
 const persistConfig = {

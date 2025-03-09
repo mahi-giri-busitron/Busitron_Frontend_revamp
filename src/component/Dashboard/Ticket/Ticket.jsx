@@ -41,9 +41,20 @@ const Ticket = () => {
     });
 
     const { currentUser } = useSelector((store) => store.user);
+    const { roles } = useSelector((store) => store.rolesPermissions);
     const navigate = useNavigate();
+    const userRole = currentUser?.data?.role;
 
-    // Fetch Tickets
+
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.tickets || {};
+
+    
+        const canView = userRole === "SuperAdmin" || userPermissions.view;
+        const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+        const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+        const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
+
     const fetchTickets = useCallback(async () => {
         try {
             const response = await axios.get("/api/v1/ticket/getAllTickets");
@@ -209,7 +220,8 @@ const Ticket = () => {
                 {/* Top Bar */}
                 <div className="flex justify-between my-2 flex-wrap  gap-4">
                     <div className="flex gap-2">
-                        <Button
+                        {canAdd && (
+                            <Button
                             icon="pi pi-plus"
                             label="Create Ticket"
                             severity="primary"
@@ -217,6 +229,7 @@ const Ticket = () => {
                             size="small"
                             onClick={handleCreateTicket} // Call handleCreateTicket
                         />
+                        )}
                     </div>
                     <div className="w-full md:w-100 ">
                         <IconField iconPosition="left" className="h-10 w-full">
@@ -276,38 +289,48 @@ const Ticket = () => {
                         />
                         <Column
                             header="Action"
-                            body={(rowData) => (
-                                <div className="flex gap-3 items-center">
-                                    <button
-                                        className="cursor-pointer"
-                                        onClick={() =>
-                                            navigate(
-                                                `/dashboard/ticket/${rowData._id}`,
-                                                {
-                                                    state: rowData,
+                            body={(rowData) => {
+                                return (
+                                    <div className="flex gap-3 items-center">
+                                        {canView && (
+                                            <button
+                                                className="cursor-pointer"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/dashboard/ticket/${rowData._id}`,
+                                                        {
+                                                            state: rowData,
+                                                        }
+                                                    )
                                                 }
-                                            )
-                                        }
-                                    >
-                                        <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            handleEditTicket(rowData)
-                                        }
-                                    >
-                                        <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setConfirmVisible(true);
-                                            setDeleteId(rowData._id);
-                                        }}
-                                    >
-                                        <i className="pi pi-trash text-red-500 cursor-pointer"></i>
-                                    </button>
-                                </div>
-                            )}
+                                            >
+                                                <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
+                                            </button>
+                                        )}
+
+                                        {canEdit && (
+                                            <button
+                                                onClick={() =>
+                                                    handleEditTicket(rowData)
+                                                }
+                                            >
+                                                <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
+                                            </button>
+                                        )}
+
+                                        {canDelete && (
+                                            <button
+                                                onClick={() => {
+                                                    setConfirmVisible(true);
+                                                    setDeleteId(rowData._id);
+                                                }}
+                                            >
+                                                <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                                            </button>
+                                        )}
+                                    </div>
+                                );
+                            }}
                         />
                     </DataTable>
                 </div>

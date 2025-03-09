@@ -20,6 +20,9 @@ const Task = () => {
     const { register, watch } = useForm({ defaultValues: { taskName: "" } });
     const taskName = watch("taskName");
     const navigate = useNavigate();
+    const { roles } = useSelector((store) => store.rolesPermissions);
+    const { currentUser } = useSelector((store) => store.user);
+    const dispatch = useDispatch();
 
     const [tasks, setTasks] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
@@ -27,14 +30,19 @@ const Task = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
-
     const [dialogMode, setDialogMode] = useState("add");
     const [currentTask, setCurrentTask] = useState(null);
     const [originalTasks, setOriginalTasks] = useState([]);
 
-    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
 
-    const dispatch = useDispatch();
+    const userPermissions =
+        roles.find((r) => r.role === userRole)?.permissions?.tasks || {};
+
+    const canView = userRole === "SuperAdmin" || userPermissions.view;
+    const canAdd = userRole === "SuperAdmin" || userPermissions.add;
+    const canEdit = userRole === "SuperAdmin" || userPermissions.update;
+    const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -44,10 +52,8 @@ const Task = () => {
                     (task, index) => ({
                         ...task,
                         sno: index + 1,
-                        startDate: task.startDate
-                            ? task.startDate.split("T")[0]
-                            : "",
-                        dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
+                        startDate: task.startDate?.split("T")[0] || "",
+                        dueDate: task.dueDate?.split("T")[0] || "",
                     })
                 );
                 setTasks(formattedTasks);
@@ -78,7 +84,6 @@ const Task = () => {
     const handleDelete = async () => {
         setTasks(tasks.filter((task) => task._id !== deleteId));
         setConfirmVisible(false);
-
         const response = await axios.delete(`/api/v1/task/${deleteId}`);
 
         if (response?.data.statusCode === 200) {
@@ -141,13 +146,15 @@ const Task = () => {
             <ConfirmDialog />
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
                 <div className="flex gap-2">
-                    <Button
-                        label="Add Task"
-                        onClick={handleAddTask}
-                        className="h-9"
-                        size="small"
-                        icon="pi pi-plus"
-                    />
+                    {canAdd && (
+                        <Button
+                            label="Add Task"
+                            onClick={handleAddTask}
+                            className="h-9"
+                            size="small"
+                            icon="pi pi-plus"
+                        />
+                    )}
                 </div>
                 <div className="w-full md:w-100">
                     <IconField iconPosition="left" className="h-10 w-full">
@@ -169,39 +176,8 @@ const Task = () => {
                     removableSort
                     tableStyle={{ minWidth: "60rem" }}
                 >
-                    <Column
-                        field="taskID"
-                        header="Task Id"
-                        sortable
-                        body={(rowData) => (
-                            <h1
-                                className="hover:text-blue-600 cursor-pointer "
-                                onClick={() => {
-                                    navigate(`/dashboard/task/${rowData._id}`, {
-                                        state: rowData,
-                                    });
-                                }}
-                            >
-                                {rowData.taskID}
-                            </h1>
-                        )}
-                    />
-                    <Column
-                        field="title"
-                        header="Task"
-                        body={(rowData) => (
-                            <h1
-                                className="hover:text-blue-600 cursor-pointer "
-                                onClick={() => {
-                                    navigate(`/dashboard/task/${rowData._id}`, {
-                                        state: rowData,
-                                    });
-                                }}
-                            >
-                                {rowData.title}
-                            </h1>
-                        )}
-                    />
+                    <Column field="taskID" header="Task ID" sortable />
+                    <Column field="title" header="Task" />
                     <Column field="assignedTo.name" header="Assigned To" />
                     <Column field="assignedBy.name" header="Assigned By" />
                     <Column field="startDate" header="Start Date" />
@@ -211,28 +187,35 @@ const Task = () => {
                         header="Action"
                         body={(rowData) => (
                             <div className="flex gap-3 items-center">
-                                <button
-                                    onClick={() =>
-                                        navigate(
-                                            `/dashboard/task/${rowData._id}`,
-                                            { state: rowData }
-                                        )
-                                    }
-                                >
-                                    <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
-                                </button>
-                                <button onClick={() => handleEditTask(rowData)}>
-                                    <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
-                                </button>
-
-                                <button
-                                    onClick={() => {
-                                        setConfirmVisible(true);
-                                        setDeleteId(rowData._id);
-                                    }}
-                                >
-                                    <i className="pi pi-trash text-red-500 cursor-pointer"></i>
-                                </button>
+                                {canView && (
+                                    <button
+                                        onClick={() =>
+                                            navigate(
+                                                `/dashboard/task/${rowData._id}`,
+                                                { state: rowData }
+                                            )
+                                        }
+                                    >
+                                        <i className="pi pi-eye text-blue-500 cursor-pointer"></i>
+                                    </button>
+                                )}
+                                {canEdit && (
+                                    <button
+                                        onClick={() => handleEditTask(rowData)}
+                                    >
+                                        <i className="pi pi-pen-to-square text-green-500 cursor-pointer"></i>
+                                    </button>
+                                )}
+                                {canDelete && (
+                                    <button
+                                        onClick={() => {
+                                            setConfirmVisible(true);
+                                            setDeleteId(rowData._id);
+                                        }}
+                                    >
+                                        <i className="pi pi-trash text-red-500 cursor-pointer"></i>
+                                    </button>
+                                )}
                             </div>
                         )}
                     />
