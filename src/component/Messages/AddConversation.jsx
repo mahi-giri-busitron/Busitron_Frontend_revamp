@@ -4,7 +4,11 @@ import { fetchUsers, startConversation } from "../../redux/chatSlice.js";
 
 export default function AddConversation({ open, handleClose }) {
     const dispatch = useDispatch();
-    const { users } = useSelector((state) => state.chat);
+    // const { users } = useSelector((state) => state.chat);
+
+    const { users = [] } = useSelector((store) => store.userManagement || {});
+
+    console.log(users);
 
     useEffect(() => {
         if (open) {
@@ -37,7 +41,7 @@ export default function AddConversation({ open, handleClose }) {
                 </div>
 
                 <div className="mt-4 max-h-80 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
-                    {users?.data?.other_users?.map((user) => (
+                    {users?.map((user) => (
                         <div
                             key={user._id}
                             className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
