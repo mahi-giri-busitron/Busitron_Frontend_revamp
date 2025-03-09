@@ -128,10 +128,10 @@ export default function MediaPicker() {
         >
             <div
                 ref={modalRef}
-                className="w-full max-w-2xl rounded-lg bg-white dark:bg-boxdark px-8 py-6"
+                className="w-full max-w-2xl rounded-lg bg-white px-8 py-6"
             >
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-lg font-semibold text-black dark:text-white">
+                    <h2 className="text-lg font-semibold text-black ">
                         Choose Media Files
                     </h2>
                     <button
@@ -182,7 +182,7 @@ export default function MediaPicker() {
                         onKeyDown={(e) => {
                             if (e.key === "Enter") handleSendMessage();
                         }}
-                        className="border rounded-lg w-full p-2 border-stroke dark:border-strokedark bg-transparent"
+                        className="border rounded-lg w-full p-2 border-stroke  bg-transparent"
                         placeholder="Type your message..."
                     />
                     <button

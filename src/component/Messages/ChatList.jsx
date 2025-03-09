@@ -112,10 +112,10 @@ export default function ChatList() {
                         <div className="no-scrollbar overflow-auto max-h-130 space-y-2.5 py-2">
                             {filteredConversations.map((object) => (
                                 <div
-                                    className={`flex cursor-pointer items-center rounded-lg px-4 py-3 transition-all shadow-md border border-gray-200 dark:border-gray-700 ${
+                                    className={`flex cursor-pointer items-center rounded-lg px-4 py-3 transition-all shadow-md border border-gray-200  ${
                                         currentConversation === object.id
-                                            ? "bg-gray-100 dark:bg-gray-700"
-                                            : "hover:bg-gray-50 dark:hover:bg-gray-600"
+                                            ? "bg-gray-100 "
+                                            : "hover:bg-gray-50"
                                     }`}
                                     key={object.key}
                                     onClick={() =>
@@ -143,10 +143,10 @@ export default function ChatList() {
                                     </div>
 
                                     <div className="w-full">
-                                        <h5 className="text-sm font-medium text-gray-900 dark:text-white">
+                                        <h5 className="text-sm font-medium text-gray-900 ">
                                             {object.name}
                                         </h5>
-                                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                                        <p className="text-xs text-gray-600 ">
                                             {object.message}
                                         </p>
                                     </div>
