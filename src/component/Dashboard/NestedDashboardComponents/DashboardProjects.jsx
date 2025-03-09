@@ -1,16 +1,16 @@
 import React from "react";
-const DashboardProjects = () => {
+const DashboardProjects = ({ projectPending, projectOverdue }) => {
     return (
         <div>
             <div>
                 <h2 className="font-semibold">Projects</h2>
                 <div className="flex justify-between pt-5">
                     <div>
-                        <p>1</p>
+                        <p>{projectPending}</p>
                         <p>Pending</p>
                     </div>
                     <div>
-                        <p>0</p>
+                        <p>{projectOverdue}</p>
                         <p>Overdue</p>
                     </div>
                     <div>

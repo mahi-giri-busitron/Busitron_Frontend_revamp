@@ -176,8 +176,39 @@ const Task = () => {
                     removableSort
                     tableStyle={{ minWidth: "60rem" }}
                 >
-                    <Column field="taskID" header="Task ID" sortable />
-                    <Column field="title" header="Task" />
+                    <Column
+                        field="taskID"
+                        header="Task ID"
+                        sortable
+                        body={(rowData) => (
+                            <span
+                                className="cursor-pointer hover:text-blue-500"
+                                onClick={() =>
+                                    navigate(`/dashboard/task/${rowData._id}`, {
+                                        state: rowData,
+                                    })
+                                }
+                            >
+                                {rowData?.taskID}
+                            </span>
+                        )}
+                    />
+                    <Column
+                        field="title"
+                        header="Task"
+                        body={(rowData) => (
+                            <span
+                                className="cursor-pointer hover:text-blue-500"
+                                onClick={() =>
+                                    navigate(`/dashboard/task/${rowData._id}`, {
+                                        state: rowData,
+                                    })
+                                }
+                            >
+                                {rowData?.title}
+                            </span>
+                        )}
+                    />  
                     <Column field="assignedTo.name" header="Assigned To" />
                     <Column field="assignedBy.name" header="Assigned By" />
                     <Column field="startDate" header="Start Date" />

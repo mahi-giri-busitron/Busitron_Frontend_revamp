@@ -21,6 +21,7 @@ const CreateProject = ({
     onCloseedit,
     onRecall,
     editMode,
+    setShouldReload
 }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -151,6 +152,7 @@ const CreateProject = ({
                 );
 
                 toast.success("Project created successfully!");
+                setShouldReload((prev)=> !prev)
             } else {
                 const response = await axios.put(
                     `/api/v1/project/projects/${Data._id}`,

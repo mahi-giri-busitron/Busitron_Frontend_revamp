@@ -36,9 +36,11 @@ const ProjectList = () => {
     const canAdd = userRole === "SuperAdmin" || userPermissions.add;
     const canEdit = userRole === "SuperAdmin" || userPermissions.update;
     const canDelete = userRole === "SuperAdmin" || userPermissions.delete;
+    const [shouldReload, setShouldReload] = useState(false);
+
     useEffect(() => {
         dispatch(getAllprojects());
-    }, [dispatch]);
+    }, [dispatch, shouldReload]);
 
     useEffect(() => {
         dispatch(fetchAllUser());
@@ -133,6 +135,7 @@ const ProjectList = () => {
                     onCloseedit={() => setIsOpen(false)}
                     onRecall={() => FetchProjects()}
                     editMode={editMode} // Pass editMode state properly
+                    setShouldReload={setShouldReload}
                 />
             )}
 

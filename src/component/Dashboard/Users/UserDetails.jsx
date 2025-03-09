@@ -4,7 +4,7 @@ import { Divider } from "primereact/divider";
 import profile_pic from "../../../assets/images/dashboard/profilepic.jpg";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import axios from 'axios';
+import axios from "axios";
 import {
     deactivateUser,
     fetchSpecificUser,
@@ -53,26 +53,26 @@ const UserDetails = () => {
         }
     }, [userInfo, editable]);
 
-
-
     const [taskCount, setTaskCount] = useState(0);
     const [ticketCount, setTicketCount] = useState(0);
     const [projects, setProjects] = useState(0);
-   
-    
+
     useEffect(() => {
         dispatch(fetchSpecificUser(empid));
-    
-        axios.get(`http://localhost:5421/api/v1/userdashboard/${empid}`)
+
+        axios
+            .get(`/api/v1/userdashboard/${empid}`)
             .then((response) => {
-                const data = response.data; 
+                const data = response.data;
                 if (data.success) {
                     setTaskCount(data.data.taskCount);
                     setTicketCount(data.data.ticketCount);
                     setProjects(data.data.projectCount);
                 }
             })
-            .catch((error) => console.error("Error fetching user data:", error));
+            .catch((error) =>
+                console.error("Error fetching user data:", error)
+            );
     }, [dispatch, empid]);
 
     const getUserDetailsUi = () => {
@@ -112,18 +112,26 @@ const UserDetails = () => {
                                     </div>
                                     <div className="flex flex-1 w-full h-full justify-around text-center mt-4">
                                         <div className="shadow-lg p-4 flex-1 gap-3 flex-wrap flex flex-col justify-between">
-                                            <p className="text-gray-500">Open Tasks</p>
-                                            <p className="font-bold text-lg sm:text-lg md:text-xl">{taskCount}</p>
+                                            <p className="text-gray-500">
+                                                Open Tasks
+                                            </p>
+                                            <p className="font-bold text-lg sm:text-lg md:text-xl">
+                                                {taskCount}
+                                            </p>
                                         </div>
                                         <div className="shadow-lg p-4 flex-1 md:w-50 flex flex-col justify-between">
-                                            <p className="text-gray-500">Projects</p>
+                                            <p className="text-gray-500">
+                                                Projects
+                                            </p>
                                             <p className="text-lg sm:text-lg md:text-xl font-bold">
                                                 {projects ?? 0}
                                             </p>
                                         </div>
-                                      
+
                                         <div className="shadow-lg p-4 flex-1 flex flex-col justify-between">
-                                            <p className="text-gray-500">Tickets</p>
+                                            <p className="text-gray-500">
+                                                Tickets
+                                            </p>
                                             <p className="text-lg sm:text-lg md:text-xl font-bold">
                                                 {ticketCount ?? 0}
                                             </p>

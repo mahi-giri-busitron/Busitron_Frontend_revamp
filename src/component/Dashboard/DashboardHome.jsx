@@ -15,6 +15,14 @@ const DashboardHome = () => {
     const { currentUser } = useSelector((state) => state.user);
     const [tasks, setTasks] = useState([]);
 
+    const [taskCount, setTaskCount] = useState(0);
+    const [ticketCount, setTicketCount] = useState(0);
+    const [projects, setProjects] = useState(0);
+    const [pendingTasks, setPendingTasks] = useState(0);
+    const [overdueTasks, setOverdueTasks] = useState(0);
+    const [projectPending, setProjectPending] = useState(0);
+    const [projectOverdue, setProjectOverdue] = useState(0);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setTime(new Date());
@@ -36,8 +44,23 @@ const DashboardHome = () => {
         }
     }
 
+    const getUserDetails = async () => {
+        const response = await axios.get(
+            `/api/v1/userdashboard/${currentUser.data._id}`
+        );
+
+        setTaskCount(response.data.data.taskCount);
+        setTicketCount(response.data.data.ticketCount);
+        setProjects(response.data.data.projectCount);
+        setPendingTasks(response.data.data.pendingTasks);
+        setOverdueTasks(response.data.data.overdueTasks);
+        setProjectPending(response.data.data.projectPending);
+        setProjectOverdue(response.data.data.projectOverdue);
+    };
+
     useEffect(() => {
         getUserTasks();
+        getUserDetails();
     }, []);
 
     return (
@@ -75,18 +98,25 @@ const DashboardHome = () => {
                     auto-rows-auto"
                 >
                     <div className="md:col-span-2 lg:row-span-2 bg-white rounded-lg shadow-md">
-                        <DashboardProfile currentUser={currentUser} />
-                    </div>
-
-                    <div className="bg-white rounded-lg p-4 shadow-md">
-                        <DashboardTask
-                            Pending={tasks?.Pending}
-                            overDue={tasks?.overDue}
+                        <DashboardProfile
+                            currentUser={currentUser}
+                            taskCount={taskCount}
+                            projects={projects}
                         />
                     </div>
 
                     <div className="bg-white rounded-lg p-4 shadow-md">
-                        <DashboardProjects />
+                        <DashboardTask
+                            Pending={pendingTasks}
+                            overDue={overdueTasks}
+                        />
+                    </div>
+
+                    <div className="bg-white rounded-lg p-4 shadow-md">
+                        <DashboardProjects
+                            projectPending={projectPending}
+                            projectOverdue={projectOverdue}
+                        />
                     </div>
 
                     <div className="md:col-span-2 lg:row-span-3 rounded-lg shadow-md">

@@ -1,5 +1,6 @@
-import React from "react";
-function DashboardProfile({ currentUser }) {
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+function DashboardProfile({ currentUser, taskCount, projects }) {
     return (
         <div className="p-0">
             <div className="bg-white flex flex-col rounded-lg shadow-md">
@@ -21,11 +22,11 @@ function DashboardProfile({ currentUser }) {
                 <div className="flex justify-between px-11 py-6 border-t-3 border-gray-200 w-full">
                     <div>
                         <p className="text-gray-600">Open Tasks</p>
-                        <p className="font-bold text-lg">0</p>
+                        <p className="font-bold text-lg">{taskCount}</p>
                     </div>
                     <div>
                         <p className="text-gray-600">Projects</p>
-                        <p className="font-bold text-lg">1</p>
+                        <p className="font-bold text-lg">{projects}</p>
                     </div>
                 </div>
             </div>
