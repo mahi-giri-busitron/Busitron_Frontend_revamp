@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { Button } from "primereact/button";
 import DashboardProfile from "./NestedDashboardComponents/DashboardProfile.jsx";
 import DashboardTask from "./NestedDashboardComponents/DashboardTask.jsx";
 import DashboardProjects from "./NestedDashboardComponents/DashboardProjects.jsx";
 import DashboardTaskboard from "./NestedDashboardComponents/DashboardTaskboard.jsx";
 import DashboardEmployeeList from "./NestedDashboardComponents/DashboardEmployeeList.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { getALlEstimates } from "../../redux/estimateSlice.js";
+import NewDashboardFinantialEstimate from "./NestedDashboardComponents/NewDashboardFinantialEstimate.jsx";
 
 const DashboardHome = () => {
     const [time, setTime] = useState(new Date());
-
+    const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.user);
     const [tasks, setTasks] = useState([]);
 
@@ -21,6 +22,10 @@ const DashboardHome = () => {
 
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        dispatch(getALlEstimates());
+    }, [dispatch]);
 
     async function getUserTasks() {
         try {
@@ -91,6 +96,12 @@ const DashboardHome = () => {
                     <div className="md:col-span-2 lg:row-span-3 bg-white rounded-lg shadow-md">
                         <DashboardEmployeeList />
                     </div>
+                    {(currentUser?.data?.role === "Admin" ||
+                        currentUser?.data?.role === "SuperAdmin") && (
+                        <div className="md:col-span-2 lg:row-span-3 bg-white rounded-lg shadow-md">
+                            <NewDashboardFinantialEstimate />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,21 +1,27 @@
 import { Dialog } from "primereact/dialog";
 import React from "react";
-import { Button } from "primereact/button"
+import { Button } from "primereact/button";
 
-const DeleteModal = ({visible, setVisible , handleDelete, disableDeleteBtn}) => {
+const DeleteModal = ({
+    visible,
+    setVisible,
+    handleDelete,
+    disableDeleteBtn,
+    confirmationText = "Are you sure you want to delete this record ?",
+}) => {
     return (
         <>
             <Dialog
                 header="Delete Confirmation"
                 visible={visible}
-                className="w-[90%] sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
-                style={{ width: "40vw" }}
+                className="w-[90%] sm:w-[80%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
+                style={{ width: "40vw", minWidth: "300px" }}
                 onHide={() => setVisible(false)}
             >
                 <div className="flex flex-col sm:flex-row items-center gap-3 p-2 text-center sm:text-left">
                     <i className="pi pi-info-circle icon-size"></i>
                     <span className="text-base sm:text-lg">
-                        Are you sure you want to delete this record ?
+                        {confirmationText}
                     </span>
                 </div>
 
@@ -40,3 +46,4 @@ const DeleteModal = ({visible, setVisible , handleDelete, disableDeleteBtn}) => 
 };
 
 export default DeleteModal;
+    
