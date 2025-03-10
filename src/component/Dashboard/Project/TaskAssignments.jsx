@@ -76,6 +76,26 @@ const TaskAssignments = () => {
         setShow(true);
     };
 
+    const statusTemplate = (rowData) => {
+        const statusColors = {
+            "To Do": "bg-blue-200 text-blue-800",
+            Review: "bg-purple-200 text-purple-800",
+            Pending: "bg-yellow-200 text-yellow-800",
+            "In Progress": "bg-orange-300 text-orange-900",
+            Completed: "bg-green-200 text-green-800",
+            Close: "bg-gray-300 text-gray-900",
+        };
+        return (
+            <span
+                className={`inline-flex justify-center w-[120px] px-2 py-1 rounded-md text-sm ${
+                    statusColors[rowData.status] || "bg-gray-100 text-gray-800"
+                }`}
+            >
+                {rowData.status}
+            </span>
+        );
+    };
+
     return (
         <div className="p-4">
             <div className="mx-5 my-4 flex flex-wrap items-center justify-between gap-4 md:flex-wrap text-xs">
@@ -179,7 +199,7 @@ const TaskAssignments = () => {
                     <Column
                         field="status"
                         header="Status"
-                        body={(rowData) => rowData.status}
+                        body={statusTemplate}
                     />
                     <Column
                         header="Action"
@@ -210,7 +230,7 @@ const TaskAssignments = () => {
                 onHide={() => setShow(false)}
                 modal
                 className="p-fluid"
-                draggable = {false}
+                draggable={false}
             >
                 <AddTask
                     setShow={setShow}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 function DashboardProfile({ currentUser, taskCount, projects }) {
     return (
         <div className="p-0">
-            <div className="bg-white flex flex-col rounded-lg shadow-md">
+            <div className="bg-white flex flex-col rounded-lg shadow-md min-h-36">
                 <div className="flex gap-8 w-full py-10 pl-12">
                     <img
                         className="w-[90px] h-[90px] rounded-sm"
@@ -13,8 +13,8 @@ function DashboardProfile({ currentUser, taskCount, projects }) {
                         <h2 className="font-bold text-lg">
                             {currentUser?.data?.name}
                         </h2>
-                        <p>{currentUser?.data?.designation}</p>
-                        <p className="text-[0.9rem] text-gray-400">
+                        <p className="text-md">{currentUser?.data?.designation}</p>
+                        <p className="text-sm text-gray-400">
                             Employee ID: {currentUser?.data?.employeeId}
                         </p>
                     </div>

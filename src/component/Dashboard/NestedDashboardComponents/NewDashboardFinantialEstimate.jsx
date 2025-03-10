@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getALlEstimates } from "../../../redux/estimateSlice";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { useNavigate } from "react-router-dom";
 
 export default function NewDashboardFinantialEstimate() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { allEstimateData, isLoading } = useSelector(
         (state) => state.estimate
@@ -19,19 +21,30 @@ export default function NewDashboardFinantialEstimate() {
     if (isLoading) return <p>Loading Estimates...</p>;
 
     return (
-        <>
+        <div className="rounded-md min-h-96">
             {currentUser?.data?.role === "SuperAdmin" && (
                 <DataTable
                     value={allEstimateData || []}
                     paginator
                     rows={5}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
                     currentPageReportTemplate="{first} to {last} of {totalRecords}"
                     paginatorTemplate=" FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
                 >
                     <Column
                         field="estimateNumber"
                         header="Estimate No"
+                        body={(rowData) => (
+                            <span
+                                className="cursor-pointer hover:text-blue-500"
+                                onClick={() =>
+                                    navigate(
+                                        `/dashboard/financial-management/${rowData._id}`
+                                    )
+                                }
+                            >
+                                {rowData.estimateNumber}
+                            </span>
+                        )}
                     ></Column>
                     <Column field="clientId.name" header="Client"></Column>
                     <Column
@@ -76,6 +89,18 @@ export default function NewDashboardFinantialEstimate() {
                     <Column
                         field="estimateNumber"
                         header="Estimate No"
+                        body={(rowData) => (
+                            <span
+                                className="cursor-pointer hover:text-blue-500"
+                                onClick={() =>
+                                    navigate(
+                                        `/dashboard/financial-management/${rowData._id}`
+                                    )
+                                }
+                            >
+                                {rowData.estimateNumber}
+                            </span>
+                        )}
                     ></Column>
                     <Column field="userId.name" header="Created By"></Column>
                     <Column
@@ -114,6 +139,6 @@ export default function NewDashboardFinantialEstimate() {
                     ></Column>
                 </DataTable>
             )}
-        </>
+        </div>
     );
 }

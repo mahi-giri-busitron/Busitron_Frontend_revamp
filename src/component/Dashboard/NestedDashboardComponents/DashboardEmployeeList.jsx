@@ -55,7 +55,7 @@ const DashboardEmployeeList = () => {
     }, []);
 
     return (
-        <div className="pt-4 px-4">
+        <div className="pt-4 px-4 min-h-80">
             <div className="border-b-2 border-gray-200 pb-2">
                 <div className="flex justify-between font-semibold text-lg mt-3 px-3">
                     <p className="w-16">S.No</p>

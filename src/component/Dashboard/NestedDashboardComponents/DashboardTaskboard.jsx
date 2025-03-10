@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const DashboardTaskboard = ({ tasks }) => {
     const navigate = useNavigate();
     return (
-        <div className="pt-4 px-4 bg-white">
+        <div className="pt-4 px-4 bg-white rounded-md min-h-96">
             <div className="border-b-2 border-gray-300 pb-2">
                 <h2 className="font-bold text-xl">My Tasks</h2>
                 <div className="flex justify-between font-semibold text-lg mt-3 px-3">

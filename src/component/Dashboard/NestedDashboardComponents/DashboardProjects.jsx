@@ -3,7 +3,7 @@ const DashboardProjects = ({ projectPending, projectOverdue }) => {
     return (
         <div>
             <div>
-                <h2 className="font-semibold">Projects</h2>
+                <h2 className="font-semibold text-xl">Projects</h2>
                 <div className="flex justify-between pt-5">
                     <div>
                         <p>{projectPending}</p>
