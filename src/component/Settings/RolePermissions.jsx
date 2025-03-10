@@ -21,6 +21,15 @@ const RolesPermissions = () => {
     const { roles, loading, error } = useSelector(
         (state) => state.rolesPermissions
     );
+    const { currentUser } = useSelector((store) => store.user);
+    const userRole = currentUser?.data?.role;
+    console.log(userRole);
+
+    const filteredRoles =
+        userRole === "Admin"
+            ? roles.filter((role) => role.role === "Employee")
+            : roles;
+
     const [expandedRole, setExpandedRole] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [manageRoleVisible, setManageRoleVisible] = useState(false);
@@ -74,7 +83,6 @@ const RolesPermissions = () => {
             toast.error("Failed to delete role!");
         }
     };
-    
 
     const resetPermissions = async (roleId) => {
         try {
@@ -96,6 +104,7 @@ const RolesPermissions = () => {
         setManageRoleVisible(false);
         reset();
     };
+
     return (
         <div>
             <Toaster />
@@ -115,7 +124,7 @@ const RolesPermissions = () => {
             </div>
 
             <div className="mt-4 space-y-4">
-                {roles.map((role) => (
+                {filteredRoles.map((role) => (
                     <div
                         key={role._id}
                         className="border rounded-lg p-4 shadow-sm"
@@ -216,7 +225,7 @@ const RolesPermissions = () => {
                                         >
                                             <Column
                                                 field="module"
-                                                header="Moduledsdss"
+                                                header="Module"
                                             />
 
                                             {[
@@ -288,7 +297,11 @@ const RolesPermissions = () => {
                 className="w-full max-w-5xl mx-10"
             >
                 <div className="overflow-x-auto">
-                    <DataTable value={roles} scrollable scrollHeight="400px">
+                    <DataTable
+                        value={filteredRoles}
+                        scrollable
+                        scrollHeight="400px"
+                    >
                         <Column field="role" header="User Role" />
                         <Column field="unsyncedUsers" header="Unsynced Users" />
                         <Column
@@ -298,7 +311,7 @@ const RolesPermissions = () => {
                                     <span className="text-gray-500 text-sm">
                                         Default role cannot be deleted.
                                     </span>
-                                    <div className="h-[40px]lex items-center">
+                                    <div className="h-[40px] flex items-center">
                                         {rowData.role !==
                                             "App_Administrator" && (
                                             <Button

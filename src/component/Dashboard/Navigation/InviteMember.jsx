@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { ProgressSpinner } from "primereact/progressspinner";
 import "primeicons/primeicons.css";
 import axios from "axios";
-import { ProgressSpinner } from "primereact/progressspinner";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -30,7 +30,7 @@ const InviteMemberModal = ({ visible = false, setVisible }) => {
     });
 
     const onSubmit = async (data) => {
-        // event.preventDefault();
+         // event.preventDefault();
         try {
             setLoading(true);
             const apiResponse = await axios.post(
@@ -41,11 +41,8 @@ const InviteMemberModal = ({ visible = false, setVisible }) => {
             if (apiResponse.data.statusCode === 201) {
                 toast.success(
                     apiResponse.data.message || "Successfully registered",
-                    {
-                        icon: "✅",
-                    }
+                    { icon: "✅" }
                 );
-
                 setVisible(false);
             } else {
                 toast.error(
@@ -137,6 +134,23 @@ const InviteMemberModal = ({ visible = false, setVisible }) => {
                                     {errors.designation.message}
                                 </p>
                             )}
+                        </div>
+                        <div>
+                            <label className="block font-semibold text-gray-700 mb-1">
+                                Role
+                            </label>
+                            <InputText
+                                disabled
+                                className="w-full border rounded-md p-2"
+                                defaultValue={
+                                    currentUser?.data?.role === "SuperAdmin"
+                                        ? "Admin"
+                                        : "Employee"
+                                }
+                                {...register("role", {
+                                    required: true,
+                                })}
+                            />
                         </div>
                         <div>
                             <label className="block font-semibold text-gray-700 mb-1">
