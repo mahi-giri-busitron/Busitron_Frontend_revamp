@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { useNavigate } from "react-router-dom";
 import InviteMemberModal from "./InviteMember";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signOutUser } from "../../../redux/userSlice";
 import toast from "react-hot-toast";
 const SideTopNavigation = (props) => {
@@ -11,6 +11,8 @@ const SideTopNavigation = (props) => {
     const op = useRef(null);
     const [visible, setVisible] = useState(false);
     const dispatch = useDispatch();
+    const { currentUser } = useSelector((store) => store.user);
+    const userrole = currentUser?.data?.role;
 
     const handleOnLogout = async () => {
         const apiResult = await dispatch(signOutUser());
@@ -33,14 +35,14 @@ const SideTopNavigation = (props) => {
     };
 
     return (
-        <div className=" flex px-5 py-3   items-center max-h-[85px]  h-[85px]    text-gray-900  border-b-2 border-gray-400 ">
-            <div className="  w-full  h-[100px] flex justify-between items-center">
+        <div className=" flex px-5 py-3 items-center max-h-[85px] h-[85px] text-gray-900 border-b-2 border-gray-400 ">
+            <div className=" w-full h-[100px] flex justify-between items-center">
                 {maximizeSideBar && (
                     <div>
                         <h2 className="text-xl font-bold ">
                             Busitron
                             <i
-                                className="pi pi-angle-down  hover:text-blue-600 cursor-pointer ml-2"
+                                className="pi pi-angle-down hover:text-blue-600 cursor-pointer ml-2"
                                 onClick={(e) => op.current.toggle(e)}
                             ></i>
                         </h2>
@@ -51,7 +53,7 @@ const SideTopNavigation = (props) => {
                 )}
                 <div className="hidden lg:inline">
                     <i
-                        className={`  pi ${
+                        className={` pi ${
                             maximizeSideBar
                                 ? "pi-angle-double-left"
                                 : "pi-angle-double-right"
@@ -86,18 +88,21 @@ const SideTopNavigation = (props) => {
                             style={{ fontSize: "20px" }}
                         ></i>
                     </div>
-                    <div className="w-full flex gap-2 p-2 px-4 hover:bg-blue-400 hover:text-blue-900 text-gray-500 cursor-pointer">
-                        <button
-                            className={`w-full text-left font-semibold   transition duration-200 cursor-pointer`}
-                            onClick={handleOnInviteMember}
-                        >
-                            Invite Member
-                        </button>
-                        <i
-                            className={`ml-3 pi pi-user-plus`}
-                            style={{ fontSize: "20px" }}
-                        ></i>
-                    </div>
+                    {userrole !== "Employee" && (
+                        <div className="w-full flex gap-2 p-2 px-4 hover:bg-blue-400 hover:text-blue-900 text-gray-500 cursor-pointer">
+                            <button
+                                className="w-full text-left font-semibold transition duration-200 cursor-pointer"
+                                onClick={handleOnInviteMember}
+                            >
+                                Invite Member
+                            </button>
+                            <i
+                                className="ml-3 pi pi-user-plus"
+                                style={{ fontSize: "20px" }}
+                            ></i>
+                        </div>
+                    )}
+
                     <div
                         className=" w-full flex gap-2 p-2 px-4 text-gray-500 hover:text-blue-900 hover:bg-blue-400 cursor-pointer "
                         onClick={handleOnLogout}
