@@ -38,7 +38,7 @@ const SingleEstimate = () => {
                                     style={{ maxHeight: "70vh" }}
                                 >
                                     <div className="flex flex-wrap gap-3 mt-3 mb-8 items-center"></div>
-                                    <div className="mb-8">
+                                    <div className="mb-4">
                                         <h2 className="text-lg font-bold text-gray-600 mb-2">
                                             Estimate Subject
                                         </h2>
@@ -46,7 +46,7 @@ const SingleEstimate = () => {
                                             <Skeleton height="3rem" />
                                         </div>
                                     </div>
-                                    <div className="mb-8">
+                                    <div className="mb-4">
                                         <h2 className="text-lg font-bold text-gray-600 mb-2">
                                             Project Name
                                         </h2>
@@ -108,7 +108,7 @@ const SingleEstimate = () => {
                                 className="w-full md:w-1/2 overflow-y-auto"
                                 style={{ maxHeight: "70vh" }}
                             >
-                                <div className="mb-8">
+                                <div className="mb-4">
                                     <h2 className="text-lg font-bold text-gray-600 mb-2">
                                         Estimate Number
                                     </h2>
@@ -118,15 +118,47 @@ const SingleEstimate = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="mb-8">
+                                <div className="mb-4">
                                     <h2 className="text-lg font-bold text-gray-600 mb-2">
                                         Project Name
                                     </h2>
                                     <div className="p-4 bg-gray-50 rounded">
-                                        <p>
-                                            {singleEstimateData?.projectName}
-                                        </p>
+                                        <p>{singleEstimateData?.projectName}</p>
                                     </div>
+                                </div>
+                                <div className="mb-4">
+                                    <h2 className="text-lg font-bold text-gray-600 mb-2">
+                                        File Attachments
+                                    </h2>
+                                    {singleEstimateData?.uploadedFile
+                                        ?.length ? (
+                                        singleEstimateData.uploadedFile.map(
+                                            (val) => {
+                                                let fileName = val
+                                                    ?.split("/")
+                                                    .pop()
+                                                    .split("-")
+                                                    .slice(1)
+                                                    .join("-");
+                                                return (
+                                                    <div
+                                                        className="p-1 text-sm underline text-blue-600"
+                                                        key={val}
+                                                    >
+                                                        <a
+                                                            target="_blank"
+                                                            href={val}
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            {fileName}
+                                                        </a>
+                                                    </div>
+                                                );
+                                            }
+                                        )
+                                    ) : (
+                                        <p>NA</p>
+                                    )}
                                 </div>
                                 <div className="mb-6">
                                     <h2 className="text-lg font-bold text-gray-600 mb-2">

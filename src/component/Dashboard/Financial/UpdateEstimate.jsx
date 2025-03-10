@@ -111,6 +111,7 @@ const UpdateEstimate = ({ selectedItem, setOpenUpdateModal }) => {
                     />
                     <Button
                         outlined
+                        type="button"
                         label="Cancel"
                         severity="secondary"
                         size="small"
