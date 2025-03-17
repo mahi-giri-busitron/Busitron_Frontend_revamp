@@ -19,7 +19,6 @@ export const getALlEstimates = createAsyncThunk(
 export const getSingleEstimate = createAsyncThunk("singleEstimate/get", async(id,{rejectWithValue})=>{
     try {
         const res = await axios.get(`/api/v1/estimates/get/${id}`);
-        // console.log("res", res.data.data);
         return res?.data?.data;
     } catch (error) {
         return rejectWithValue(
