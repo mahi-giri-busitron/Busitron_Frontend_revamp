@@ -4,7 +4,7 @@ import axios from "axios";
 // ✅ Fetch Users
 export const fetchUsers = createAsyncThunk(
   "chat/fetchUsers",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue,getState }) => {
     try {
       const response = await axios.get("/api/v1/message/all-employees", {
         headers: {
@@ -22,7 +22,7 @@ export const fetchUsers = createAsyncThunk(
 // ✅ Fetch Conversations
 export const fetchConversations = createAsyncThunk(
   "chat/fetchConversations",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue,,getState }) => {
     try {
       const response = await axios.get("/api/v1/message/conversations", {
         headers: {
@@ -39,7 +39,7 @@ export const fetchConversations = createAsyncThunk(
 // ✅ Start Conversation
 export const startConversation = createAsyncThunk(
   "chat/startConversation",
-  async (formValues, { rejectWithValue }) => {
+  async (formValues, { rejectWithValue,getState }) => {
     try {
       const response = await axios.post("/api/v1/message/conversation-start", formValues, {
         headers: {
