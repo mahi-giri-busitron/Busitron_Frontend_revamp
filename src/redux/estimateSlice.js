@@ -7,7 +7,6 @@ export const getALlEstimates = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axios.get("/api/v1/estimates/getAll");
-            // console.log("res", res.data.data);
             return res?.data?.data;
         } catch (error) {
             return rejectWithValue(
