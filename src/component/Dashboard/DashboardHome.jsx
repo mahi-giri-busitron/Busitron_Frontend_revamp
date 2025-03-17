@@ -7,6 +7,8 @@ import DashboardTaskboard from "./NestedDashboardComponents/DashboardTaskboard.j
 import DashboardEmployeeList from "./NestedDashboardComponents/DashboardEmployeeList.jsx";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import DashboardFinantialEstimate from "./NestedDashboardComponents/DashboardFinantialEstimate.jsx";
+
 
 const DashboardHome = () => {
     const [time, setTime] = useState(new Date());
@@ -90,6 +92,10 @@ const DashboardHome = () => {
 
                     <div className="md:col-span-2 lg:row-span-3 bg-white rounded-lg shadow-md">
                         <DashboardEmployeeList />
+                    </div>
+                    <div className="md:col-span-2 lg:row-span-3">
+                        <DashboardFinantialEstimate/>
+                        <h1>Hai</h1>
                     </div>
                 </div>
             </div>
