@@ -98,7 +98,6 @@ const userManagementSlice = createSlice({
             state.isRequestRejected = true;
         });
 
-        //specific user
         builder.addCase(fetchSpecificUser.pending, (state, action) => {
             state.isLoading = true;
         });
