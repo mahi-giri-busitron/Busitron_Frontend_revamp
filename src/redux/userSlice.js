@@ -171,7 +171,6 @@ const userSlice = createSlice({
             .addCase(signOutUser.fulfilled, (state) => {
                 state.loading = false;
                 state.currentUser = null;
-                localStorage.clear("persist:root");
             })
             .addCase(signOutUser.rejected, (state, action) => {
                 state.loading = false;
