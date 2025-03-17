@@ -56,7 +56,7 @@ export const deleteCompanyLocation = createAsyncThunk(
     "company/deleteLocation",
     async ({ companyID, id }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(
+            await axios.delete(
                 `/api/v1/setting/delete_business_address/${companyID}/${id}`
             );
             return { companyID, id };

@@ -8,15 +8,24 @@ export default defineConfig({
     server: {
         proxy: {
             "/api": {
-                target: "http://localhost:5421",
+                target: "http://backend:1431",
                 changeOrigin: true,
             },
         },
+<<<<<<< Updated upstream
         host:"0.0.0.0",
         port:5173,
         strictPort:true,
         watch:{
             usePolling:true,
         }
+=======
+        host: "0.0.0.0",
+        port: 5173,
+        strictPort: true,
+        watch: {
+            usePolling: true,
+          },
+>>>>>>> Stashed changes
     },
 });

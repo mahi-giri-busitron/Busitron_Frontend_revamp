@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -260,4 +260,4 @@ const Financial_Management = () => {
     );
 };
 
-export default Financial_Management;
+export default memo(Financial_Management);
