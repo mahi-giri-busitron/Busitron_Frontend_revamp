@@ -4,7 +4,6 @@ import { fetchUsers, startConversation } from "../../redux/chatSlice.js";
 
 export default function AddConversation({ open, handleClose }) {
     const dispatch = useDispatch();
-    // const { users } = useSelector((state) => state.chat);
 
     const { users = [] } = useSelector((store) => store.userManagement || {});
 
