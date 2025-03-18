@@ -78,7 +78,6 @@ const ServicesPage = () => {
                     stock markets time and time again.
                 </p>
             </motion.div>
-
             {/* Services Grid */}
             <motion.div
                 initial="hidden"
@@ -119,7 +118,6 @@ const ServicesPage = () => {
                     </motion.div>
                 ))}
             </motion.div>
-
             {/* Video Section */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
