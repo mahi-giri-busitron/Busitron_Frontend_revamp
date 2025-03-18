@@ -95,6 +95,8 @@ export default function ChatList() {
                             <i className="pi pi-search"></i>
                         </button>
                     </div>
+
+                    
                     {filteredConversations.length === 0 ? (
                         <div className="min-h-130 flex items-center justify-center py-5">
                             <button
