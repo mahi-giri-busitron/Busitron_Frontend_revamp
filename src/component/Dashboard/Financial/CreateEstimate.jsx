@@ -172,7 +172,7 @@ const CreateEstimate = ({ setOpenModel }) => {
                                     {...field}
                                     className="w-full h-10 items-center"
                                     options={currencyList}
-                                    // value="INR"
+                                    // value="INR" 
                                     placeholder="Select Currency"
                                     onChange={(e) => field.onChange(e.value)}
                                 />
