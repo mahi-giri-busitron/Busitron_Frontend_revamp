@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const getAppSetting = createAsyncThunk(
+
     "appSetting/get",
     async (_, { rejectWithValue }) => {
         try {
@@ -13,6 +14,7 @@ export const getAppSetting = createAsyncThunk(
             return rejectWithValue(
                 error.response?.data?.message ||
                     "Failed to fetch company address"
+                    
             );
         }
     }
