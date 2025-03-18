@@ -48,6 +48,7 @@ export default function Attachment() {
                 <i className="pi pi-paperclip"></i>
             </button>
 
+            
             <div
                 ref={dropdown}
                 className={`absolute right-0 -top-24 z-40 w-54 space-y-1 rounded-sm border border-stroke bg-white p-1.5 shadow-default ${
