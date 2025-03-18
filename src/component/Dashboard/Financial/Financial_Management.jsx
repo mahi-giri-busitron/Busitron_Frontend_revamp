@@ -128,7 +128,6 @@ const Financial_Management = () => {
                 dispatch(getALlEstimates())
             }            
         } catch (error) {
-            // console.log(error);
             toast.error("Failed to Delete Record");
         }
     }
