@@ -54,6 +54,7 @@ const DashboardHome = () => {
         setProjects(response.data.data.projectCount);
         setPendingTasks(response.data.data.pendingTasks);
         setOverdueTasks(response.data.data.overdueTasks);
+        
         setProjectPending(response.data.data.projectPending);
         setProjectOverdue(response.data.data.projectOverdue);
     };
